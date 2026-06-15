@@ -4,140 +4,127 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Posto Alfa — Análise de Desempenho</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-  :root{--fuel-dark:#0D1B2A;--fuel-navy:#1A2E44;--fuel-blue:#1B6CA8;--fuel-sky:#3B9FD6;--fuel-accent:#F5A623;--fuel-green:#27AE60;--fuel-red:#E74C3C;--fuel-light:#F0F4F8;--fuel-muted:#8FA3B1;--white:#FFFFFF;--text:#1A2E44;--text-soft:#4A6274;--border:#DDE6EE;--card-bg:#FFFFFF;--section-bg:#F7FAFC;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Inter',sans-serif;background:var(--fuel-light);color:var(--text);line-height:1.6;}
-  .hero{background:linear-gradient(135deg,var(--fuel-dark) 0%,var(--fuel-navy) 60%,#1B3E5C 100%);padding:56px 40px 48px;position:relative;overflow:hidden;}
-  .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(59,159,214,.15) 0%,transparent 70%);pointer-events:none;}
-  .hero::after{content:'⛽';position:absolute;right:48px;top:40px;font-size:96px;opacity:.07;}
-  .hero-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--fuel-sky);margin-bottom:14px;}
-  .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:700;color:var(--white);letter-spacing:-.02em;line-height:1.15;margin-bottom:10px;}
-  .hero-sub{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:36px;}
-  .hero-pills{display:flex;flex-wrap:wrap;gap:10px;}
-  .pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.75);}
-  .pill strong{color:var(--fuel-accent);}
-  .import-bar{background:var(--fuel-navy);border-bottom:2px solid var(--fuel-blue);padding:0;position:sticky;top:0;z-index:100;}
-  .import-toggle{display:flex;align-items:center;gap:10px;padding:12px 32px;cursor:pointer;color:rgba(255,255,255,.8);font-size:13px;font-weight:500;user-select:none;}
-  .import-toggle:hover{color:#fff;}
-  .import-toggle .arrow{transition:transform .2s;font-size:10px;}
-  .import-toggle.open .arrow{transform:rotate(180deg);}
-  .import-panel{display:none;background:#132231;padding:24px 32px;border-top:1px solid rgba(255,255,255,.08);}
-  .import-panel.open{display:block;}
-  .import-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-  @media(max-width:700px){.import-grid{grid-template-columns:1fr;}}
-  .import-section h3{color:var(--fuel-sky);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
-  .import-section p{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:12px;line-height:1.7;}
-  .import-section code{display:block;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.7);font-family:monospace;white-space:pre;overflow-x:auto;margin-bottom:12px;}
-  textarea#csvInput{width:100%;min-height:160px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-family:monospace;font-size:12px;padding:12px;resize:vertical;outline:none;}
-  textarea#csvInput:focus{border-color:var(--fuel-sky);}
-  .btn-import{background:var(--fuel-blue);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:8px;}
-  .btn-import:hover{background:#1d7ec4;}
-  .import-msg{font-size:12px;margin-top:8px;min-height:18px;}
-  .import-msg.ok{color:#6ee9aa;}
-  .import-msg.err{color:#f87171;}
-  .empty-state{text-align:center;padding:80px 24px;color:var(--text-soft);}
-  .empty-state .es-icon{font-size:64px;margin-bottom:16px;}
-  .empty-state h2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;}
-  .empty-state p{font-size:14px;max-width:420px;margin:0 auto;}
-  .container{max-width:1200px;margin:0 auto;padding:0 24px;}
-  .section{padding:40px 0;}
-  .section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fuel-blue);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-  .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:36px;}
-  .kpi-card{background:var(--card-bg);border-radius:14px;padding:20px 18px 16px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(13,27,42,.05);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
-  .kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,27,42,.10);}
-  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-color,var(--fuel-blue));border-radius:14px 14px 0 0;}
-  .kpi-label{font-size:11px;font-weight:500;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-  .kpi-value{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.02em;line-height:1;margin-bottom:6px;}
-  .kpi-sub{font-size:11px;color:var(--fuel-muted);}
-  .kpi-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;margin-top:4px;}
-  .badge-green{background:#D4F0E3;color:#1A7A44;}
-  .badge-amber{background:#FEF0D2;color:#8A5400;}
-  .badge-blue{background:#D6EBF9;color:#1557A0;}
-  .chart-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-  .chart-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px;}
-  @media(max-width:900px){.chart-grid-2,.chart-grid-3{grid-template-columns:1fr;}}
-  .chart-card{background:var(--card-bg);border-radius:16px;padding:24px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(13,27,42,.05);}
-  .chart-card.wide{grid-column:1/-1;}
-  .chart-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
-  .chart-sub{font-size:12px;color:var(--fuel-muted);margin-bottom:20px;}
-  .chart-wrap{position:relative;}
-  .table-card{background:var(--card-bg);border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(13,27,42,.05);margin-bottom:24px;}
-  .table-header{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-  .table-header .chart-title{margin-bottom:0;}
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  thead th{background:var(--section-bg);padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap;}
-  thead th:not(:first-child){text-align:right;}
-  tbody tr{border-bottom:1px solid #F0F4F8;transition:background .15s;}
-  tbody tr:hover{background:#F7FAFC;}
-  tbody tr:last-child{border-bottom:none;}
-  td{padding:11px 14px;color:var(--text);}
-  td:not(:first-child){text-align:right;}
-  td.date{font-weight:600;color:var(--fuel-blue);white-space:nowrap;}
-  td.fat{font-weight:700;}
-  td.good{color:var(--fuel-green);font-weight:600;}
-  td.warn{color:var(--fuel-red);font-weight:600;}
-  .tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;}
-  .tag-g{background:#D4F0E3;color:#1A7A44;}
-  .tag-y{background:#FEF0D2;color:#8A5400;}
-  .tag-r{background:#FADBD8;color:#922B21;}
-  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-  @media(max-width:700px){.compare-grid{grid-template-columns:1fr;}}
-  .compare-card{background:var(--card-bg);border-radius:16px;padding:24px;border:1px solid var(--border);}
-  .compare-period{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--white);background:var(--fuel-navy);display:inline-block;padding:4px 12px;border-radius:100px;margin-bottom:18px;}
-  .compare-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
-  .compare-row:last-child{border-bottom:none;}
-  .compare-key{font-size:12px;color:var(--text-soft);}
-  .compare-val{font-size:14px;font-weight:700;color:var(--text);}
-  .insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
-  .insight-card{border-radius:14px;padding:20px 22px;border-left:4px solid var(--accent);background:var(--bg);}
-  .insight-card.positive{--accent:var(--fuel-green);--bg:#F0FAF5;}
-  .insight-icon{font-size:22px;margin-bottom:8px;}
-  .insight-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
-  .insight-body{font-size:12px;color:var(--text-soft);line-height:1.65;}
-  .insight-rec{margin-top:8px;font-size:11px;color:var(--fuel-blue);font-weight:600;padding:6px 10px;background:rgba(27,108,168,.08);border-radius:8px;}
-  .progress-list{display:flex;flex-direction:column;gap:14px;}
-  .progress-header{display:flex;justify-content:space-between;margin-bottom:5px;}
-  .progress-label{font-size:12px;font-weight:500;color:var(--text);}
-  .progress-val{font-size:12px;font-weight:700;color:var(--text);}
-  .progress-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden;}
-  .progress-fill{height:100%;border-radius:100px;transition:width 1s ease;}
-  .footer{background:var(--fuel-dark);color:rgba(255,255,255,.45);text-align:center;padding:28px 24px;font-size:12px;margin-top:40px;}
-  .footer strong{color:rgba(255,255,255,.7);}
-  .footer .dev-credit{margin-top:8px;font-size:11px;color:rgba(255,255,255,.3);}
-  .footer .dev-credit strong{color:rgba(255,255,255,.55);}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{--fuel-dark:#0D1B2A;--fuel-navy:#1A2E44;--fuel-blue:#1B6CA8;--fuel-sky:#3B9FD6;--fuel-accent:#F5A623;--fuel-green:#27AE60;--fuel-red:#E74C3C;--fuel-light:#F0F4F8;--fuel-muted:#8FA3B1;--white:#FFFFFF;--text:#1A2E44;--text-soft:#4A6274;--border:#DDE6EE;--card-bg:#FFFFFF;--section-bg:#F7FAFC;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--fuel-light);color:var(--text);line-height:1.6;}
+.hero{background:linear-gradient(135deg,var(--fuel-dark) 0%,var(--fuel-navy) 60%,#1B3E5C 100%);padding:56px 40px 48px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(59,159,214,.15) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'⛽';position:absolute;right:48px;top:40px;font-size:96px;opacity:.07;}
+.hero-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--fuel-sky);margin-bottom:14px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.15;margin-bottom:10px;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:36px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.75);}
+.pill strong{color:var(--fuel-accent);}
+.import-bar{background:var(--fuel-navy);border-bottom:2px solid var(--fuel-blue);position:sticky;top:0;z-index:100;}
+.import-toggle{display:flex;align-items:center;gap:10px;padding:12px 32px;cursor:pointer;color:rgba(255,255,255,.8);font-size:13px;font-weight:500;user-select:none;}
+.import-toggle:hover{color:#fff;}
+.arrow{transition:transform .2s;font-size:10px;}
+.import-toggle.open .arrow{transform:rotate(180deg);}
+.import-panel{display:none;background:#132231;padding:24px 32px;border-top:1px solid rgba(255,255,255,.08);}
+.import-panel.open{display:block;}
+.import-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+@media(max-width:700px){.import-grid{grid-template-columns:1fr;}}
+.import-section h3{color:var(--fuel-sky);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.import-section p{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:12px;line-height:1.7;}
+.import-section code{display:block;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.7);font-family:monospace;white-space:pre;overflow-x:auto;margin-bottom:12px;}
+textarea#csvInput{width:100%;min-height:150px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-family:monospace;font-size:12px;padding:12px;resize:vertical;outline:none;}
+textarea#csvInput:focus{border-color:var(--fuel-sky);}
+.btn-row{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.btn-import{background:var(--fuel-blue);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;}
+.btn-import:hover{background:#1d7ec4;}
+.btn-clear{background:rgba(231,76,60,.2);color:#f87171;border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-clear:hover{background:rgba(231,76,60,.35);}
+.import-msg{font-size:12px;margin-top:8px;min-height:18px;}
+.import-msg.ok{color:#6ee9aa;}.import-msg.err{color:#f87171;}
+.empty-state{text-align:center;padding:80px 24px;color:var(--text-soft);}
+.empty-state .es-icon{font-size:64px;margin-bottom:16px;}
+.empty-state h2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.empty-state p{font-size:14px;max-width:420px;margin:0 auto;}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.section{padding:40px 0;}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fuel-blue);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:36px;}
+.kpi-card{background:var(--card-bg);border-radius:14px;padding:20px 18px 16px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(13,27,42,.05);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,27,42,.10);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ac,var(--fuel-blue));border-radius:14px 14px 0 0;}
+.kpi-label{font-size:11px;font-weight:500;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.kpi-value{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.02em;line-height:1;margin-bottom:6px;}
+.kpi-sub{font-size:11px;color:var(--fuel-muted);}
+.kpi-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;margin-top:4px;}
+.badge-g{background:#D4F0E3;color:#1A7A44;}.badge-a{background:#FEF0D2;color:#8A5400;}.badge-b{background:#D6EBF9;color:#1557A0;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px;}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr;}}
+.cc{background:var(--card-bg);border-radius:16px;padding:24px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(13,27,42,.05);}
+.cc.wide{grid-column:1/-1;}
+.ct{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.cs{font-size:12px;color:var(--fuel-muted);margin-bottom:20px;}
+.cw{position:relative;}
+.tc{background:var(--card-bg);border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(13,27,42,.05);margin-bottom:24px;}
+.th{padding:18px 24px 14px;border-bottom:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--section-bg);padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap;}
+thead th:not(:first-child){text-align:right;}
+tbody tr{border-bottom:1px solid #F0F4F8;transition:background .15s;}
+tbody tr:hover{background:#F7FAFC;}
+tbody tr:last-child{border-bottom:none;}
+td{padding:11px 14px;color:var(--text);}
+td:not(:first-child){text-align:right;}
+td.dn{font-weight:600;color:var(--fuel-blue);white-space:nowrap;}
+td.fw{font-weight:700;}
+td.gd{color:var(--fuel-green);font-weight:600;}
+td.wn{color:var(--fuel-red);font-weight:600;}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;}
+.tg{background:#D4F0E3;color:#1A7A44;}.ty{background:#FEF0D2;color:#8A5400;}.tr{background:#FADBD8;color:#922B21;}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+@media(max-width:700px){.cmp-grid{grid-template-columns:1fr;}}
+.cmp-card{background:var(--card-bg);border-radius:16px;padding:24px;border:1px solid var(--border);}
+.cmp-period{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#fff;background:var(--fuel-navy);display:inline-block;padding:4px 12px;border-radius:100px;margin-bottom:18px;}
+.cmp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-k{font-size:12px;color:var(--text-soft);}
+.cmp-v{font-size:14px;font-weight:700;color:var(--text);}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
+.ic{border-radius:14px;padding:20px 22px;border-left:4px solid var(--fuel-green);background:#F0FAF5;}
+.ii{font-size:22px;margin-bottom:8px;}
+.it{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.ib{font-size:12px;color:var(--text-soft);line-height:1.65;}
+.ir{margin-top:8px;font-size:11px;color:var(--fuel-blue);font-weight:600;padding:6px 10px;background:rgba(27,108,168,.08);border-radius:8px;}
+.footer{background:var(--fuel-dark);color:rgba(255,255,255,.45);text-align:center;padding:28px 24px;font-size:12px;margin-top:40px;}
+.footer strong{color:rgba(255,255,255,.7);}
+.footer .dev{margin-top:8px;font-size:11px;color:rgba(255,255,255,.3);}
+.footer .dev strong{color:rgba(255,255,255,.55);}
 </style>
 </head>
 <body>
 
 <div class="import-bar">
   <div class="import-toggle" id="importToggle" onclick="toggleImport()">
-    <span>📥</span>
-    <span>Atualizar dados — cole sua planilha aqui</span>
-    <span class="arrow">▼</span>
+    <span>📥</span><span>Atualizar dados — cole sua planilha aqui</span><span class="arrow">▼</span>
   </div>
   <div class="import-panel" id="importPanel">
     <div class="import-grid">
       <div class="import-section">
         <h3>Como usar</h3>
-        <p>Copie as linhas da sua planilha Excel/Google Sheets e cole no campo ao lado. A primeira linha deve ser o cabeçalho exatamente como abaixo:</p>
+        <p>Copie as linhas da planilha e cole ao lado. Primeira linha deve ser o cabeçalho:</p>
         <code>data,dia,fc,fv,ft,mg,et,gc,ga,ds,d5,freq</code>
-        <p>Onde:<br>
-        <strong>data</strong> = 23/05 &nbsp;|&nbsp; <strong>dia</strong> = Sábado<br>
-        <strong>fc</strong> = Fat.Combustível &nbsp;|&nbsp; <strong>fv</strong> = Fat.Conveniência<br>
-        <strong>ft</strong> = Fat.Total &nbsp;|&nbsp; <strong>mg</strong> = Margem Bruta<br>
-        <strong>et</strong> = Etanol(L) &nbsp;|&nbsp; <strong>gc</strong> = Gas.Comum(L)<br>
-        <strong>ga</strong> = Gas.Aditivada(L) &nbsp;|&nbsp; <strong>ds</strong> = Diesel S10(L)<br>
-        <strong>d5</strong> = Diesel S500(L) &nbsp;|&nbsp; <strong>freq</strong> = Frequência</p>
+        <p><strong>data</strong>=23/05 · <strong>dia</strong>=Sábado · <strong>fc</strong>=Fat.Combustível<br>
+        <strong>fv</strong>=Fat.Conveniência · <strong>ft</strong>=Fat.Total · <strong>mg</strong>=Margem<br>
+        <strong>et</strong>=Etanol(L) · <strong>gc</strong>=Gas.Comum(L) · <strong>ga</strong>=Gas.Aditivada(L)<br>
+        <strong>ds</strong>=Diesel S10(L) · <strong>d5</strong>=Diesel S500(L) · <strong>freq</strong>=Frequência</p>
+        <p style="color:rgba(255,255,255,.35);margin-top:8px">💾 Os dados ficam salvos no navegador — não somem ao recarregar.</p>
       </div>
       <div class="import-section">
         <h3>Cole os dados aqui</h3>
-        <textarea id="csvInput" placeholder="data,dia,fc,fv,ft,mg,et,gc,ga,ds,d5,freq
-23/05,Sábado,5328.47,654.00,5982.47,787.60,48.281,451.184,135.141,67.825,86.478,206"></textarea>
-        <button class="btn-import" onclick="importCSV()">▶ Aplicar dados e atualizar relatório</button>
+        <textarea id="csvInput" placeholder="data,dia,fc,fv,ft,mg,et,gc,ga,ds,d5,freq&#10;23/05,Sábado,5328.47,654.00,5982.47,787.60,48.281,451.184,135.141,67.825,86.478,206"></textarea>
+        <div class="btn-row">
+          <button class="btn-import" onclick="importCSV()">▶ Aplicar e atualizar</button>
+          <button class="btn-clear" onclick="limparDados()">🗑 Limpar tudo</button>
+        </div>
         <div class="import-msg" id="importMsg"></div>
       </div>
     </div>
@@ -153,56 +140,64 @@
   </div>
 </div>
 
-<div class="container" id="mainContent">
-  <!-- preenchido pelo JS -->
-</div>
+<div class="container" id="mainContent"></div>
 
 <div class="footer">
   <strong>Posto Alfa</strong> · CNPJ 30.247.229/0001-96 · Relatório atualizado automaticamente · <span id="footerDate"></span>
-  <div class="dev-credit">Desenvolvido por <strong>Everton Vinicius</strong></div>
+  <div class="dev">Desenvolvido por <strong>Everton Vinicius</strong></div>
 </div>
 
+<!-- Chart.js carregado no final para garantir que o DOM esteja pronto -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ─── ESTADO ────────────────────────────────────────────────────────────────────
-let dados = [];
-let charts = {};
+var dados = [];
+var charts = {};
+var STORAGE_KEY = 'posto_alfa_dados_v1';
 
-// ─── HELPERS ───────────────────────────────────────────────────────────────────
-const fmt   = v => 'R$\u00a0' + v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtK  = v => v>=1000 ? 'R$\u00a0'+(v/1000).toFixed(1)+'k' : 'R$\u00a0'+v.toFixed(0);
-const fmtN  = v => v.toLocaleString('pt-BR',{maximumFractionDigits:0});
-const sum   = (arr,k) => arr.reduce((a,d)=>a+(+d[k]||0),0);
-const litros= d => (d.et||0)+(d.gc||0)+(d.ga||0)+(d.ds||0)+(d.d5||0);
-const today = () => new Date().toLocaleDateString('pt-BR');
-const C = {
-  blue:'#1B6CA8',sky:'#3B9FD6',green:'#27AE60',amber:'#F5A623',
-  red:'#E74C3C',purple:'#8E44AD',teal:'#16A085',gray:'#8FA3B1',
-  blueA:'rgba(27,108,168,.15)'
-};
+// ── helpers ──────────────────────────────────────────────────────────────────
+function fmt(v){ return 'R$\u00a0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtK(v){ return v>=1000?'R$\u00a0'+(v/1000).toFixed(1)+'k':'R$\u00a0'+v.toFixed(0); }
+function fmtN(v){ return v.toLocaleString('pt-BR',{maximumFractionDigits:0}); }
+function sum(arr,k){ return arr.reduce(function(a,d){ return a+(+d[k]||0); },0); }
+function lit(d){ return (d.et||0)+(d.gc||0)+(d.ga||0)+(d.ds||0)+(d.d5||0); }
+function today(){ return new Date().toLocaleDateString('pt-BR'); }
+var C={blue:'#1B6CA8',sky:'#3B9FD6',green:'#27AE60',amber:'#F5A623',red:'#E74C3C',purple:'#8E44AD',teal:'#16A085',gray:'#8FA3B1'};
 
-// ─── IMPORT ────────────────────────────────────────────────────────────────────
+// ── localStorage ─────────────────────────────────────────────────────────────
+function salvarDados(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }catch(e){}
+}
+function carregarDados(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ dados = JSON.parse(raw); }
+  }catch(e){ dados=[]; }
+}
+
+// ── import ───────────────────────────────────────────────────────────────────
 function toggleImport(){
   document.getElementById('importPanel').classList.toggle('open');
   document.getElementById('importToggle').classList.toggle('open');
 }
 
 function importCSV(){
-  const raw = document.getElementById('csvInput').value.trim();
-  const msg = document.getElementById('importMsg');
+  var raw = document.getElementById('csvInput').value.trim();
+  var msg = document.getElementById('importMsg');
   if(!raw){ msg.className='import-msg err'; msg.textContent='⚠ Cole os dados antes de aplicar.'; return; }
-  const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
-  const header = lines[0].toLowerCase().split(/[,;\t]/);
-  const cols = ['data','dia','fc','fv','ft','mg','et','gc','ga','ds','d5','freq'];
-  const missing = cols.filter(c=>!header.includes(c));
+  var lines = raw.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+  var header = lines[0].toLowerCase().split(/[,;\t]/);
+  var cols = ['data','dia','fc','fv','ft','mg','et','gc','ga','ds','d5','freq'];
+  var missing = cols.filter(function(c){ return header.indexOf(c)<0; });
   if(missing.length){ msg.className='import-msg err'; msg.textContent='⚠ Colunas faltando: '+missing.join(', '); return; }
-  const idx = c => header.indexOf(c);
-  const parsed = [];
-  for(let i=1;i<lines.length;i++){
-    const parts = lines[i].split(/[,;\t]/);
+  var parsed = [];
+  for(var i=1;i<lines.length;i++){
+    var parts = lines[i].split(/[,;\t]/);
     if(parts.length < cols.length) continue;
-    const n = c => parseFloat((parts[idx(c)]||'0').replace(',','.')) || 0;
+    var idx = function(c){ return header.indexOf(c); };
+    var n = function(c){ return parseFloat((parts[header.indexOf(c)]||'0').replace(',','.')) || 0; };
     parsed.push({
-      data:parts[idx('data')].trim(), dia:parts[idx('dia')].trim(),
+      data:parts[header.indexOf('data')].trim(),
+      dia: parts[header.indexOf('dia')].trim(),
       fc:n('fc'),fv:n('fv'),ft:n('ft'),mg:n('mg'),
       et:n('et'),gc:n('gc'),ga:n('ga'),ds:n('ds'),d5:n('d5'),
       freq:Math.round(n('freq'))
@@ -210,612 +205,413 @@ function importCSV(){
   }
   if(!parsed.length){ msg.className='import-msg err'; msg.textContent='⚠ Nenhuma linha válida encontrada.'; return; }
   dados = parsed;
+  salvarDados();
   renderAll();
   msg.className='import-msg ok';
-  msg.textContent='✓ '+parsed.length+' dias carregados! Relatório atualizado.';
-  setTimeout(()=>{
+  msg.textContent='✓ '+parsed.length+' dias salvos! Relatório atualizado.';
+  setTimeout(function(){
     document.getElementById('importPanel').classList.remove('open');
     document.getElementById('importToggle').classList.remove('open');
   },1800);
 }
 
-// ─── RENDER ALL ────────────────────────────────────────────────────────────────
+function limparDados(){
+  if(!confirm('Limpar todos os dados salvos?')) return;
+  dados=[];
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  document.getElementById('csvInput').value='';
+  document.getElementById('importMsg').textContent='';
+  renderAll();
+}
+
+// ── render all ───────────────────────────────────────────────────────────────
 function renderAll(){
   destroyCharts();
   document.getElementById('heroDate').textContent = today();
   document.getElementById('footerDate').textContent = today();
-
-  if(!dados.length){
-    renderEmptyState();
-    return;
-  }
-  renderHeroPills();
-  buildMainHTML();
-  // wait one tick so DOM is ready before creating canvases
-  setTimeout(()=>{
-    renderKPIs();
-    renderCharts();
-    renderTabela();
-    renderMixTable();
-    renderProgressBars();
-    renderCompareCards();
-    renderInsights();
-  }, 0);
+  if(!dados.length){ renderEmpty(); return; }
+  renderPills();
+  buildHTML();
+  renderKPIs();
+  renderCharts();
+  renderTabela();
+  renderMixTable();
+  renderProgressBars();
+  renderCompareCards();
+  renderInsights();
 }
 
 function destroyCharts(){
-  Object.values(charts).forEach(c=>{ try{ c&&c.destroy(); }catch(e){} });
+  Object.keys(charts).forEach(function(k){ try{ if(charts[k]) charts[k].destroy(); }catch(e){} });
   charts={};
 }
 
-// ─── EMPTY STATE ───────────────────────────────────────────────────────────────
-function renderEmptyState(){
-  document.getElementById('heroPills').innerHTML = '';
-  document.getElementById('mainContent').innerHTML = `
-    <div class="empty-state">
-      <div class="es-icon">⛽</div>
-      <h2>Aguardando dados do posto</h2>
-      <p>Clique na barra azul acima, cole os dados da planilha e clique em <strong>Aplicar</strong> para gerar o relatório completo.</p>
-    </div>`;
+function renderEmpty(){
+  document.getElementById('heroPills').innerHTML='';
+  document.getElementById('mainContent').innerHTML='<div class="empty-state"><div class="es-icon">⛽</div><h2>Aguardando dados do posto</h2><p>Clique na barra azul acima, cole os dados da planilha e clique em <strong>Aplicar</strong> para gerar o relatório.</p></div>';
 }
 
-// ─── HERO PILLS ────────────────────────────────────────────────────────────────
-function renderHeroPills(){
-  const totalFat = sum(dados,'ft');
-  const totalMg  = sum(dados,'mg');
-  const totalLit = dados.reduce((a,d)=>a+litros(d),0);
-  document.getElementById('heroPills').innerHTML = `
-    <span class="pill">📅 ${dados[0].data} → ${dados[dados.length-1].data}</span>
-    <span class="pill"><strong>${dados.length} dias</strong> de operação</span>
-    <span class="pill">Faturamento Total: <strong>${fmtK(totalFat)}</strong></span>
-    <span class="pill">Margem Bruta: <strong>${fmtK(totalMg)}</strong></span>
-    <span class="pill">${fmtN(totalLit)} litros vendidos</span>`;
+function renderPills(){
+  var tf=sum(dados,'ft'), tm=sum(dados,'mg'), tl=dados.reduce(function(a,d){ return a+lit(d); },0);
+  document.getElementById('heroPills').innerHTML=
+    '<span class="pill">📅 '+dados[0].data+' → '+dados[dados.length-1].data+'</span>'+
+    '<span class="pill"><strong>'+dados.length+' dias</strong> de operação</span>'+
+    '<span class="pill">Faturamento: <strong>'+fmtK(tf)+'</strong></span>'+
+    '<span class="pill">Margem: <strong>'+fmtK(tm)+'</strong></span>'+
+    '<span class="pill">'+fmtN(tl)+' litros vendidos</span>';
 }
 
-// ─── BUILD MAIN HTML ───────────────────────────────────────────────────────────
-function buildMainHTML(){
-  document.getElementById('mainContent').innerHTML = `
-  <div class="section">
-    <div class="section-title">indicadores principais</div>
-    <div class="kpi-grid" id="kpiGrid"></div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">faturamento e evolução diária</div>
-    <div class="chart-grid-2">
-      <div class="chart-card wide">
-        <div class="chart-title">Faturamento Diário</div>
-        <div class="chart-sub">Total, combustíveis e conveniência por dia</div>
-        <div class="chart-wrap" style="height:260px"><canvas id="chartFat"></canvas></div>
-      </div>
-    </div>
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="chart-title">Margem Bruta % por Dia</div>
-        <div class="chart-sub">Verde ≥17% · Amarelo ≥14% · Vermelho &lt;14%</div>
-        <div class="chart-wrap" style="height:220px"><canvas id="chartMargem"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Combustíveis + Conveniência (Stacked)</div>
-        <div class="chart-sub">Composição diária do faturamento</div>
-        <div class="chart-wrap" style="height:220px"><canvas id="chartStack"></canvas></div>
-      </div>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">volume e mix de combustíveis</div>
-    <div class="chart-grid-3">
-      <div class="chart-card">
-        <div class="chart-title">Mix de Combustíveis (litros)</div>
-        <div class="chart-sub">Participação total no período</div>
-        <div class="chart-wrap" style="height:220px"><canvas id="chartMix"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Litros Vendidos por Dia</div>
-        <div class="chart-sub">Volume total diário</div>
-        <div class="chart-wrap" style="height:220px"><canvas id="chartLitros"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Faturamento por Produto</div>
-        <div class="chart-sub">Receita acumulada por combustível</div>
-        <div class="chart-wrap" style="height:220px"><canvas id="chartProduto"></canvas></div>
-      </div>
-    </div>
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="chart-title">Gasolina Comum vs Aditivada</div>
-        <div class="chart-sub">Litros vendidos por dia</div>
-        <div class="chart-wrap" style="height:200px"><canvas id="chartGas"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Participação % dos Combustíveis</div>
-        <div class="chart-sub">Mix diário de litros</div>
-        <div class="chart-wrap" style="height:200px"><canvas id="chartPart"></canvas></div>
-      </div>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">clientes e comparativo de período</div>
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="chart-title">Frequência de Clientes por Dia</div>
-        <div class="chart-sub">Número de atendimentos registrados</div>
-        <div class="chart-wrap" style="height:200px"><canvas id="chartFreq"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Comparativo de Períodos</div>
-        <div class="chart-sub">Métricas médias — primeira vs segunda metade</div>
-        <div class="chart-wrap" style="height:200px"><canvas id="chartCompare"></canvas></div>
-      </div>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">registro por dia</div>
-    <div class="table-card">
-      <div class="table-header"><span class="chart-title">Histórico Diário Completo</span></div>
-      <div style="overflow-x:auto">
-        <table>
-          <thead><tr>
-            <th>Data</th><th>Dia</th><th>Litros</th><th>Fat. Comb.</th>
-            <th>Conveniência</th><th>Fat. Total</th><th>Margem</th>
-            <th>Margem %</th><th>Freq.</th><th>Status</th>
-          </tr></thead>
-          <tbody id="tabelaDias"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">detalhamento por combustível</div>
-    <div class="chart-grid-2">
-      <div class="table-card" style="margin-bottom:0">
-        <div class="table-header"><span class="chart-title">Resumo por Combustível</span></div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Produto</th><th>Litros</th><th>Part.%</th><th>Fat. Total</th><th>Mg %</th></tr></thead>
-            <tbody id="tabelaMix"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="chart-card" style="display:flex;flex-direction:column;justify-content:center">
-        <div class="chart-title" style="margin-bottom:16px">Participação no Mix (litros)</div>
-        <div id="progressBars" class="progress-list"></div>
-      </div>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">comparativo de períodos</div>
-    <div class="compare-grid" id="compareCards"></div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-title">pontos positivos do período</div>
-    <div class="insight-grid" id="insightGrid"></div>
-  </div>`;
+// ── build HTML ───────────────────────────────────────────────────────────────
+function buildHTML(){
+  document.getElementById('mainContent').innerHTML =
+  '<div class="section">'+
+    '<div class="section-title">indicadores principais</div>'+
+    '<div class="kpi-grid" id="kpiGrid"></div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">faturamento e evolução diária</div>'+
+    '<div class="g2"><div class="cc wide"><div class="ct">Faturamento Diário</div><div class="cs">Total, combustíveis e conveniência por dia</div><div class="cw" style="height:260px"><canvas id="chartFat"></canvas></div></div></div>'+
+    '<div class="g2">'+
+      '<div class="cc"><div class="ct">Margem Bruta % por Dia</div><div class="cs">Verde ≥17% · Amarelo ≥14% · Vermelho &lt;14%</div><div class="cw" style="height:220px"><canvas id="chartMargem"></canvas></div></div>'+
+      '<div class="cc"><div class="ct">Combustíveis + Conveniência (Stacked)</div><div class="cs">Composição diária do faturamento</div><div class="cw" style="height:220px"><canvas id="chartStack"></canvas></div></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">volume e mix de combustíveis</div>'+
+    '<div class="g3">'+
+      '<div class="cc"><div class="ct">Mix de Combustíveis (litros)</div><div class="cs">Participação total no período</div><div class="cw" style="height:220px"><canvas id="chartMix"></canvas></div></div>'+
+      '<div class="cc"><div class="ct">Litros Vendidos por Dia</div><div class="cs">Volume total diário</div><div class="cw" style="height:220px"><canvas id="chartLitros"></canvas></div></div>'+
+      '<div class="cc"><div class="ct">Faturamento por Produto</div><div class="cs">Receita acumulada por combustível</div><div class="cw" style="height:220px"><canvas id="chartProduto"></canvas></div></div>'+
+    '</div>'+
+    '<div class="g2">'+
+      '<div class="cc"><div class="ct">Gasolina Comum vs Aditivada</div><div class="cs">Litros vendidos por dia</div><div class="cw" style="height:200px"><canvas id="chartGas"></canvas></div></div>'+
+      '<div class="cc"><div class="ct">Participação % dos Combustíveis</div><div class="cs">Mix diário de litros</div><div class="cw" style="height:200px"><canvas id="chartPart"></canvas></div></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">clientes e comparativo de período</div>'+
+    '<div class="g2">'+
+      '<div class="cc"><div class="ct">Frequência de Clientes por Dia</div><div class="cs">Número de atendimentos registrados</div><div class="cw" style="height:200px"><canvas id="chartFreq"></canvas></div></div>'+
+      '<div class="cc"><div class="ct">Comparativo de Períodos</div><div class="cs">Primeira vs segunda metade do período</div><div class="cw" style="height:200px"><canvas id="chartCompare"></canvas></div></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">registro por dia</div>'+
+    '<div class="tc"><div class="th"><span class="ct">Histórico Diário Completo</span></div><div style="overflow-x:auto"><table><thead><tr><th>Data</th><th>Dia</th><th>Litros</th><th>Fat. Comb.</th><th>Conveniência</th><th>Fat. Total</th><th>Margem</th><th>Margem %</th><th>Freq.</th><th>Status</th></tr></thead><tbody id="tabelaDias"></tbody></table></div></div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">detalhamento por combustível</div>'+
+    '<div class="g2">'+
+      '<div class="tc" style="margin-bottom:0"><div class="th"><span class="ct">Resumo por Combustível</span></div><div style="overflow-x:auto"><table><thead><tr><th>Produto</th><th>Litros</th><th>Part.%</th><th>Fat. Total</th><th>Mg %</th></tr></thead><tbody id="tabelaMix"></tbody></table></div></div>'+
+      '<div class="cc" style="display:flex;flex-direction:column;justify-content:center"><div class="ct" style="margin-bottom:16px">Participação no Mix (litros)</div><div id="progressBars"></div></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">comparativo de períodos</div>'+
+    '<div class="cmp-grid" id="compareCards"></div>'+
+  '</div>'+
+  '<div class="section" style="padding-top:0">'+
+    '<div class="section-title">pontos positivos do período</div>'+
+    '<div class="ig" id="insightGrid"></div>'+
+  '</div>';
 }
 
-// ─── KPIs ──────────────────────────────────────────────────────────────────────
+// ── KPIs ─────────────────────────────────────────────────────────────────────
 function renderKPIs(){
-  const totalFat = sum(dados,'ft');
-  const totalMg  = sum(dados,'mg');
-  const totalLit = dados.reduce((a,d)=>a+litros(d),0);
-  const totalConv= sum(dados,'fv');
-  const avgMg    = (totalMg/totalFat*100).toFixed(1);
-  const avgLit   = (totalLit/dados.length).toFixed(0);
-  const avgFreq  = Math.round(sum(dados,'freq')/dados.length);
-  const ticket   = (totalFat/sum(dados,'freq')).toFixed(2);
-  const melhorDia= dados.reduce((a,b)=>b.ft>a.ft?b:a,dados[0]);
-  document.getElementById('kpiGrid').innerHTML = `
-    <div class="kpi-card" style="--accent-color:#1B6CA8">
-      <div class="kpi-label">Faturamento Total</div>
-      <div class="kpi-value">${fmtK(totalFat)}</div>
-      <div class="kpi-sub">${dados.length} dias de operação</div>
-      <span class="kpi-badge badge-blue">${fmt(totalFat)}</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#27AE60">
-      <div class="kpi-label">Margem Bruta Total</div>
-      <div class="kpi-value">${fmtK(totalMg)}</div>
-      <div class="kpi-sub">média ${avgMg}% por dia</div>
-      <span class="kpi-badge badge-green">crescente</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#F5A623">
-      <div class="kpi-label">Litros Vendidos</div>
-      <div class="kpi-value">${fmtN(totalLit)}</div>
-      <div class="kpi-sub">média ${fmtN(+avgLit)} L/dia</div>
-      <span class="kpi-badge badge-amber">5 combustíveis</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#3B9FD6">
-      <div class="kpi-label">Conveniência Total</div>
-      <div class="kpi-value">${fmtK(totalConv)}</div>
-      <div class="kpi-sub">${(totalConv/totalFat*100).toFixed(1)}% do faturamento</div>
-      <span class="kpi-badge badge-blue">alta margem</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#8E44AD">
-      <div class="kpi-label">Ticket Médio</div>
-      <div class="kpi-value">R$\u00a0${ticket}</div>
-      <div class="kpi-sub">por atendimento</div>
-      <span class="kpi-badge badge-blue">${fmtN(sum(dados,'freq'))} total</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#16A085">
-      <div class="kpi-label">Freq. Média/Dia</div>
-      <div class="kpi-value">${avgFreq}</div>
-      <div class="kpi-sub">atendimentos por dia</div>
-      <span class="kpi-badge badge-green">recorrente</span>
-    </div>
-    <div class="kpi-card" style="--accent-color:#F5A623">
-      <div class="kpi-label">Melhor Dia</div>
-      <div class="kpi-value">${fmtK(melhorDia.ft)}</div>
-      <div class="kpi-sub">${melhorDia.data} · ${melhorDia.dia}</div>
-      <span class="kpi-badge badge-amber">${melhorDia.freq} atend.</span>
-    </div>`;
+  var tf=sum(dados,'ft'), tm=sum(dados,'mg'), tl=dados.reduce(function(a,d){ return a+lit(d); },0);
+  var tv=sum(dados,'fv'), freq=sum(dados,'freq');
+  var am=(tm/tf*100).toFixed(1), al=(tl/dados.length).toFixed(0);
+  var af=Math.round(freq/dados.length), tk=(tf/freq).toFixed(2);
+  var md=dados.reduce(function(a,b){ return b.ft>a.ft?b:a; },dados[0]);
+  document.getElementById('kpiGrid').innerHTML=
+    kpi('#1B6CA8','Faturamento Total',fmtK(tf),dados.length+' dias de operação','badge-b',fmt(tf))+
+    kpi('#27AE60','Margem Bruta Total',fmtK(tm),'média '+am+'% por dia','badge-g','crescente')+
+    kpi('#F5A623','Litros Vendidos',fmtN(tl),'média '+fmtN(+al)+' L/dia','badge-a','5 combustíveis')+
+    kpi('#3B9FD6','Conveniência Total',fmtK(tv),(tv/tf*100).toFixed(1)+'% do faturamento','badge-b','alta margem')+
+    kpi('#8E44AD','Ticket Médio','R$\u00a0'+tk,'por atendimento','badge-b',fmtN(freq)+' total')+
+    kpi('#16A085','Freq. Média/Dia',String(af),'atendimentos/dia','badge-g','recorrente')+
+    kpi('#F5A623','Melhor Dia',fmtK(md.ft),md.data+' · '+md.dia,'badge-a',md.freq+' atend.');
+}
+function kpi(ac,lbl,val,sub,badge,btxt){
+  return '<div class="kpi-card" style="--ac:'+ac+'"><div class="kpi-label">'+lbl+'</div><div class="kpi-value">'+val+'</div><div class="kpi-sub">'+sub+'</div><span class="kpi-badge '+badge+'">'+btxt+'</span></div>';
 }
 
-// ─── CHARTS ────────────────────────────────────────────────────────────────────
-function makeChart(id, config){
-  const el = document.getElementById(id);
-  if(!el){ console.warn('Canvas não encontrado:', id); return null; }
-  try{ return new Chart(el, config); }catch(e){ console.error('Erro no chart '+id, e); return null; }
+// ── charts ───────────────────────────────────────────────────────────────────
+function mkChart(id, cfg){
+  var el = document.getElementById(id);
+  if(!el){ return null; }
+  try{ return new Chart(el, cfg); }catch(e){ console.error(id, e); return null; }
 }
 
 function renderCharts(){
-  Chart.defaults.font = {family:"'Inter',sans-serif"};
-  Chart.defaults.color = '#4A6274';
-  Chart.defaults.plugins.legend.labels.boxWidth = 10;
-  Chart.defaults.plugins.legend.labels.padding  = 14;
+  Chart.defaults.font={family:"'Inter',sans-serif"};
+  Chart.defaults.color='#4A6274';
+  Chart.defaults.plugins.legend.labels.boxWidth=10;
+  Chart.defaults.plugins.legend.labels.padding=14;
 
-  const labels = dados.map(d=>d.data);
+  var labels=dados.map(function(d){ return d.data; });
 
-  // 1. Faturamento diário
-  charts.fat = makeChart('chartFat',{
-    type:'line',
-    data:{labels, datasets:[
-      {label:'Fat. Total', data:dados.map(d=>d.ft), borderColor:C.blue, backgroundColor:'rgba(27,108,168,.08)', borderWidth:2.5, pointBackgroundColor:C.blue, pointRadius:4, fill:true, tension:.3},
-      {label:'Combustíveis', data:dados.map(d=>d.fc), borderColor:C.sky, borderWidth:1.5, borderDash:[4,3], pointRadius:2, tension:.3},
-      {label:'Conveniência', data:dados.map(d=>d.fv), borderColor:C.green, borderWidth:1.5, pointRadius:2, tension:.3},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)}}},
-      scales:{y:{ticks:{callback:v=>fmtK(v)}, grid:{color:'#F0F4F8'}}, x:{grid:{display:false}}}}
-  });
+  // 1. Fat diário
+  charts.fat=mkChart('chartFat',{type:'line',data:{labels:labels,datasets:[
+    {label:'Fat. Total',data:dados.map(function(d){return d.ft;}),borderColor:C.blue,backgroundColor:'rgba(27,108,168,.08)',borderWidth:2.5,pointBackgroundColor:C.blue,pointRadius:4,fill:true,tension:.3},
+    {label:'Combustíveis',data:dados.map(function(d){return d.fc;}),borderColor:C.sky,borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.3},
+    {label:'Conveniência',data:dados.map(function(d){return d.fv;}),borderColor:C.green,borderWidth:1.5,pointRadius:2,tension:.3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+fmt(ctx.parsed.y);}}}},
+    scales:{y:{ticks:{callback:function(v){return fmtK(v);}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}});
 
-  // 2. Margem % por dia
-  const margemPct = dados.map(d=>+(d.mg/d.ft*100).toFixed(1));
-  charts.margem = makeChart('chartMargem',{
-    type:'bar',
-    data:{labels, datasets:[{label:'Margem %', data:margemPct,
-      backgroundColor:margemPct.map(v=>v>=17?'rgba(39,174,96,.8)':v>=14?'rgba(245,166,35,.8)':'rgba(231,76,60,.8)'),
-      borderRadius:5, borderSkipped:false}]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.parsed.y.toFixed(1)+'%'}}},
-      scales:{y:{ticks:{callback:v=>v+'%'}, grid:{color:'#F0F4F8'}, suggestedMin:8, suggestedMax:24}, x:{grid:{display:false}}}}
-  });
+  // 2. Margem %
+  var mgp=dados.map(function(d){ return +(d.mg/d.ft*100).toFixed(1); });
+  charts.margem=mkChart('chartMargem',{type:'bar',data:{labels:labels,datasets:[{label:'Margem %',data:mgp,
+    backgroundColor:mgp.map(function(v){ return v>=17?'rgba(39,174,96,.8)':v>=14?'rgba(245,166,35,.8)':'rgba(231,76,60,.8)'; }),
+    borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.parsed.y.toFixed(1)+'%';}}},legend:{display:false}},
+      scales:{y:{ticks:{callback:function(v){return v+'%';}},grid:{color:'#F0F4F8'},suggestedMin:8,suggestedMax:24},x:{grid:{display:false}}}}});
 
-  // 3. Stack combustível + conveniência
-  charts.stack = makeChart('chartStack',{
-    type:'bar',
-    data:{labels, datasets:[
-      {label:'Combustíveis', data:dados.map(d=>d.fc), backgroundColor:'rgba(27,108,168,.85)', stack:'a'},
-      {label:'Conveniência',  data:dados.map(d=>d.fv), backgroundColor:'rgba(39,174,96,.85)',  stack:'a'},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index'},
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y)}}},
-      scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, ticks:{callback:v=>fmtK(v)}, grid:{color:'#F0F4F8'}}}}
-  });
+  // 3. Stack
+  charts.stack=mkChart('chartStack',{type:'bar',data:{labels:labels,datasets:[
+    {label:'Combustíveis',data:dados.map(function(d){return d.fc;}),backgroundColor:'rgba(27,108,168,.85)',stack:'a'},
+    {label:'Conveniência',data:dados.map(function(d){return d.fv;}),backgroundColor:'rgba(39,174,96,.85)',stack:'a'}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},
+    plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+fmt(ctx.parsed.y);}}}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fmtK(v);}},grid:{color:'#F0F4F8'}}}}});
 
   // 4. Mix doughnut
-  const totEt=sum(dados,'et'), totGc=sum(dados,'gc'), totGa=sum(dados,'ga'), totDs=sum(dados,'ds'), totD5=sum(dados,'d5');
-  charts.mix = makeChart('chartMix',{
-    type:'doughnut',
-    data:{labels:['Gas. Comum','Gas. Aditivada','Etanol','Diesel S10','Diesel S500'],
-      datasets:[{data:[totGc,totGa,totEt,totDs,totD5],
-        backgroundColor:[C.blue,C.sky,C.amber,C.teal,C.gray],
-        borderWidth:2, borderColor:'#fff', hoverOffset:8}]},
-    options:{responsive:true, maintainAspectRatio:false, cutout:'55%',
-      plugins:{tooltip:{callbacks:{label:ctx=>{
-        const tot=ctx.dataset.data.reduce((a,b)=>a+b,0);
-        return ctx.label+': '+fmtN(ctx.parsed)+' L ('+((ctx.parsed/tot)*100).toFixed(1)+'%)';
-      }}}}}
-  });
+  var tEt=sum(dados,'et'),tGc=sum(dados,'gc'),tGa=sum(dados,'ga'),tDs=sum(dados,'ds'),tD5=sum(dados,'d5');
+  charts.mix=mkChart('chartMix',{type:'doughnut',data:{
+    labels:['Gas. Comum','Gas. Aditivada','Etanol','Diesel S10','Diesel S500'],
+    datasets:[{data:[tGc,tGa,tEt,tDs,tD5],backgroundColor:[C.blue,C.sky,C.amber,C.teal,C.gray],borderWidth:2,borderColor:'#fff',hoverOffset:8}]
+  },options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{tooltip:{callbacks:{label:function(ctx){
+      var tot=ctx.dataset.data.reduce(function(a,b){return a+b;},0);
+      return ctx.label+': '+fmtN(ctx.parsed)+' L ('+(ctx.parsed/tot*100).toFixed(1)+'%)';
+    }}}}}});
 
-  // 5. Litros por dia
-  charts.litros = makeChart('chartLitros',{
-    type:'bar',
-    data:{labels, datasets:[{label:'Litros', data:dados.map(d=>+litros(d).toFixed(0)),
-      backgroundColor:'rgba(59,159,214,.75)', borderRadius:4}]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmtN(ctx.parsed.y)+' L'}}},
-      scales:{y:{ticks:{callback:v=>fmtN(v)}, grid:{color:'#F0F4F8'}}, x:{grid:{display:false}}}}
-  });
+  // 5. Litros/dia
+  charts.litros=mkChart('chartLitros',{type:'bar',data:{labels:labels,datasets:[{label:'Litros',
+    data:dados.map(function(d){return +lit(d).toFixed(0);}),backgroundColor:'rgba(59,159,214,.75)',borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return fmtN(ctx.parsed.y)+' L';}}}},
+      scales:{y:{ticks:{callback:function(v){return fmtN(v);}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}});
 
-  // 6. Faturamento por produto (polar)
-  const totL2 = totGc+totGa+totEt+totDs+totD5;
-  const totFc = sum(dados,'fc');
-  const fatProduto = [totL2?totGc/totL2*totFc:0, totL2?totGa/totL2*totFc:0, totL2?totEt/totL2*totFc:0, totL2?totDs/totL2*totFc:0, totL2?totD5/totL2*totFc:0];
-  charts.produto = makeChart('chartProduto',{
-    type:'polarArea',
-    data:{labels:['Gas. Comum','Gas. Aditivada','Etanol','Diesel S10','Diesel S500'],
-      datasets:[{data:fatProduto,
-        backgroundColor:['rgba(27,108,168,.7)','rgba(59,159,214,.7)','rgba(245,166,35,.7)','rgba(22,160,133,.7)','rgba(142,164,177,.7)'],
-        borderWidth:1, borderColor:'#fff'}]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.parsed.r)}}}}
-  });
+  // 6. Polar produto
+  var tL2=tGc+tGa+tEt+tDs+tD5, tFc=sum(dados,'fc');
+  var fp=tL2?[tGc/tL2*tFc,tGa/tL2*tFc,tEt/tL2*tFc,tDs/tL2*tFc,tD5/tL2*tFc]:[0,0,0,0,0];
+  charts.produto=mkChart('chartProduto',{type:'polarArea',data:{
+    labels:['Gas. Comum','Gas. Aditivada','Etanol','Diesel S10','Diesel S500'],
+    datasets:[{data:fp,backgroundColor:['rgba(27,108,168,.7)','rgba(59,159,214,.7)','rgba(245,166,35,.7)','rgba(22,160,133,.7)','rgba(142,164,177,.7)'],borderWidth:1,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+fmt(ctx.parsed.r);}}}}}});
 
-  // 7. Gasolina comum vs aditivada
-  charts.gas = makeChart('chartGas',{
-    type:'line',
-    data:{labels, datasets:[
-      {label:'Gas. Comum',    data:dados.map(d=>+d.gc.toFixed(0)), borderColor:C.blue, backgroundColor:'rgba(27,108,168,.1)', borderWidth:2, fill:true, tension:.3, pointRadius:3},
-      {label:'Gas. Aditivada',data:dados.map(d=>+d.ga.toFixed(0)), borderColor:C.sky,  backgroundColor:'rgba(59,159,214,.1)', borderWidth:2, fill:true, tension:.3, pointRadius:3},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmtN(ctx.parsed.y)+' L'}}},
-      scales:{y:{ticks:{callback:v=>v+' L'}, grid:{color:'#F0F4F8'}}, x:{grid:{display:false}}}}
-  });
+  // 7. Gas comum vs aditivada
+  charts.gas=mkChart('chartGas',{type:'line',data:{labels:labels,datasets:[
+    {label:'Gas. Comum',data:dados.map(function(d){return +d.gc.toFixed(0);}),borderColor:C.blue,backgroundColor:'rgba(27,108,168,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:3},
+    {label:'Gas. Aditivada',data:dados.map(function(d){return +d.ga.toFixed(0);}),borderColor:C.sky,backgroundColor:'rgba(59,159,214,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+fmtN(ctx.parsed.y)+' L';}}}},
+    scales:{y:{ticks:{callback:function(v){return v+' L';}},grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}});
 
-  // 8. Participação % combustíveis
-  charts.part = makeChart('chartPart',{
-    type:'bar',
-    data:{labels, datasets:[
-      {label:'Gas. Comum',    data:dados.map(d=>litros(d)?+((d.gc/litros(d))*100).toFixed(1):0), backgroundColor:'rgba(27,108,168,.8)', stack:'a'},
-      {label:'Gas. Aditivada',data:dados.map(d=>litros(d)?+((d.ga/litros(d))*100).toFixed(1):0), backgroundColor:'rgba(59,159,214,.8)', stack:'a'},
-      {label:'Etanol',        data:dados.map(d=>litros(d)?+((d.et/litros(d))*100).toFixed(1):0), backgroundColor:'rgba(245,166,35,.8)', stack:'a'},
-      {label:'Diesel S10',    data:dados.map(d=>litros(d)?+((d.ds/litros(d))*100).toFixed(1):0), backgroundColor:'rgba(22,160,133,.8)', stack:'a'},
-      {label:'Diesel S500',   data:dados.map(d=>litros(d)?+((d.d5/litros(d))*100).toFixed(1):0), backgroundColor:'rgba(142,164,177,.8)', stack:'a'},
-    ]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y+'%'}}},
-      scales:{x:{stacked:true, grid:{display:false}}, y:{stacked:true, max:100, ticks:{callback:v=>v+'%'}, grid:{color:'#F0F4F8'}}}}
-  });
+  // 8. Participação %
+  charts.part=mkChart('chartPart',{type:'bar',data:{labels:labels,datasets:[
+    {label:'Gas. Comum',data:dados.map(function(d){return lit(d)?+((d.gc/lit(d))*100).toFixed(1):0;}),backgroundColor:'rgba(27,108,168,.8)',stack:'a'},
+    {label:'Gas. Aditivada',data:dados.map(function(d){return lit(d)?+((d.ga/lit(d))*100).toFixed(1):0;}),backgroundColor:'rgba(59,159,214,.8)',stack:'a'},
+    {label:'Etanol',data:dados.map(function(d){return lit(d)?+((d.et/lit(d))*100).toFixed(1):0;}),backgroundColor:'rgba(245,166,35,.8)',stack:'a'},
+    {label:'Diesel S10',data:dados.map(function(d){return lit(d)?+((d.ds/lit(d))*100).toFixed(1):0;}),backgroundColor:'rgba(22,160,133,.8)',stack:'a'},
+    {label:'Diesel S500',data:dados.map(function(d){return lit(d)?+((d.d5/lit(d))*100).toFixed(1):0;}),backgroundColor:'rgba(142,164,177,.8)',stack:'a'}
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+': '+ctx.parsed.y+'%';}}}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:100,ticks:{callback:function(v){return v+'%';}},grid:{color:'#F0F4F8'}}}}});
 
   // 9. Frequência
-  charts.freq = makeChart('chartFreq',{
-    type:'line',
-    data:{labels, datasets:[{label:'Atendimentos', data:dados.map(d=>d.freq),
-      borderColor:C.purple, backgroundColor:'rgba(142,68,173,.1)',
-      borderWidth:2, fill:true, pointBackgroundColor:C.purple, pointRadius:3, tension:.3}]},
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{y:{grid:{color:'#F0F4F8'}}, x:{grid:{display:false}}}}
-  });
+  charts.freq=mkChart('chartFreq',{type:'line',data:{labels:labels,datasets:[{label:'Atendimentos',
+    data:dados.map(function(d){return d.freq;}),borderColor:C.purple,backgroundColor:'rgba(142,68,173,.1)',
+    borderWidth:2,fill:true,pointBackgroundColor:C.purple,pointRadius:3,tension:.3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{y:{grid:{color:'#F0F4F8'}},x:{grid:{display:false}}}}});
 
-  // 10. Comparativo de períodos
-  const metade = Math.floor(dados.length/2);
-  const p1 = dados.slice(0,metade), p2 = dados.slice(metade);
-  const sAvg = (arr,k)=>arr.length?sum(arr,k)/arr.length:0;
-  const lbl1 = p1.length?p1[0].data+' – '+p1[p1.length-1].data:'P1';
-  const lbl2 = p2.length?p2[0].data+' – '+p2[p2.length-1].data:'P2';
-  charts.compare = makeChart('chartCompare',{
-    type:'bar',
-    data:{
-      labels:['Fat. Médio','Margem Média','Ticket Médio','Litros/dia'],
-      datasets:[
-        {label:lbl1, data:[sAvg(p1,'ft'), sAvg(p1,'mg'), p1.length?sum(p1,'ft')/sum(p1,'freq'):0, p1.reduce((a,d)=>a+litros(d),0)/(p1.length||1)], backgroundColor:'rgba(27,108,168,.75)', borderRadius:5},
-        {label:lbl2, data:[sAvg(p2,'ft'), sAvg(p2,'mg'), p2.length?sum(p2,'ft')/sum(p2,'freq'):0, p2.reduce((a,d)=>a+litros(d),0)/(p2.length||1)], backgroundColor:'rgba(39,174,96,.75)',  borderRadius:5},
-      ]
-    },
-    options:{responsive:true, maintainAspectRatio:false,
-      plugins:{tooltip:{callbacks:{label:ctx=>{
-        const u = ctx.dataIndex<2?fmt(ctx.parsed.y):ctx.dataIndex===2?'R$ '+ctx.parsed.y.toFixed(2):fmtN(ctx.parsed.y)+' L';
-        return ctx.dataset.label+': '+u;
-      }}}},
-      scales:{x:{grid:{display:false}}, y:{ticks:{callback:v=>v>=1000?'R$'+(v/1000).toFixed(1)+'k':v}, grid:{color:'#F0F4F8'}}}}
-  });
+  // 10. Comparativo períodos
+  var m=Math.floor(dados.length/2), p1=dados.slice(0,m), p2=dados.slice(m);
+  function sAvg(arr,k){ return arr.length?sum(arr,k)/arr.length:0; }
+  function tLit(arr){ return arr.reduce(function(a,d){return a+lit(d);},0)/(arr.length||1); }
+  var l1=p1.length?p1[0].data+' – '+p1[p1.length-1].data:'P1';
+  var l2=p2.length?p2[0].data+' – '+p2[p2.length-1].data:'P2';
+  charts.compare=mkChart('chartCompare',{type:'bar',data:{
+    labels:['Fat. Médio','Margem Média','Ticket Médio','Litros/dia'],
+    datasets:[
+      {label:l1,data:[sAvg(p1,'ft'),sAvg(p1,'mg'),p1.length?sum(p1,'ft')/sum(p1,'freq'):0,tLit(p1)],backgroundColor:'rgba(27,108,168,.75)',borderRadius:5},
+      {label:l2,data:[sAvg(p2,'ft'),sAvg(p2,'mg'),p2.length?sum(p2,'ft')/sum(p2,'freq'):0,tLit(p2)],backgroundColor:'rgba(39,174,96,.75)',borderRadius:5}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:function(ctx){
+      var u=ctx.dataIndex<2?fmt(ctx.parsed.y):ctx.dataIndex===2?'R$ '+ctx.parsed.y.toFixed(2):fmtN(ctx.parsed.y)+' L';
+      return ctx.dataset.label+': '+u;
+    }}}},
+    scales:{x:{grid:{display:false}},y:{ticks:{callback:function(v){return v>=1000?'R$'+(v/1000).toFixed(1)+'k':v;}},grid:{color:'#F0F4F8'}}}}});
 }
 
-// ─── TABELA ────────────────────────────────────────────────────────────────────
+// ── tabela ───────────────────────────────────────────────────────────────────
 function renderTabela(){
-  const tbody = document.getElementById('tabelaDias');
-  if(!tbody) return;
-  tbody.innerHTML = '';
-  dados.forEach(d=>{
-    const lit = litros(d);
-    const mgPct = (d.mg/d.ft*100).toFixed(1);
-    let tag, tagClass;
-    if(d.mg/d.ft>=0.18){tag='Excelente';tagClass='tag-g';}
-    else if(d.mg/d.ft>=0.14){tag='Ótimo';tagClass='tag-g';}
-    else if(d.mg/d.ft>=0.12){tag='Bom';tagClass='tag-y';}
-    else{tag='Atenção';tagClass='tag-r';}
-    const isWeekend = d.dia==='Sábado'||d.dia==='Sexta';
-    tbody.innerHTML += `<tr>
-      <td class="date">${d.data}</td>
-      <td style="color:var(--text-soft);font-size:12px">${isWeekend?'<strong>'+d.dia+'</strong>':d.dia}</td>
-      <td>${fmtN(lit)} L</td>
-      <td>${fmt(d.fc)}</td>
-      <td>${fmt(d.fv)}</td>
-      <td class="fat">${fmt(d.ft)}</td>
-      <td class="${d.mg>1500?'good':''}">${fmt(d.mg)}</td>
-      <td class="${+mgPct>=16?'good':+mgPct<=12?'warn':''}">${mgPct}%</td>
-      <td>${d.freq}</td>
-      <td><span class="tag ${tagClass}">${tag}</span></td>
-    </tr>`;
+  var tb=document.getElementById('tabelaDias'); if(!tb) return;
+  tb.innerHTML='';
+  dados.forEach(function(d){
+    var l=lit(d), mp=(d.mg/d.ft*100).toFixed(1), tag, tc;
+    if(d.mg/d.ft>=0.18){tag='Excelente';tc='tg';}
+    else if(d.mg/d.ft>=0.14){tag='Ótimo';tc='tg';}
+    else if(d.mg/d.ft>=0.12){tag='Bom';tc='ty';}
+    else{tag='Atenção';tc='tr';}
+    var wk=d.dia==='Sábado'||d.dia==='Sexta';
+    tb.innerHTML+='<tr>'+
+      '<td class="dn">'+d.data+'</td>'+
+      '<td style="color:var(--text-soft);font-size:12px">'+(wk?'<strong>'+d.dia+'</strong>':d.dia)+'</td>'+
+      '<td>'+fmtN(l)+' L</td>'+
+      '<td>'+fmt(d.fc)+'</td>'+
+      '<td>'+fmt(d.fv)+'</td>'+
+      '<td class="fw">'+fmt(d.ft)+'</td>'+
+      '<td class="'+(d.mg>1500?'gd':'')+'">'+fmt(d.mg)+'</td>'+
+      '<td class="'+(+mp>=16?'gd':+mp<=12?'wn':'')+'">'+mp+'%</td>'+
+      '<td>'+d.freq+'</td>'+
+      '<td><span class="tag '+tc+'">'+tag+'</span></td>'+
+    '</tr>';
   });
 }
 
-// ─── MIX TABLE ─────────────────────────────────────────────────────────────────
+// ── mix table ────────────────────────────────────────────────────────────────
 function renderMixTable(){
-  const totEt=sum(dados,'et'), totGc=sum(dados,'gc'), totGa=sum(dados,'ga'), totDs=sum(dados,'ds'), totD5=sum(dados,'d5');
-  const totL = totEt+totGc+totGa+totDs+totD5;
-  const totFc= sum(dados,'fc');
-  const produtos = [
-    {nome:'Gasolina Comum',    lit:totGc, mg:16.1},
-    {nome:'Gasolina Aditivada',lit:totGa, mg:17.5},
-    {nome:'Etanol',            lit:totEt, mg:18.2},
-    {nome:'Diesel S10',        lit:totDs, mg:14.0},
-    {nome:'Diesel S500',       lit:totD5, mg:14.5},
-  ];
-  const tbody = document.getElementById('tabelaMix');
-  if(!tbody) return;
-  tbody.innerHTML = '';
-  produtos.forEach(p=>{
-    const pct = (p.lit/totL*100).toFixed(1);
-    const fat = p.lit/totL*totFc;
-    tbody.innerHTML += `<tr>
-      <td class="date">${p.nome}</td>
-      <td>${fmtN(p.lit)} L</td>
-      <td>${pct}%</td>
-      <td class="fat">${fmt(fat)}</td>
-      <td class="good">~${p.mg}%</td>
-    </tr>`;
+  var tEt=sum(dados,'et'),tGc=sum(dados,'gc'),tGa=sum(dados,'ga'),tDs=sum(dados,'ds'),tD5=sum(dados,'d5');
+  var tL=tEt+tGc+tGa+tDs+tD5, tFc=sum(dados,'fc');
+  var prods=[{n:'Gasolina Comum',l:tGc,m:16.1},{n:'Gasolina Aditivada',l:tGa,m:17.5},{n:'Etanol',l:tEt,m:18.2},{n:'Diesel S10',l:tDs,m:14.0},{n:'Diesel S500',l:tD5,m:14.5}];
+  var tb=document.getElementById('tabelaMix'); if(!tb) return;
+  tb.innerHTML='';
+  prods.forEach(function(p){
+    var pct=(p.l/tL*100).toFixed(1), fat=p.l/tL*tFc;
+    tb.innerHTML+='<tr><td class="dn">'+p.n+'</td><td>'+fmtN(p.l)+' L</td><td>'+pct+'%</td><td class="fw">'+fmt(fat)+'</td><td class="gd">~'+p.m+'%</td></tr>';
   });
-  tbody.innerHTML += `<tr style="background:#F7FAFC;font-weight:700">
-    <td><strong>TOTAL</strong></td>
-    <td><strong>${fmtN(totL)} L</strong></td>
-    <td><strong>100%</strong></td>
-    <td class="fat"><strong>${fmt(totFc)}</strong></td>
-    <td class="good"><strong>~16.1%</strong></td>
-  </tr>`;
+  tb.innerHTML+='<tr style="background:#F7FAFC;font-weight:700"><td><strong>TOTAL</strong></td><td><strong>'+fmtN(tL)+' L</strong></td><td><strong>100%</strong></td><td class="fw"><strong>'+fmt(tFc)+'</strong></td><td class="gd"><strong>~16.1%</strong></td></tr>';
 }
 
-// ─── PROGRESS BARS ─────────────────────────────────────────────────────────────
+// ── progress bars ────────────────────────────────────────────────────────────
 function renderProgressBars(){
-  const totEt=sum(dados,'et'), totGc=sum(dados,'gc'), totGa=sum(dados,'ga'), totDs=sum(dados,'ds'), totD5=sum(dados,'d5');
-  const totL = totEt+totGc+totGa+totDs+totD5;
-  const mixData = [
-    {nome:'Gasolina Comum',    lit:totGc, cor:'#1B6CA8'},
-    {nome:'Gasolina Aditivada',lit:totGa, cor:'#3B9FD6'},
-    {nome:'Etanol',            lit:totEt, cor:'#F5A623'},
-    {nome:'Diesel S500',       lit:totD5, cor:'#8FA3B1'},
-    {nome:'Diesel S10',        lit:totDs, cor:'#16A085'},
-  ];
-  const pb = document.getElementById('progressBars');
-  if(!pb) return;
-  pb.innerHTML = '';
-  mixData.forEach(m=>{
-    const pct = (m.lit/totL*100).toFixed(1);
-    pb.innerHTML += `
-      <div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <span style="font-size:12px;font-weight:500;color:var(--text)">${m.nome}</span>
-          <span style="font-size:12px;font-weight:700;color:var(--text)">${fmtN(m.lit)} L · <strong>${pct}%</strong></span>
-        </div>
-        <div style="height:8px;background:var(--border);border-radius:100px;overflow:hidden">
-          <div style="width:${pct}%;height:100%;background:${m.cor};border-radius:100px;transition:width 1s ease"></div>
-        </div>
-      </div>`;
+  var tEt=sum(dados,'et'),tGc=sum(dados,'gc'),tGa=sum(dados,'ga'),tDs=sum(dados,'ds'),tD5=sum(dados,'d5');
+  var tL=tEt+tGc+tGa+tDs+tD5;
+  var mx=[{n:'Gasolina Comum',l:tGc,c:'#1B6CA8'},{n:'Gasolina Aditivada',l:tGa,c:'#3B9FD6'},{n:'Etanol',l:tEt,c:'#F5A623'},{n:'Diesel S500',l:tD5,c:'#8FA3B1'},{n:'Diesel S10',l:tDs,c:'#16A085'}];
+  var pb=document.getElementById('progressBars'); if(!pb) return;
+  pb.innerHTML='';
+  mx.forEach(function(m){
+    var pct=(m.l/tL*100).toFixed(1);
+    pb.innerHTML+='<div style="margin-bottom:14px">'+
+      '<div style="display:flex;justify-content:space-between;margin-bottom:5px">'+
+        '<span style="font-size:12px;font-weight:500;color:var(--text)">'+m.n+'</span>'+
+        '<span style="font-size:12px;color:var(--text)">'+fmtN(m.l)+' L · <strong>'+pct+'%</strong></span>'+
+      '</div>'+
+      '<div style="height:8px;background:var(--border);border-radius:100px;overflow:hidden">'+
+        '<div style="width:'+pct+'%;height:100%;background:'+m.c+';border-radius:100px"></div>'+
+      '</div></div>';
   });
 }
 
-// ─── COMPARE CARDS ─────────────────────────────────────────────────────────────
+// ── compare cards ────────────────────────────────────────────────────────────
 function renderCompareCards(){
-  const metade = Math.floor(dados.length/2);
-  const p1 = dados.slice(0,metade), p2 = dados.slice(metade);
+  var el=document.getElementById('compareCards'); if(!el) return;
+  var m=Math.floor(dados.length/2), p1=dados.slice(0,m), p2=dados.slice(m);
   if(!p1.length||!p2.length) return;
-  const lbl1 = p1[0].data+' – '+p1[p1.length-1].data+' ('+p1.length+' dias)';
-  const lbl2 = p2[0].data+' – '+p2[p2.length-1].data+' ('+p2.length+' dias)';
-  const sAvg = (arr,k)=>arr.length?sum(arr,k)/arr.length:0;
-  const tk   = arr=>sum(arr,'ft')/sum(arr,'freq');
-  const rows = arr=>[
-    ['Fat. Médio Diário',    fmt(sAvg(arr,'ft'))],
-    ['Margem Média',         fmt(sAvg(arr,'mg'))],
-    ['Margem %',             (sAvg(arr,'mg')/sAvg(arr,'ft')*100).toFixed(1)+'%'],
-    ['Ticket Médio',         'R$ '+tk(arr).toFixed(2)],
-    ['Litros/dia',           fmtN(arr.reduce((a,d)=>a+litros(d),0)/arr.length)+' L'],
-    ['Frequência Média',     Math.round(sAvg(arr,'freq'))+' aten./dia'],
-  ];
-  const card = (lbl,data)=>`
-    <div class="compare-card">
-      <div class="compare-period">${lbl}</div>
-      ${data.map(r=>`<div class="compare-row"><span class="compare-key">${r[0]}</span><span class="compare-val">${r[1]}</span></div>`).join('')}
-    </div>`;
-  const el = document.getElementById('compareCards');
-  if(el) el.innerHTML = card(lbl1,rows(p1))+card(lbl2,rows(p2));
+  function sAvg(arr,k){ return arr.length?sum(arr,k)/arr.length:0; }
+  function tk(arr){ return sum(arr,'ft')/sum(arr,'freq'); }
+  function rows(arr){
+    return [
+      ['Fat. Médio Diário',fmt(sAvg(arr,'ft'))],
+      ['Margem Média',fmt(sAvg(arr,'mg'))],
+      ['Margem %',(sAvg(arr,'mg')/sAvg(arr,'ft')*100).toFixed(1)+'%'],
+      ['Ticket Médio','R$ '+tk(arr).toFixed(2)],
+      ['Litros/dia',fmtN(arr.reduce(function(a,d){return a+lit(d);},0)/arr.length)+' L'],
+      ['Freq. Média',Math.round(sAvg(arr,'freq'))+' aten./dia']
+    ];
+  }
+  function card(lbl,data){
+    return '<div class="cmp-card"><div class="cmp-period">'+lbl+'</div>'+
+      data.map(function(r){ return '<div class="cmp-row"><span class="cmp-k">'+r[0]+'</span><span class="cmp-v">'+r[1]+'</span></div>'; }).join('')+
+    '</div>';
+  }
+  var l1=p1[0].data+' – '+p1[p1.length-1].data+' ('+p1.length+' dias)';
+  var l2=p2[0].data+' – '+p2[p2.length-1].data+' ('+p2.length+' dias)';
+  el.innerHTML=card(l1,rows(p1))+card(l2,rows(p2));
 }
 
-// ─── INSIGHTS ──────────────────────────────────────────────────────────────────
+// ── insights ─────────────────────────────────────────────────────────────────
 function renderInsights(){
-  const el = document.getElementById('insightGrid');
-  if(!el) return;
-  const insights = [];
-  const totalFat  = sum(dados,'ft');
-  const totalConv = sum(dados,'fv');
-  const totalFreq = sum(dados,'freq');
-  const totalMg   = sum(dados,'mg');
-  const totalLit  = dados.reduce((a,d)=>a+litros(d),0);
-  const ticket    = totalFat/totalFreq;
+  var el=document.getElementById('insightGrid'); if(!el) return;
+  var ins=[];
+  var tf=sum(dados,'ft'),tm=sum(dados,'mg'),tv=sum(dados,'fv'),freq=sum(dados,'freq');
+  var tl=dados.reduce(function(a,d){return a+lit(d);},0);
+  var ticket=tf/freq;
+  var md=dados.reduce(function(a,b){return b.ft>a.ft?b:a;},dados[0]);
+  var mv=dados.reduce(function(a,b){return b.fv>a.fv?b:a;},dados[0]);
 
-  // 1. Crescimento
   if(dados.length>=2){
-    const primeiro=dados[0].ft, ultimo=dados[dados.length-1].ft;
-    const delta=((ultimo-primeiro)/primeiro*100).toFixed(0);
-    if(+delta>0) insights.push({icon:'📈',titulo:`Crescimento de +${delta}% no período`,
-      corpo:`O posto saiu de ${fmt(primeiro)} no primeiro dia para ${fmt(ultimo)} no último, demonstrando crescimento consistente e consolidação da clientela.`,
-      rec:'→ Manter atendimento rápido e qualidade para fidelizar os clientes recorrentes'});
+    var d0=dados[0].ft, dn=dados[dados.length-1].ft, dt=((dn-d0)/d0*100).toFixed(0);
+    if(+dt>0) ins.push({i:'📈',t:'Crescimento de +'+dt+'% no período',
+      b:'O posto saiu de '+fmt(d0)+' no primeiro dia para '+fmt(dn)+' no último. Crescimento consistente sinalizando fidelização real da clientela na região.',
+      r:'→ Manter atendimento rápido e qualidade para fortalecer a fidelização'});
   }
 
-  // 2. Melhor dia
-  const melhorDia = dados.reduce((a,b)=>b.ft>a.ft?b:a,dados[0]);
-  insights.push({icon:'🏆',titulo:`Recorde: ${fmt(melhorDia.ft)} em um único dia`,
-    corpo:`${melhorDia.dia} ${melhorDia.data} foi o melhor dia do período — ${melhorDia.freq} atendimentos com margem de ${(melhorDia.mg/melhorDia.ft*100).toFixed(1)}%. Um marco para o posto.`,
-    rec:'→ Analisar o que funcionou nesse dia e replicar: mix de produtos, equipe, estoque'});
+  ins.push({i:'🏆',t:'Recorde: '+fmt(md.ft)+' em um único dia',
+    b:md.dia+' '+md.data+' foi o melhor dia — '+md.freq+' atendimentos com margem de '+(md.mg/md.ft*100).toFixed(1)+'%. Um marco para o posto.',
+    r:'→ Analisar o mix de produtos e equipe desse dia e replicar nos finais de semana'});
 
-  // 3. Margem
-  const metade=Math.floor(dados.length/2);
-  const mg1=dados.slice(0,metade).reduce((a,d)=>a+d.mg/d.ft,0)/metade*100;
-  const mg2=dados.slice(metade).reduce((a,d)=>a+d.mg/d.ft,0)/(dados.length-metade)*100;
-  if(mg2>mg1) insights.push({icon:'💰',titulo:`Margem em evolução: ${mg1.toFixed(1)}% → ${mg2.toFixed(1)}%`,
-    corpo:`A rentabilidade melhorou da primeira para a segunda metade do período. Sinal de maturidade operacional e mix mais equilibrado.`,
-    rec:'→ Aditivada e etanol têm as melhores margens — vale incentivar esses produtos na pista'});
+  var m2=Math.floor(dados.length/2);
+  var mg1=dados.slice(0,m2).reduce(function(a,d){return a+d.mg/d.ft;},0)/m2*100;
+  var mg2=dados.slice(m2).reduce(function(a,d){return a+d.mg/d.ft;},0)/(dados.length-m2)*100;
+  if(mg2>mg1) ins.push({i:'💰',t:'Margem em evolução: '+mg1.toFixed(1)+'% → '+mg2.toFixed(1)+'%',
+    b:'A rentabilidade melhorou da primeira para a segunda metade do período. Sinal de maturidade operacional e mix mais lucrativo.',
+    r:'→ Aditivada e etanol têm as melhores margens — vale incentivar esses produtos na pista'});
 
-  // 4. Conveniência
-  const melhorConv = dados.reduce((a,b)=>b.fv>a.fv?b:a,dados[0]);
-  insights.push({icon:'🛒',titulo:`Conveniência: markup médio de 58%`,
-    corpo:`Enquanto combustíveis rendem ~14% de margem, os produtos de conveniência chegam a 58%+. Em ${melhorConv.data} a conveniência foi ${fmt(melhorConv.fv)} — ${(melhorConv.fv/melhorConv.ft*100).toFixed(1)}% do dia.`,
-    rec:'→ Manter estoque dos produtos campeões (Red Bull, Conti Zero, Chopp) para os picos de fim de semana'});
+  ins.push({i:'🛒',t:'Conveniência: markup médio de 58%',
+    b:'Enquanto combustíveis rendem ~14-18% de margem, a conveniência chega a 58%+. Em '+mv.data+' foram '+fmt(mv.fv)+' só em produtos — '+(mv.fv/mv.ft*100).toFixed(1)+'% do dia.',
+    r:'→ Manter estoque dos campeões (Red Bull, Conti Zero, Chopp) para os picos de fim de semana'});
 
-  // 5. Finais de semana
-  const fds   = dados.filter(d=>d.dia==='Sábado'||d.dia==='Domingo');
-  const uteis = dados.filter(d=>!['Sábado','Domingo'].includes(d.dia));
+  var fds=dados.filter(function(d){return d.dia==='Sábado'||d.dia==='Domingo';});
+  var uteis=dados.filter(function(d){return ['Sábado','Domingo'].indexOf(d.dia)<0;});
   if(fds.length&&uteis.length){
-    const avgFds  = sum(fds,'ft')/fds.length;
-    const avgUtil = sum(uteis,'ft')/uteis.length;
-    const mult = (avgFds/avgUtil).toFixed(1);
-    insights.push({icon:'📅',titulo:`Sábado rende ${mult}× mais que a média dos úteis`,
-      corpo:`Finais de semana geram em média ${fmt(avgFds)} vs ${fmt(avgUtil)} nos dias úteis. Movimento previsível e crescente — já foi o maior dia do posto.`,
-      rec:'→ Reforçar equipe e estoque toda quinta-feira para estar 100% preparado para o pico'});
+    var af=sum(fds,'ft')/fds.length, au=sum(uteis,'ft')/uteis.length;
+    ins.push({i:'📅',t:'Sábado rende '+(af/au).toFixed(1)+'× mais que a média dos úteis',
+      b:'Finais de semana geram em média '+fmt(af)+' vs '+fmt(au)+' nos dias úteis. Movimento previsível — já bateu o recorde do posto.',
+      r:'→ Reforçar equipe e estoque toda quinta para estar 100% pronto no pico'});
   }
 
-  // 6. Diesel
-  const totD5 = sum(dados,'d5');
-  const pctD5 = (totD5/totalLit*100).toFixed(1);
-  if(+pctD5>5) insights.push({icon:'⛽',titulo:`Diesel S500 já representa ${pctD5}% do volume`,
-    corpo:`O posto captou clientela de frotas e transportadores. O diesel garante volume recorrente e previsível mês a mês — uma base sólida de faturamento.`,
-    rec:'→ Criar cartão de fidelidade para frotas consolida essa receita e traz novos motoristas'});
+  var tD5=sum(dados,'d5'), pd5=(tD5/tl*100).toFixed(1);
+  if(+pd5>5) ins.push({i:'⛽',t:'Diesel S500 já é '+pd5+'% do volume total',
+    b:'O posto captou frotas e transportadores. O diesel traz volume recorrente e previsível — base sólida de faturamento mensal garantido.',
+    r:'→ Cartão de fidelidade para frotas consolida essa receita e atrai novos motoristas'});
 
-  // 7. Ticket médio
-  insights.push({icon:'🛢️',titulo:`Ticket médio de R$ ${ticket.toFixed(2)} por atendimento`,
-    corpo:`Com ${fmt(totalFat)} em ${fmtN(totalFreq)} atendimentos, o ticket médio é expressivo e ainda tem espaço para crescer com upsell de lubrificantes e aditivada.`,
-    rec:'→ Treinamento de equipe para oferecer troca de óleo e aditivada na pista eleva o ticket'});
+  ins.push({i:'🛢️',t:'Ticket médio de R$ '+ticket.toFixed(2)+' por atendimento',
+    b:'Com '+fmt(tf)+' em '+fmtN(freq)+' atendimentos, o ticket é expressivo e ainda tem espaço para crescer com upsell de lubrificantes e aditivada.',
+    r:'→ Oferta de troca de óleo na pista e sugestão de aditivada elevam o ticket médio'});
 
-  // 8. Margem absoluta
-  insights.push({icon:'📊',titulo:`${fmt(totalMg)} de margem bruta acumulada`,
-    corpo:`Cada real investido no posto retornou ${(totalMg/totalFat*100).toFixed(1)}% de margem bruta no período. A operação é sólida e demonstra saúde financeira.`,
-    rec:'→ Reinvestir parte da margem em infraestrutura e marketing local acelera o crescimento'});
+  ins.push({i:'📊',t:fmt(tm)+' de margem bruta acumulada',
+    b:'Cada real investido retornou '+(tm/tf*100).toFixed(1)+'% de margem no período. Operação sólida com saúde financeira comprovada pelos números.',
+    r:'→ Reinvestir parte da margem em infraestrutura e marketing local acelera o crescimento'});
 
-  // 9. Etanol
-  const totEt = sum(dados,'et');
-  const pctEt = (totEt/totalLit*100).toFixed(1);
-  if(+pctEt>10) insights.push({icon:'🌱',titulo:`Etanol com ${pctEt}% do mix — boa margem e demanda crescente`,
-    corpo:`O etanol apresenta uma das melhores margens entre os combustíveis (~18%) e vem com demanda crescente por ser mais barato que a gasolina para o consumidor.`,
-    rec:'→ Sinalizar o preço do etanol na entrada do posto chama atenção de quem está de passagem'});
+  var tEt=sum(dados,'et'), pet=(tEt/tl*100).toFixed(1);
+  if(+pet>10) ins.push({i:'🌱',t:'Etanol com '+pet+'% do mix — melhor margem entre os combustíveis',
+    b:'O etanol tem uma das melhores margens (~18%) e cresce em demanda por ser mais barato para o consumidor final. Produto estratégico.',
+    r:'→ Destacar o preço do etanol na entrada chama atenção de quem passa pela rua'});
 
-  // 10. Dias de pico semanal
-  const sextas = dados.filter(d=>d.dia==='Sexta');
-  if(sextas.length){
-    const avgSex = sum(sextas,'ft')/sextas.length;
-    insights.push({icon:'🎯',titulo:`Sexta-feira: média de ${fmt(avgSex)} por dia`,
-      corpo:`As sextas-feiras mostram movimento forte, impulsionado por abastecimentos antes do fim de semana. Pico tanto em combustíveis quanto em conveniência.`,
-      rec:'→ Promoção de fim de semana ativa a partir de sexta pode elevar ainda mais o ticket médio'});
-  }
+  var sex=dados.filter(function(d){return d.dia==='Sexta';});
+  if(sex.length) ins.push({i:'🎯',t:'Sexta-feira: média de '+fmt(sum(sex,'ft')/sex.length),
+    b:'As sextas têm movimento forte impulsionado por abastecimentos pré-fim de semana. Pico tanto em combustíveis quanto em conveniência.',
+    r:'→ Promoção especial a partir de sexta pode elevar ainda mais o ticket médio'});
 
-  el.innerHTML = insights.map(i=>`
-    <div class="insight-card positive">
-      <div class="insight-icon">${i.icon}</div>
-      <div class="insight-title">${i.titulo}</div>
-      <div class="insight-body">${i.corpo}</div>
-      <div class="insight-rec">${i.rec}</div>
-    </div>`).join('');
+  ins.push({i:'🤝',t:fmtN(freq)+' atendimentos realizados no período',
+    b:'Uma base de clientes em construção — com '+(freq/dados.length).toFixed(0)+' pessoas por dia em média. Cada atendimento é uma oportunidade de fidelização.',
+    r:'→ Programa de fidelidade simples (cartão carimbado, desconto recorrente) pode dobrar o retorno'});
+
+  el.innerHTML=ins.map(function(i){
+    return '<div class="ic"><div class="ii">'+i.i+'</div><div class="it">'+i.t+'</div><div class="ib">'+i.b+'</div><div class="ir">'+i.r+'</div></div>';
+  }).join('');
 }
 
-// ─── INIT ──────────────────────────────────────────────────────────────────────
+// ── init ──────────────────────────────────────────────────────────────────────
+carregarDados();
 renderAll();
 </script>
 </body>
