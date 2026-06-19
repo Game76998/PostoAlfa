@@ -717,7 +717,7 @@ function renderMixTable(){
   const totL=totEt+totGc+totGa+totDs+totD5;
   const totFc=sum(dados,'fc');
   const produtos=[
-    {nome:'Gasolina Comum',   lit:totGc, mg:16.1},
+    {nome:'Gasolina Original',   lit:totGc, mg:16.1},
     {nome:'Gasolina Aditivada',lit:totGa,mg:17.5},
     {nome:'Etanol',           lit:totEt, mg:18.2},
     {nome:'Diesel S10',       lit:totDs, mg:14.0},
@@ -750,7 +750,7 @@ function renderProgressBars(){
   const totEt=sum(dados,'et'),totGc=sum(dados,'gc'),totGa=sum(dados,'ga'),totDs=sum(dados,'ds'),totD5=sum(dados,'d5');
   const totL=totEt+totGc+totGa+totDs+totD5;
   const mixData=[
-    {nome:'Gasolina Comum',    lit:totGc, cor:'#1B6CA8'},
+    {nome:'Gasolina Original',    lit:totGc, cor:'#1B6CA8'},
     {nome:'Gasolina Aditivada',lit:totGa, cor:'#3B9FD6'},
     {nome:'Etanol',            lit:totEt, cor:'#F5A623'},
     {nome:'Diesel S500',       lit:totD5, cor:'#8FA3B1'},
