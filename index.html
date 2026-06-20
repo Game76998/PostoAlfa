@@ -198,6 +198,37 @@
   .insight-body { font-size:12px; color:var(--text-soft); line-height:1.65; }
   .insight-rec { margin-top:8px; font-size:11px; color:var(--fuel-blue); font-weight:600; padding:6px 10px; background:rgba(27,108,168,.08); border-radius:8px; }
 
+  /* TANK STOCK */
+  .tank-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:18px; }
+  .tank-card {
+    background:var(--card-bg); border-radius:16px; padding:20px 18px;
+    border:1px solid var(--border); box-shadow:0 1px 4px rgba(13,27,42,.05);
+    text-align:center; position:relative;
+  }
+  .tank-name { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .tank-pct { font-size:11px; color:var(--fuel-muted); margin-bottom:14px; }
+  .tank-visual {
+    width:64px; height:140px; margin:0 auto 14px; position:relative;
+    background:#EAF0F5; border:2px solid var(--border); border-radius:10px 10px 6px 6px;
+    overflow:hidden; box-shadow:inset 0 2px 4px rgba(13,27,42,.06);
+  }
+  .tank-fill {
+    position:absolute; bottom:0; left:0; right:0;
+    border-radius:0 0 4px 4px; transition:height 1.2s cubic-bezier(.4,0,.2,1);
+  }
+  .tank-fill::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:6px;
+    background:rgba(255,255,255,.35);
+  }
+  .tank-marks { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; padding:6px 0; pointer-events:none; }
+  .tank-marks span { display:block; height:1px; background:rgba(13,27,42,.08); width:100%; }
+  .tank-litros { font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .tank-cap { font-size:11px; color:var(--fuel-muted); margin-bottom:8px; }
+  .tank-badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:100px; }
+  .tank-ok   { background:#D4F0E3; color:#1A7A44; }
+  .tank-mid  { background:#FEF0D2; color:#8A5400; }
+  .tank-low  { background:#FADBD8; color:#922B21; }
+
   /* PROGRESS BARS */
   .progress-list { display:flex; flex-direction:column; gap:14px; }
   .progress-header { display:flex; justify-content:space-between; margin-bottom:5px; }
@@ -290,6 +321,40 @@
     </div>
   </div>
 
+  <!-- ESTOQUE DE TANQUES -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">estoque de tanques · nível atual</div>
+    <div class="tank-grid" id="tankGrid"></div>
+  </div>
+
+  <!-- RANKING DE FRENTISTAS -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">ranking de frentistas</div>
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Faturamento por Frentista</div>
+        <div class="chart-sub">Total vendido no período (R$)</div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chartFrentistaValor"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Volume por Frentista</div>
+        <div class="chart-sub">Litros vendidos no período</div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chartFrentistaLitros"></canvas></div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-header"><span class="chart-title">Ranking Completo</span></div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Frentista</th><th>Atendimentos</th><th>Litros</th><th>Faturamento</th><th>Margem</th><th>Margem %</th></tr>
+          </thead>
+          <tbody id="tabelaFrentistas"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- MIX TABLE -->
   <div class="section" style="padding-top:0">
     <div class="section-title">detalhamento por combustível</div>
@@ -362,6 +427,29 @@ const dadosPadrao = [
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let charts = {};
+
+// ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
+// Atualize "atual" sempre que quiser refletir o estoque do dia. "cap" é a capacidade máxima do tanque.
+const tanquesPadrao = [
+  {nome:'Gasolina Comum',    atual:4608,  cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Aditivada',atual:820,   cap:15000, cor:'#3B9FD6'},
+  {nome:'Etanol',            atual:4833,  cap:15000, cor:'#F5A623'},
+  {nome:'Diesel S500',       atual:246,   cap:15000, cor:'#8FA3B1'},
+  {nome:'Diesel S10',        atual:2059,  cap:15000, cor:'#16A085'},
+];
+let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
+
+// ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
+// Período: 23/05/2026 a 19/06/2026 (mesmo período do relatório de vendedores)
+const frentistasPadrao = [
+  {nome:'CELIO',   freq:1233, litros:6717.325, faturamento:44026.39, margem:5577.81},
+  {nome:'ELVIO',   freq:960,  litros:4928.234, faturamento:32345.31, margem:3919.10},
+  {nome:'ERALDO',  freq:782,  litros:3181.575, faturamento:21142.60, margem:2831.17},
+  {nome:'EURICO',  freq:1482, litros:7467.808, faturamento:49660.03, margem:6346.76},
+  {nome:'ROBERTA', freq:1370, litros:6238.053, faturamento:41486.97, margem:5587.79},
+  {nome:'VICTOR',  freq:1379, litros:5805.638, faturamento:38661.76, margem:4992.84},
+];
+let frentistas = JSON.parse(localStorage.getItem('postoFrentistas')) || frentistasPadrao;
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const fmt  = v => 'R$\u00a0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -439,6 +527,8 @@ function renderAll(){
   renderKPIs();
   renderCharts();
   renderTabela();
+  renderTanques();
+  renderFrentistas();
   renderMixTable();
   renderProgressBars();
   renderCompareCards();
@@ -710,6 +800,114 @@ function renderTabela(){
       <td><span class="tag ${tagClass}">${tag}</span></td>
     </tr>`;
   });
+}
+
+// ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
+function renderTanques(){
+  const grid = document.getElementById('tankGrid');
+  if(!grid) return;
+  grid.innerHTML = tanques.map(t=>{
+    const pct = Math.max(0, Math.min(100, (t.atual/t.cap*100)));
+    const pctRound = pct.toFixed(0);
+    let badgeClass, badgeText;
+    if(pct >= 40){ badgeClass='tank-ok'; badgeText='Nível bom'; }
+    else if(pct >= 15){ badgeClass='tank-mid'; badgeText='Atenção'; }
+    else { badgeClass='tank-low'; badgeText='Crítico'; }
+    return `
+      <div class="tank-card">
+        <div class="tank-name">${t.nome}</div>
+        <div class="tank-pct">${pctRound}% do tanque</div>
+        <div class="tank-visual">
+          <div class="tank-marks"><span></span><span></span><span></span><span></span></div>
+          <div class="tank-fill" style="height:${pct}%;background:linear-gradient(180deg,${t.cor}dd,${t.cor})"></div>
+        </div>
+        <div class="tank-litros">${fmtN(t.atual)} L</div>
+        <div class="tank-cap">de ${fmtN(t.cap)} L</div>
+        <span class="tank-badge ${badgeClass}">${badgeText}</span>
+      </div>`;
+  }).join('');
+}
+
+// ─── PLUGIN: nome dentro da barra (frentistas) ───────────────────────────────
+const nomeNaBarraPlugin = {
+  id: 'nomeNaBarra',
+  afterDatasetsDraw(chart){
+    const {ctx} = chart;
+    const meta = chart.getDatasetMeta(0);
+    const labels = chart.data.labels;
+    ctx.save();
+    ctx.font = "600 12px 'Inter',sans-serif";
+    ctx.textBaseline = 'middle';
+    meta.data.forEach((bar,i)=>{
+      const label = labels[i];
+      const {x,y,base} = bar;
+      const barWidth = x - base;
+      const textWidth = ctx.measureText(label).width;
+      if(barWidth > textWidth + 24){
+        // texto dentro da barra, alinhado à esquerda, em branco
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'left';
+        ctx.fillText(label, base + 10, y);
+      } else {
+        // barra curta: texto fora, à direita, em cor escura
+        ctx.fillStyle = '#1A2E44';
+        ctx.textAlign = 'left';
+        ctx.fillText(label, x + 6, y);
+      }
+    });
+    ctx.restore();
+  }
+};
+
+// ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
+function renderFrentistas(){
+  const ordenado = [...frentistas].sort((a,b)=>b.faturamento-a.faturamento);
+
+  // gráfico de faturamento
+  charts.frentistaValor = makeChart('chartFrentistaValor',{
+    type:'bar',
+    data:{labels:ordenado.map(f=>f.nome),datasets:[{
+      label:'Faturamento',data:ordenado.map(f=>f.faturamento),
+      backgroundColor:ordenado.map((f,i)=>i===0?'rgba(245,166,35,.85)':'rgba(27,108,168,.75)'),
+      borderRadius:6
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.parsed.x)}}},
+      scales:{x:{ticks:{callback:v=>fmtK(v)},grid:{color:'#F0F4F8'}},y:{grid:{display:false},ticks:{display:false}}}},
+    plugins:[nomeNaBarraPlugin]
+  });
+
+  // gráfico de litros
+  charts.frentistaLitros = makeChart('chartFrentistaLitros',{
+    type:'bar',
+    data:{labels:ordenado.map(f=>f.nome),datasets:[{
+      label:'Litros',data:ordenado.map(f=>f.litros),
+      backgroundColor:ordenado.map((f,i)=>i===0?'rgba(39,174,96,.85)':'rgba(59,159,214,.75)'),
+      borderRadius:6
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmtN(ctx.parsed.x)+' L'}}},
+      scales:{x:{ticks:{callback:v=>fmtN(v)},grid:{color:'#F0F4F8'}},y:{grid:{display:false},ticks:{display:false}}}},
+    plugins:[nomeNaBarraPlugin]
+  });
+
+  // tabela
+  const tbody = document.getElementById('tabelaFrentistas');
+  if(tbody){
+    tbody.innerHTML = ordenado.map((f,i)=>{
+      const mgPct = (f.margem/f.faturamento*100).toFixed(1);
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+      return `<tr>
+        <td class="date">${medal}</td>
+        <td style="font-weight:700">${f.nome}</td>
+        <td>${fmtN(f.freq)}</td>
+        <td>${fmtN(f.litros)} L</td>
+        <td class="fat">${fmt(f.faturamento)}</td>
+        <td class="good">${fmt(f.margem)}</td>
+        <td>${mgPct}%</td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 // ─── MIX TABLE ────────────────────────────────────────────────────────────────
