@@ -433,7 +433,7 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // Atualize "atual" sempre que quiser refletir o estoque do dia. "cap" é a capacidade máxima do tanque.
 const tanquesPadrao = [
-  {nome:'Gasolina Comum',    atual:3019, cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Original',    atual:3019, cap:30000, cor:'#1B6CA8'},
   {nome:'Gasolina Aditivada',atual:458,  cap:15000, cor:'#3B9FD6'},
   {nome:'Etanol',            atual:4614, cap:15000, cor:'#F5A623'},
   {nome:'Diesel S500',       atual:230,  cap:15000, cor:'#8FA3B1'},
@@ -748,7 +748,7 @@ function renderCharts(){
       scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>v>=1000?'R$'+(v/1000).toFixed(1)+'k':v},grid:{color:'#F0F4F8'}}}}
   });
 
-  // 9. Gasolina comum vs aditivada
+  // 9. Gasolina Original vs aditivada
   charts.gas = makeChart('chartGas',{
     type:'line',
     data:{labels,datasets:[
