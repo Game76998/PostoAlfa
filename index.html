@@ -431,9 +431,8 @@ let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
-// Atualize "atual" sempre que quiser refletir o estoque do dia. "cap" é a capacidade máxima do tanque.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',    atual:3019, cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Original', atual:3019, cap:30000, cor:'#1B6CA8'},
   {nome:'Gasolina Aditivada',atual:458,  cap:15000, cor:'#3B9FD6'},
   {nome:'Etanol',            atual:4614, cap:15000, cor:'#F5A623'},
   {nome:'Diesel S500',       atual:230,  cap:15000, cor:'#8FA3B1'},
@@ -442,7 +441,6 @@ const tanquesPadrao = [
 let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
-// Período: 23/05/2026 a 20/06/2026 (mesmo período do relatório de vendedores)
 const frentistasPadrao = [
   {nome:'CELIO',   freq:1393, litros:7328.802, faturamento:48249.68, margem:6123.25},
   {nome:'ELVIO',   freq:1009, litros:5146.294, faturamento:33846.05, margem:4111.85},
