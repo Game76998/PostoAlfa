@@ -426,28 +426,29 @@ const dadosPadrao = [
   {data:"19/06",dia:"Sexta",   fc:11347.71,fv:467.80,  ft:11815.51,mg:1693.66, et:90.140,  gc:1124.138,ga:304.597,  ds:46.358,  d5:97.986,  freq:408},
   {data:"20/06",dia:"Sábado",  fc:12675.31,fv:372.00,  ft:13047.31,mg:1826.29, et:152.390, gc:1280.899,ga:364.858, ds:39.736, d5:43.610,  freq:453},
   {data:"21/06",dia:"Domingo", fc:4391.97, fv:455.50,  ft:4847.47, mg:682.07,  et:50.626,  gc:422.604, ga:70.488,  ds:108.242, d5:0,       freq:179},
+  {data:"22/06",dia:"Segunda", fc:12686.98,fv:218.90,  ft:12905.88,mg:1794.80, et:177.529, gc:1246.287,ga:235.260, ds:96.752, d5:124.832, freq:407},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 const tanquesPadrao = [
-  {nome:'Gasolina Original', atual:3019, cap:30000, cor:'#1B6CA8'},
-  {nome:'Gasolina Aditivada',atual:458,  cap:15000, cor:'#3B9FD6'},
-  {nome:'Etanol',            atual:4614, cap:15000, cor:'#F5A623'},
-  {nome:'Diesel S500',       atual:230,  cap:15000, cor:'#8FA3B1'},
-  {nome:'Diesel S10',        atual:1969, cap:15000, cor:'#16A085'},
+  {nome:'Gasolina Original',    atual:1781, cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Aditivada',atual:246,  cap:15000, cor:'#3B9FD6'},
+  {nome:'Etanol',            atual:4433, cap:15000, cor:'#F5A623'},
+  {nome:'Diesel S500',       atual:105,  cap:15000, cor:'#8FA3B1'},
+  {nome:'Diesel S10',        atual:1735, cap:15000, cor:'#16A085'},
 ];
 let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
 const frentistasPadrao = [
-  {nome:'CELIO',   freq:1393, litros:7328.802, faturamento:48249.68, margem:6123.25},
-  {nome:'ELVIO',   freq:1009, litros:5146.294, faturamento:33846.05, margem:4111.85},
-  {nome:'ERALDO',  freq:782,  litros:3181.575, faturamento:21142.60, margem:2831.17},
-  {nome:'EURICO',  freq:1644, litros:8256.809, faturamento:54895.53, margem:7006.20},
-  {nome:'ROBERTA', freq:1467, litros:6744.123, faturamento:44911.07, margem:6043.68},
-  {nome:'VICTOR',  freq:1472, litros:6192.853, faturamento:41219.54, margem:5348.88},
+  {nome:'CELIO',   freq:1447, litros:7576.151, faturamento:49938.34, margem:6345.59},
+  {nome:'ELVIO',   freq:1048, litros:5416.732, faturamento:35630.79, margem:4369.35},
+  {nome:'ERALDO',  freq:838,  litros:3490.228, faturamento:23201.25, margem:3111.37},
+  {nome:'EURICO',  freq:1697, litros:8511.083, faturamento:56577.43, margem:7237.95},
+  {nome:'ROBERTA', freq:1565, litros:7150.599, faturamento:47675.27, margem:6411.35},
+  {nome:'VICTOR',  freq:1556, litros:6579.034, faturamento:43878.37, margem:5695.21},
 ];
 let frentistas = JSON.parse(localStorage.getItem('postoFrentistas')) || frentistasPadrao;
 
