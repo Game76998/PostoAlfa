@@ -252,6 +252,39 @@
   .tank-mid  { background:#FEF0D2; color:#8A5400; }
   .tank-low  { background:#FADBD8; color:#922B21; }
 
+  /* TANK FORECAST */
+  .tank-forecast-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .tank-forecast-card { background:var(--card-bg); border-radius:14px; padding:20px 22px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(13,27,42,.05); position:relative; overflow:hidden; }
+  .tank-forecast-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--tk,var(--fuel-blue)); }
+  .tk-name { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; margin-bottom:12px; color:var(--text); display:flex; align-items:center; gap:8px; }
+  .tk-dot { width:10px; height:10px; border-radius:50%; background:var(--tk,var(--fuel-blue)); }
+  .tk-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; font-size:12px; color:var(--text-soft); }
+  .tk-row strong { color:var(--text); font-weight:600; }
+  .tk-forecast { margin-top:14px; padding-top:14px; border-top:1px dashed var(--border); text-align:center; }
+  .tk-days { font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:800; color:var(--text); letter-spacing:-.02em; line-height:1; }
+  .tk-days-lbl { font-size:11px; color:var(--fuel-muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+  .tk-badge { display:inline-block; margin-top:8px; font-size:10px; font-weight:700; padding:3px 10px; border-radius:100px; }
+  .tk-b-safe   { background:#D4F0E3; color:#1A7A44; }
+  .tk-b-warn   { background:#FEF0D2; color:#8A5400; }
+  .tk-b-danger { background:#FADBD8; color:#922B21; }
+
+  /* TOP PRODUTOS */
+  .top-prod-list { padding:8px 0; }
+  .top-prod-row { display:flex; align-items:center; gap:14px; padding:12px 24px; border-bottom:1px solid #F0F4F8; transition:background .15s; }
+  .top-prod-row:hover { background:#F7FAFC; }
+  .top-prod-row:last-child { border-bottom:none; }
+  .top-prod-rank { font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:800; color:var(--fuel-muted); width:32px; text-align:center; flex-shrink:0; }
+  .top-prod-rank.medal { font-size:20px; }
+  .top-prod-info { flex:1; min-width:0; }
+  .top-prod-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .top-prod-bar { height:6px; background:#EAF0F5; border-radius:100px; overflow:hidden; }
+  .top-prod-fill { height:100%; background:linear-gradient(90deg,#3B9FD6,#1B6CA8); border-radius:100px; transition:width 1s ease; }
+  .top-prod-vals { display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
+  .top-prod-total { font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:var(--text); }
+  .top-prod-qtd { font-size:11px; color:var(--fuel-muted); }
+  .top-prod-empty { text-align:center; padding:40px 24px; color:var(--fuel-muted); }
+  .top-prod-empty-icon { font-size:36px; margin-bottom:10px; opacity:.5; }
+
   /* PROGRESS BARS */
   .progress-list { display:flex; flex-direction:column; gap:14px; }
   .progress-header { display:flex; justify-content:space-between; margin-bottom:5px; }
@@ -308,14 +341,14 @@
       <div class="import-section">
         <h3>Como usar</h3>
         <p>Copie as linhas da sua planilha Excel/Google Sheets e cole no campo ao lado. A primeira linha deve ser o cabeçalho exatamente como abaixo:</p>
-        <code>data,dia,fc,fv,ft,mg,et,gc,ga,ds,d5,freq</code>
+        <code>data,dia,fc,fv,ft,mg,et,gc,ga,ds,d5,lub,freq</code>
         <p>Onde:<br>
         <strong>data</strong> = 23/05 &nbsp;|&nbsp; <strong>dia</strong> = Sábado<br>
         <strong>fc</strong> = Fat.Combustível &nbsp;|&nbsp; <strong>fv</strong> = Fat.Conveniência<br>
         <strong>ft</strong> = Fat.Total &nbsp;|&nbsp; <strong>mg</strong> = Margem Bruta<br>
         <strong>et</strong> = Etanol(L) &nbsp;|&nbsp; <strong>gc</strong> = Gas.Original(L)<br>
         <strong>ga</strong> = Gas.Aditivada(L) &nbsp;|&nbsp; <strong>ds</strong> = Diesel S10(L)<br>
-        <strong>d5</strong> = Diesel S500(L) &nbsp;|&nbsp; <strong>freq</strong> = Frequência</p>
+        <strong>d5</strong> = Diesel S500(L) &nbsp;|&nbsp; <strong>lub</strong> = Lubrificantes(R$)<br><strong>freq</strong> = Frequência</p>
       </div>
       <div class="import-section">
         <h3>Cole os dados aqui</h3>
@@ -503,6 +536,48 @@
   </div>
 
 
+  <!-- RANKING DIAS DA SEMANA -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">ranking · dias da semana</div>
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Faturamento Médio por Dia da Semana</div>
+        <div class="chart-sub">Média de vendas em cada dia</div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chartDiaSemana"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Detalhamento por Dia da Semana</div>
+        <div class="chart-sub">Faturamento, frequência e ticket médio</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>Dia</th><th>Ocorrências</th><th>Fat. Médio</th><th>Freq. Média</th><th>Ticket</th></tr>
+            </thead>
+            <tbody id="tabelaDiaSemana"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSUMO E PREVISÃO DE TANQUES -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">previsão de estoque · tanques</div>
+    <div class="tank-forecast-grid" id="tankForecastGrid"></div>
+  </div>
+
+  <!-- TOP 10 PRODUTOS DA CONVENIÊNCIA -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">top 10 produtos da conveniência</div>
+    <div class="table-card">
+      <div class="table-header">
+        <span class="chart-title">Ranking de Produtos Mais Vendidos</span>
+        <span class="chart-sub" style="display:block;margin-top:4px">Baseado nos relatórios diários enviados</span>
+      </div>
+      <div id="topProdutosBody"></div>
+    </div>
+  </div>
+
   <!-- TABELA DE DIAS -->
   <div class="section" style="padding-top:0">
     <div class="section-title">registro por dia</div>
@@ -515,7 +590,7 @@
           <thead>
             <tr>
               <th>Data</th><th>Dia</th><th>Litros</th><th>Fat. Comb.</th>
-              <th>Conveniência</th><th>Fat. Total</th><th>Margem</th>
+              <th>Conveniência</th><th>Lubrificantes</th><th>Fat. Total</th><th>Margem</th>
               <th>Margem %</th><th>Freq.</th><th>Status</th>
             </tr>
           </thead>
@@ -535,43 +610,43 @@
 
 // ─── ESTADO GLOBAL ────────────────────────────────────────────────────────────
 const dadosPadrao = [
-  {data:"23/05",dia:"Sábado",  fc:5328.47, fv:654.00,  ft:5982.47, mg:787.60,  et:48.281,  gc:451.184, ga:135.141,  ds:67.825,  d5:86.478,  freq:206},
-  {data:"25/05",dia:"Segunda", fc:7476.51, fv:78.00,   ft:7554.51, mg:884.52,  et:78.842,  gc:654.574, ga:256.361,  ds:84.971,  d5:26.845,  freq:234},
-  {data:"26/05",dia:"Terça",   fc:6813.36, fv:94.00,   ft:6907.36, mg:821.24,  et:77.776,  gc:633.014, ga:240.021,  ds:13.245,  d5:46.842,  freq:273},
-  {data:"27/05",dia:"Quarta",  fc:11506.15,fv:95.90,   ft:11602.05,mg:1101.28, et:110.911, gc:906.514, ga:236.577,  ds:0,       d5:469.351, freq:307},
-  {data:"28/05",dia:"Quinta",  fc:8555.18, fv:224.30,  ft:8779.48, mg:1135.72, et:279.132, gc:738.903, ga:243.858,  ds:22.517,  d5:39.617,  freq:333},
-  {data:"29/05",dia:"Sexta",   fc:12341.00,fv:156.30,  ft:12497.30,mg:1580.76, et:262.315, gc:990.997, ga:409.737,  ds:140.077, d5:46.980,  freq:357},
-  {data:"30/05",dia:"Sábado",  fc:10133.66,fv:3467.30, ft:13600.96,mg:2300.60, et:162.223, gc:227.907, ga:1053.185, ds:46.358,  d5:13.423,  freq:546},
-  {data:"01/06",dia:"Segunda", fc:3948.07, fv:53.50,   ft:4001.57, mg:680.83,  et:382.246, gc:94.749,  ga:16.123,   ds:33.113,  d5:147.651, freq:85},
-  {data:"02/06",dia:"Terça",   fc:11525.81,fv:34.00,   ft:11559.81,mg:1656.15, et:241.822, gc:1045.166,ga:366.905,  ds:54.203,  d5:32.885,  freq:407},
-  {data:"03/06",dia:"Quarta",  fc:11390.36,fv:396.50,  ft:11786.86,mg:1714.49, et:202.758, gc:823.260, ga:482.505,  ds:170.546, d5:22.819,  freq:415},
-  {data:"04/06",dia:"Quinta",  fc:9705.53, fv:436.90,  ft:10142.43,mg:1595.41, et:276.889, gc:924.105, ga:246.191,  ds:15.895,  d5:26.845,  freq:336},
-  {data:"05/06",dia:"Sexta",   fc:12298.60,fv:1946.78, ft:14245.38,mg:2318.92, et:274.714, gc:975.123, ga:522.358,  ds:53.642,  d5:30.080,  freq:440},
-  {data:"06/06",dia:"Sábado",  fc:14407.52,fv:872.98,  ft:15280.50,mg:1945.22, et:183.354, gc:356.637, ga:1125.627, ds:57.587,  d5:429.182, freq:435},
-  {data:"08/06",dia:"Segunda", fc:10007.50,fv:234.00,  ft:10241.50,mg:1521.17, et:219.735, gc:758.205, ga:343.050,  ds:52.981,  d5:131.543, freq:366},
-  {data:"09/06",dia:"Terça",   fc:3618.15, fv:379.00,  ft:3997.15, mg:700.71,  et:220.319, gc:275.686, ga:2.309,    ds:72.848,  d5:14.177,  freq:108},
-  {data:"10/06",dia:"Quarta",  fc:10384.92,fv:163.90,  ft:10548.82,mg:1449.81, et:169.402, gc:1341.275,ga:2.334,    ds:19.868,  d5:36.195,  freq:403},
-  {data:"11/06",dia:"Quinta",  fc:10496.29,fv:569.82,  ft:11066.11,mg:1557.08, et:164.350, gc:1271.679,ga:0,        ds:55.183,  d5:81.223,  freq:415},
-  {data:"12/06",dia:"Sexta",   fc:9499.10, fv:771.38,  ft:10270.48,mg:1626.89, et:337.805, gc:1065.742,ga:0,        ds:26.491,  d5:50.201,  freq:355},
-  {data:"13/06",dia:"Sábado",  fc:1976.96, fv:304.50,  ft:2281.46, mg:500.29,  et:230.172, gc:0,       ga:10.178,   ds:88.142,  d5:17.107,  freq:66},
-  {data:"14/06",dia:"Domingo", fc:408.45,  fv:233.00,  ft:641.45,  mg:128.64,  et:89.308,  gc:0,       ga:0,        ds:0,       d5:0,       freq:21},
-  {data:"15/06",dia:"Segunda", fc:744.44,  fv:186.31,  ft:930.75,  mg:193.43,  et:55.463,  gc:0,       ga:0,        ds:39.735,  d5:23.624,  freq:34},
-  {data:"16/06",dia:"Terça",   fc:2654.52, fv:294.51,  ft:2949.03, mg:599.12,  et:338.865, gc:0,       ga:0,        ds:6.623,   d5:135.839, freq:55},
-  {data:"17/06",dia:"Quarta",  fc:23858.27,fv:354.90,  ft:24213.17,mg:2820.51, et:234.788, gc:1134.707,ga:1635.211, ds:434.476, d5:100.280, freq:758},
-  {data:"18/06",dia:"Quinta",  fc:21633.55,fv:147.40,  ft:21780.95,mg:2710.53, et:187.852, gc:924.076, ga:1993.052, ds:39.737,  d5:50.025,  freq:866},
-  {data:"19/06",dia:"Sexta",   fc:11347.71,fv:467.80,  ft:11815.51,mg:1693.66, et:90.140,  gc:1124.138,ga:304.597,  ds:46.358,  d5:97.986,  freq:408},
-  {data:"20/06",dia:"Sábado",  fc:12675.31,fv:372.00,  ft:13047.31,mg:1826.29, et:152.390, gc:1280.899,ga:364.858,  ds:39.736,  d5:43.610,  freq:453},
-  {data:"21/06",dia:"Domingo", fc:4391.97, fv:455.50,  ft:4847.47, mg:682.07,  et:50.626,  gc:422.604, ga:70.488,   ds:108.242, d5:0,       freq:179},
-  {data:"22/06",dia:"Segunda", fc:12686.98,fv:218.90,  ft:12905.88,mg:1794.80, et:177.529, gc:1246.287,ga:235.260,  ds:96.752,  d5:124.832, freq:407},
-  {data:"23/06",dia:"Terça",   fc:11344.88,fv:450.70,  ft:11795.58,mg:1615.51, et:100.846, gc:1199.023,ga:261.769,  ds:84.256,  d5:29.530,  freq:421},
-  {data:"24/06",dia:"Quarta",  fc:10047.75,fv:393.01,  ft:10440.76,mg:1489.25, et:124.744, gc:956.007, ga:261.697,  ds:117.218, d5:27.752,  freq:380},
-  {data:"25/06",dia:"Quarta",  fc:14406.92,fv:547.32,  ft:14954.24,mg:2020.20, et:149.024, gc:1042.836,ga:300.324,  ds:146.713, d5:508.096, freq:448},
-  {data:"26/06",dia:"Quinta",  fc:11077.57,fv:156.00,  ft:11233.57,mg:1649.11, et:56.024,  gc:1299.539,ga:202.239,  ds:13.246,  d5:53.691,  freq:407},
-  {data:"27/06",dia:"Sexta",   fc:12687.50,fv:596.93,  ft:13284.43,mg:2047.97, et:155.275, gc:1233.705,ga:409.482,  ds:45.034,  d5:40.269,  freq:498},
-  {data:"28/06",dia:"Sábado",  fc:147.78,  fv:231.73,  ft:379.51,  mg:100.95,  et:0,       gc:14.577,  ga:7.254,    ds:0,       d5:0,       freq:18},
-  {data:"29/06",dia:"Segunda", fc:11170.90,fv:395.69,  ft:11566.59,mg:1726.94, et:181.669, gc:991.208, ga:397.683,  ds:87.215,  d5:12.752,  freq:457},
-  {data:"30/06",dia:"Terça",  fc:12849.44,fv:349.23, ft:13198.67,mg:1938.62, et:205.380,gc:112.258,ga:1422.939, ds:92.516,  d5:67.919, freq:497},
-  {data:"01/07",dia:"Quarta", fc:7845.89, fv:416.44, ft:8262.33, mg:1262.94, et:269.256,gc:473.324,ga:303.807,  ds:149.086, d5:20.134, freq:267},
+  {data:"23/05",dia:"Sábado",  fc:5328.47, fv:654.00,  ft:5982.47, mg:787.60,  et:48.281,  gc:451.184, ga:135.141,  ds:67.825,  d5:86.478,  lub:0,      freq:206},
+  {data:"25/05",dia:"Segunda", fc:7476.51, fv:78.00,   ft:7554.51, mg:884.52,  et:78.842,  gc:654.574, ga:256.361,  ds:84.971,  d5:26.845,  lub:0,      freq:234},
+  {data:"26/05",dia:"Terça",   fc:6813.36, fv:94.00,   ft:6907.36, mg:821.24,  et:77.776,  gc:633.014, ga:240.021,  ds:13.245,  d5:46.842,  lub:0,      freq:273},
+  {data:"27/05",dia:"Quarta",  fc:11506.15,fv:95.90,   ft:11602.05,mg:1101.28, et:110.911, gc:906.514, ga:236.577,  ds:0,       d5:469.351, lub:29.90,  freq:307},
+  {data:"28/05",dia:"Quinta",  fc:8555.18, fv:164.50,  ft:8779.48, mg:1135.72, et:279.132, gc:738.903, ga:243.858,  ds:22.517,  d5:39.617,  lub:59.80,  freq:333},
+  {data:"29/05",dia:"Sexta",   fc:12341.00,fv:96.50,   ft:12497.30,mg:1580.76, et:262.315, gc:990.997, ga:409.737,  ds:140.077, d5:46.980,  lub:59.80,  freq:357},
+  {data:"30/05",dia:"Sábado",  fc:10133.66,fv:3407.50, ft:13600.96,mg:2300.60, et:162.223, gc:227.907, ga:1053.185, ds:46.358,  d5:13.423,  lub:59.80,  freq:546},
+  {data:"01/06",dia:"Segunda", fc:3948.07, fv:0.60,    ft:4001.57, mg:680.83,  et:382.246, gc:94.749,  ga:16.123,   ds:33.113,  d5:147.651, lub:146.90, freq:85},
+  {data:"02/06",dia:"Terça",   fc:11525.81,fv:34.00,   ft:11559.81,mg:1656.15, et:241.822, gc:1045.166,ga:366.905,  ds:54.203,  d5:32.885,  lub:0,      freq:407},
+  {data:"03/06",dia:"Quarta",  fc:11390.36,fv:396.50,  ft:11786.86,mg:1714.49, et:202.758, gc:823.260, ga:482.505,  ds:170.546, d5:22.819,  lub:0,      freq:415},
+  {data:"04/06",dia:"Quinta",  fc:9705.53, fv:289.00,  ft:10142.43,mg:1595.41, et:276.889, gc:924.105, ga:246.191,  ds:15.895,  d5:26.845,  lub:146.90, freq:336},
+  {data:"05/06",dia:"Sexta",   fc:12298.60,fv:1915.78, ft:14245.38,mg:2318.92, et:274.714, gc:975.123, ga:522.358,  ds:53.642,  d5:30.080,  lub:31.00,  freq:440},
+  {data:"06/06",dia:"Sábado",  fc:14407.52,fv:770.98,  ft:15280.50,mg:1945.22, et:183.354, gc:356.637, ga:1125.627, ds:57.587,  d5:429.182, lub:102.00, freq:435},
+  {data:"08/06",dia:"Segunda", fc:10007.50,fv:206.00,  ft:10241.50,mg:1521.17, et:219.735, gc:758.205, ga:343.050,  ds:52.981,  d5:131.543, lub:28.00,  freq:366},
+  {data:"09/06",dia:"Terça",   fc:3618.15, fv:175.00,  ft:3997.15, mg:700.71,  et:220.319, gc:275.686, ga:2.309,    ds:72.848,  d5:14.177,  lub:204.00, freq:108},
+  {data:"10/06",dia:"Quarta",  fc:10384.92,fv:134.00,  ft:10548.82,mg:1449.81, et:169.402, gc:1341.275,ga:2.334,    ds:19.868,  d5:36.195,  lub:29.90,  freq:403},
+  {data:"11/06",dia:"Quinta",  fc:10496.29,fv:413.94,  ft:11066.11,mg:1557.08, et:164.350, gc:1271.679,ga:0,        ds:55.183,  d5:81.223,  lub:155.88, freq:415},
+  {data:"12/06",dia:"Sexta",   fc:9499.10, fv:710.48,  ft:10270.48,mg:1626.89, et:337.805, gc:1065.742,ga:0,        ds:26.491,  d5:50.201,  lub:60.90,  freq:355},
+  {data:"13/06",dia:"Sábado",  fc:1976.96, fv:304.50,  ft:2281.46, mg:500.29,  et:230.172, gc:0,       ga:10.178,   ds:88.142,  d5:17.107,  lub:0,      freq:66},
+  {data:"14/06",dia:"Domingo", fc:408.45,  fv:233.00,  ft:641.45,  mg:128.64,  et:89.308,  gc:0,       ga:0,        ds:0,       d5:0,       lub:0,      freq:21},
+  {data:"15/06",dia:"Segunda", fc:744.44,  fv:186.31,  ft:930.75,  mg:193.43,  et:55.463,  gc:0,       ga:0,        ds:39.735,  d5:23.624,  lub:0,      freq:34},
+  {data:"16/06",dia:"Terça",   fc:2654.52, fv:179.71,  ft:2949.03, mg:599.12,  et:338.865, gc:0,       ga:0,        ds:6.623,   d5:135.839, lub:114.80, freq:55},
+  {data:"17/06",dia:"Quarta",  fc:23858.27,fv:305.00,  ft:24213.17,mg:2820.51, et:234.788, gc:1134.707,ga:1635.211, ds:434.476, d5:100.280, lub:49.90,  freq:758},
+  {data:"18/06",dia:"Quinta",  fc:21633.55,fv:117.50,  ft:21780.95,mg:2710.53, et:187.852, gc:924.076, ga:1993.052, ds:39.737,  d5:50.025,  lub:29.90,  freq:866},
+  {data:"19/06",dia:"Sexta",   fc:11347.71,fv:439.80,  ft:11815.51,mg:1693.66, et:90.140,  gc:1124.138,ga:304.597,  ds:46.358,  d5:97.986,  lub:28.00,  freq:408},
+  {data:"20/06",dia:"Sábado",  fc:12675.31,fv:372.00,  ft:13047.31,mg:1826.29, et:152.390, gc:1280.899,ga:364.858,  ds:39.736,  d5:43.610,  lub:0,      freq:453},
+  {data:"21/06",dia:"Domingo", fc:4391.97, fv:455.50,  ft:4847.47, mg:682.07,  et:50.626,  gc:422.604, ga:70.488,   ds:108.242, d5:0,       lub:0,      freq:179},
+  {data:"22/06",dia:"Segunda", fc:12686.98,fv:218.90,  ft:12905.88,mg:1794.80, et:177.529, gc:1246.287,ga:235.260,  ds:96.752,  d5:124.832, lub:0,      freq:407},
+  {data:"23/06",dia:"Terça",   fc:11344.88,fv:394.70,  ft:11795.58,mg:1615.51, et:100.846, gc:1199.023,ga:261.769,  ds:84.256,  d5:29.530,  lub:56.00,  freq:421},
+  {data:"24/06",dia:"Quarta",  fc:10047.75,fv:393.01,  ft:10440.76,mg:1489.25, et:124.744, gc:956.007, ga:261.697,  ds:117.218, d5:27.752,  lub:0,      freq:380},
+  {data:"25/06",dia:"Quarta",  fc:14406.92,fv:356.32,  ft:14954.24,mg:2020.20, et:149.024, gc:1042.836,ga:300.324,  ds:146.713, d5:508.096, lub:191.00, freq:448},
+  {data:"26/06",dia:"Quinta",  fc:11077.57,fv:156.00,  ft:11233.57,mg:1649.11, et:56.024,  gc:1299.539,ga:202.239,  ds:13.246,  d5:53.691,  lub:0,      freq:407},
+  {data:"27/06",dia:"Sexta",   fc:12687.50,fv:535.03,  ft:13284.43,mg:2047.97, et:155.275, gc:1233.705,ga:409.482,  ds:45.034,  d5:40.269,  lub:60.90,  freq:498},
+  {data:"28/06",dia:"Sábado",  fc:147.78,  fv:231.73,  ft:379.51,  mg:100.95,  et:0,       gc:14.577,  ga:7.254,    ds:0,       d5:0,       lub:0,      freq:18},
+  {data:"29/06",dia:"Segunda", fc:11170.90,fv:335.89,  ft:11566.59,mg:1726.94, et:181.669, gc:991.208, ga:397.683,  ds:87.215,  d5:12.752,  lub:59.80,  freq:457},
+  {data:"30/06",dia:"Terça",   fc:12849.44,fv:265.23,  ft:13198.67,mg:1938.62, et:205.380, gc:112.258, ga:1422.939, ds:92.516,  d5:67.919,  lub:84.00,  freq:497},
+  {data:"01/07",dia:"Quarta",  fc:7845.59, fv:300.64,  ft:8262.33, mg:1262.94, et:269.256, gc:473.324, ga:303.807,  ds:149.086, d5:20.134,  lub:115.80, freq:267},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let charts = {};
@@ -596,6 +671,21 @@ const frentistasPadrao = [
   {nome:'VICTOR',  freq:2155, litros:9267.960, faturamento:61860.19, margem:8174.16},
 ];
 let frentistas = JSON.parse(localStorage.getItem('postoFrentistas')) || frentistasPadrao;
+
+// ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
+const topProdutosPadrao = [
+  {nome:'CERV. CONTI ZERO 269ML',       qtd:679, valor:1762.25},
+  {nome:'CHOPP BRAHMA',                  qtd:100, valor:925.75},
+  {nome:'FIGURINHA DA COPA',             qtd:103, valor:721.00},
+  {nome:'CERV. BRAHMA CHOPP 269 ML',     qtd:136, valor:690.50},
+  {nome:'CERV. HEINEKEN 250ML',          qtd:99,  valor:681.28},
+  {nome:'SALGADO UNIDADE',               qtd:102, valor:676.00},
+  {nome:'ENER. REDBULL 250ML',           qtd:52,  valor:630.25},
+  {nome:'TABUA DE FRIOS',                qtd:12,  valor:527.26},
+  {nome:'CERV. BURGUESA 269 ML',         qtd:241, valor:526.80},
+  {nome:'ARLA 32 GALAO 20L',             qtd:5,   valor:500.00},
+];
+let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 const fmt  = v => 'R$\u00a0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -627,7 +717,7 @@ function importCSV(){
 
   const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
   const header = lines[0].toLowerCase().split(/[,;\t]/);
-  const cols = ['data','dia','fc','fv','ft','mg','et','gc','ga','ds','d5','freq'];
+  const cols = ['data','dia','fc','fv','ft','mg','et','gc','ga','ds','d5','lub','freq'];
   const missing = cols.filter(c=>!header.includes(c));
   if(missing.length){
     msg.className='import-msg err';
@@ -645,6 +735,7 @@ function importCSV(){
       dia:  parts[idx('dia')].trim(),
       fc:n('fc'),fv:n('fv'),ft:n('ft'),mg:n('mg'),
       et:n('et'),gc:n('gc'),ga:n('ga'),ds:n('ds'),d5:n('d5'),
+      lub:n('lub'),
       freq:Math.round(n('freq'))
     });
   }
@@ -679,6 +770,9 @@ function renderAll(){
   renderProgressBars();
   renderCompareCards();
   renderProjecao();
+  renderDiaSemana();
+  renderTankForecast();
+  renderTopProdutos();
   renderHeatmap('ft');
   document.getElementById('footerDate').textContent = today();
 }
@@ -711,6 +805,7 @@ function renderKPIs(){
   const totalMg  = sum(dados,'mg');
   const totalLit = dados.reduce((a,d)=>a+litros(d),0);
   const totalConv= sum(dados,'fv');
+  const totalLub = sum(dados,'lub');
   const avgMg    = (totalMg/totalFat*100).toFixed(1);
   const avgLit   = (totalLit/dados.length).toFixed(0);
   const avgFreq  = Math.round(sum(dados,'freq')/dados.length);
@@ -739,6 +834,12 @@ function renderKPIs(){
       <div class="kpi-label">Conveniência Total</div>
       <div class="kpi-value">${fmtK(totalConv)}</div>
       <div class="kpi-sub">${(totalConv/totalFat*100).toFixed(1)}% do faturamento</div>
+      <span class="kpi-badge badge-blue">alta margem</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:#8E44AD">
+      <div class="kpi-label">Lubrificantes Total</div>
+      <div class="kpi-value">${fmtK(totalLub)}</div>
+      <div class="kpi-sub">${(totalLub/totalFat*100).toFixed(1)}% do faturamento</div>
       <span class="kpi-badge badge-blue">alta margem</span>
     </div>
     <div class="kpi-card" style="--accent-color:#8E44AD">
@@ -1013,6 +1114,7 @@ function renderTabela(){
       <td>${fmtN(lit)} L</td>
       <td>${fmt(d.fc)}</td>
       <td>${fmt(d.fv)}</td>
+      <td>${fmt(d.lub||0)}</td>
       <td class="fat">${fmt(d.ft)}</td>
       <td class="${d.mg>1500?'good':''}">${fmt(d.mg)}</td>
       <td class="${+mgPct>=16?'good':+mgPct<=12?'warn':''}">${mgPct}%</td>
@@ -1203,6 +1305,8 @@ function renderCompareCards(){
     ['Fat. Médio Diário',fmt(safeAvg(arr,'ft'))],
     ['Margem Média',fmt(safeAvg(arr,'mg'))],
     ['Margem %',( safeAvg(arr,'mg')/safeAvg(arr,'ft')*100).toFixed(1)+'%'],
+    ['Conveniência Média',fmt(safeAvg(arr,'fv'))],
+    ['Lubrificantes Média',fmt(safeAvg(arr,'lub'))],
     ['Ticket Médio','R$ '+tk(arr).toFixed(2)],
     ['Litros/dia',fmtN(arr.reduce((a,d)=>a+litros(d),0)/arr.length)+' L'],
     ['Frequência Média',Math.round(safeAvg(arr,'freq'))+' aten./dia'],
@@ -1576,6 +1680,147 @@ function renderProjecao(){
     ]},
     options:chartOpts('Realizado','Projetado',v=>fmtK(v))
   });
+}
+
+// ─── RANKING DIAS DA SEMANA ───────────────────────────────────────────────────
+function renderDiaSemana(){
+  const ordem = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+  const grupos = {};
+  dados.forEach(d=>{
+    if(!grupos[d.dia]) grupos[d.dia] = [];
+    grupos[d.dia].push(d);
+  });
+
+  const stats = ordem.filter(dia => grupos[dia]).map(dia => {
+    const arr = grupos[dia];
+    const totFt = arr.reduce((a,d)=>a+d.ft, 0);
+    const totFreq = arr.reduce((a,d)=>a+d.freq, 0);
+    return {
+      dia,
+      n: arr.length,
+      medFt: totFt / arr.length,
+      medFreq: totFreq / arr.length,
+      ticket: totFreq > 0 ? totFt / totFreq : 0,
+    };
+  });
+
+  // chart
+  const maxFt = Math.max(...stats.map(s=>s.medFt));
+  charts.diaSemana = makeChart('chartDiaSemana', {
+    type: 'bar',
+    data: {
+      labels: stats.map(s=>s.dia),
+      datasets: [{
+        label: 'Fat. Médio',
+        data: stats.map(s=>+s.medFt.toFixed(2)),
+        backgroundColor: stats.map(s => s.medFt === maxFt ? 'rgba(245,166,35,.85)' : 'rgba(27,108,168,.75)'),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmt(ctx.parsed.y) } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmtK(v) }, grid: { color: '#F0F4F8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // tabela
+  const tb = document.getElementById('tabelaDiaSemana');
+  if (tb) {
+    tb.innerHTML = stats.sort((a,b) => b.medFt - a.medFt).map((s,i) => {
+      const medal = i===0 ? '🥇' : '';
+      return `<tr>
+        <td style="font-weight:${i===0?'700':'500'}">${medal} ${s.dia}</td>
+        <td>${s.n}</td>
+        <td class="fat">${fmt(s.medFt)}</td>
+        <td>${Math.round(s.medFreq)}</td>
+        <td>R$ ${s.ticket.toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+// ─── PREVISÃO DE ESTOQUE DOS TANQUES ──────────────────────────────────────────
+function renderTankForecast(){
+  const grid = document.getElementById('tankForecastGrid');
+  if(!grid || !dados.length) return;
+
+  // consumo médio por combustível (últimos 14 dias com movimento)
+  const ultimos = dados.slice(-14).filter(d => d.freq > 20); // exclui dias parados
+  const n = ultimos.length || 1;
+
+  const consumo = {
+    'Gasolina Original':  ultimos.reduce((a,d)=>a+d.gc, 0) / n,
+    'Gasolina Aditivada': ultimos.reduce((a,d)=>a+d.ga, 0) / n,
+    'Etanol':             ultimos.reduce((a,d)=>a+d.et, 0) / n,
+    'Diesel S500':        ultimos.reduce((a,d)=>a+d.d5, 0) / n,
+    'Diesel S10':         ultimos.reduce((a,d)=>a+d.ds, 0) / n,
+  };
+
+  grid.innerHTML = tanques.map(t => {
+    const consumoDia = consumo[t.nome] || 0;
+    const dias = consumoDia > 0 ? t.atual / consumoDia : 999;
+    const diasFmt = dias >= 999 ? '∞' : dias.toFixed(1);
+    let badgeClass, badgeText;
+    if (dias >= 7) { badgeClass='tk-b-safe'; badgeText='Estoque OK'; }
+    else if (dias >= 3) { badgeClass='tk-b-warn'; badgeText='Repor em breve'; }
+    else { badgeClass='tk-b-danger'; badgeText='Repor URGENTE'; }
+
+    return `
+      <div class="tank-forecast-card" style="--tk:${t.cor}">
+        <div class="tk-name"><span class="tk-dot"></span>${t.nome}</div>
+        <div class="tk-row"><span>Estoque atual</span><strong>${fmtN(t.atual)} L</strong></div>
+        <div class="tk-row"><span>Consumo médio/dia</span><strong>${fmtN(consumoDia)} L</strong></div>
+        <div class="tk-row"><span>Capacidade máx.</span><strong>${fmtN(t.cap)} L</strong></div>
+        <div class="tk-forecast">
+          <div class="tk-days">${diasFmt}</div>
+          <div class="tk-days-lbl">dias de autonomia</div>
+          <span class="tk-badge ${badgeClass}">${badgeText}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderTopProdutos(){
+  const body = document.getElementById('topProdutosBody');
+  if(!body) return;
+
+  if(!topProdutos.length){
+    body.innerHTML = `
+      <div class="top-prod-empty">
+        <div class="top-prod-empty-icon">📦</div>
+        <div style="font-weight:600;color:var(--text);margin-bottom:6px">Ranking aguardando dados</div>
+        <div>Envie os PDFs diários e o ranking dos 10 produtos mais vendidos aparecerá aqui automaticamente.</div>
+      </div>`;
+    return;
+  }
+
+  const top = [...topProdutos].sort((a,b) => b.valor - a.valor).slice(0,10);
+  const maxVal = Math.max(...top.map(p=>p.valor));
+
+  body.innerHTML = '<div class="top-prod-list">' + top.map((p,i) => {
+    const medal = i===0 ? '🥇' : i===1 ? '🥈' : i===2 ? '🥉' : (i+1);
+    const rankCls = i<3 ? 'top-prod-rank medal' : 'top-prod-rank';
+    const pct = (p.valor / maxVal * 100);
+    return `
+      <div class="top-prod-row">
+        <div class="${rankCls}">${medal}</div>
+        <div class="top-prod-info">
+          <div class="top-prod-name">${p.nome}</div>
+          <div class="top-prod-bar"><div class="top-prod-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="top-prod-vals">
+          <div class="top-prod-total">${fmt(p.valor)}</div>
+          <div class="top-prod-qtd">${p.qtd} un.</div>
+        </div>
+      </div>`;
+  }).join('') + '</div>';
 }
 
 // ─── HEATMAP ──────────────────────────────────────────────────────────────────
