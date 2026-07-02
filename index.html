@@ -569,12 +569,21 @@
   <!-- TOP 10 PRODUTOS DA CONVENIÊNCIA -->
   <div class="section" style="padding-top:0">
     <div class="section-title">top 10 produtos da conveniência</div>
-    <div class="table-card">
-      <div class="table-header">
-        <span class="chart-title">Ranking de Produtos Mais Vendidos</span>
-        <span class="chart-sub" style="display:block;margin-top:4px">Baseado nos relatórios diários enviados</span>
+    <div class="chart-grid-2">
+      <div class="table-card" style="margin-bottom:0">
+        <div class="table-header">
+          <span class="chart-title">🏆 Mais Vendidos por Quantidade</span>
+          <span class="chart-sub" style="display:block;margin-top:4px">Ranking por unidades vendidas no período</span>
+        </div>
+        <div id="topProdutosBodyQtd"></div>
       </div>
-      <div id="topProdutosBody"></div>
+      <div class="table-card" style="margin-bottom:0">
+        <div class="table-header">
+          <span class="chart-title">💰 Mais Rentáveis por Faturamento</span>
+          <span class="chart-sub" style="display:block;margin-top:4px">Ranking por valor total (R$) no período</span>
+        </div>
+        <div id="topProdutosBodyValor"></div>
+      </div>
     </div>
   </div>
 
@@ -684,6 +693,10 @@ const topProdutosPadrao = [
   {nome:'TABUA DE FRIOS',                qtd:12,  valor:527.26},
   {nome:'CERV. BURGUESA 269 ML',         qtd:241, valor:526.80},
   {nome:'ARLA 32 GALAO 20L',             qtd:5,   valor:500.00},
+  {nome:'CERV. CORONITA 210ML',          qtd:66,  valor:462.00},
+  {nome:'CERV. IMPERIO ULTRA 210 ML',    qtd:52,  valor:416.00},
+  {nome:'CERV. ANTARTICA ORIGINAL PAC',  qtd:67,  valor:390.00},
+  {nome:'CERV. SKOL 269ML',              qtd:52,  valor:260.00},
 ];
 let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
 
@@ -1788,39 +1801,47 @@ function renderTankForecast(){
 }
 
 function renderTopProdutos(){
-  const body = document.getElementById('topProdutosBody');
-  if(!body) return;
+  const bodyQtd = document.getElementById('topProdutosBodyQtd');
+  const bodyValor = document.getElementById('topProdutosBodyValor');
+  if(!bodyQtd || !bodyValor) return;
+
+  const emptyHTML = `
+    <div class="top-prod-empty">
+      <div class="top-prod-empty-icon">📦</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:6px">Ranking aguardando dados</div>
+      <div>Envie os PDFs diários e o ranking dos 10 produtos mais vendidos aparecerá aqui automaticamente.</div>
+    </div>`;
 
   if(!topProdutos.length){
-    body.innerHTML = `
-      <div class="top-prod-empty">
-        <div class="top-prod-empty-icon">📦</div>
-        <div style="font-weight:600;color:var(--text);margin-bottom:6px">Ranking aguardando dados</div>
-        <div>Envie os PDFs diários e o ranking dos 10 produtos mais vendidos aparecerá aqui automaticamente.</div>
-      </div>`;
+    bodyQtd.innerHTML = emptyHTML;
+    bodyValor.innerHTML = emptyHTML;
     return;
   }
 
-  const top = [...topProdutos].sort((a,b) => b.valor - a.valor).slice(0,10);
-  const maxVal = Math.max(...top.map(p=>p.valor));
+  function renderList(dados, campo, formatador){
+    const top = [...dados].sort((a,b) => b[campo] - a[campo]).slice(0,10);
+    const maxVal = Math.max(...top.map(p=>p[campo]));
+    return '<div class="top-prod-list">' + top.map((p,i) => {
+      const medal = i===0 ? '🥇' : i===1 ? '🥈' : i===2 ? '🥉' : (i+1);
+      const rankCls = i<3 ? 'top-prod-rank medal' : 'top-prod-rank';
+      const pct = (p[campo] / maxVal * 100);
+      return `
+        <div class="top-prod-row">
+          <div class="${rankCls}">${medal}</div>
+          <div class="top-prod-info">
+            <div class="top-prod-name">${p.nome}</div>
+            <div class="top-prod-bar"><div class="top-prod-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="top-prod-vals">
+            <div class="top-prod-total">${formatador(p[campo])}</div>
+            <div class="top-prod-qtd">${campo==='qtd' ? fmt(p.valor) : p.qtd + ' un.'}</div>
+          </div>
+        </div>`;
+    }).join('') + '</div>';
+  }
 
-  body.innerHTML = '<div class="top-prod-list">' + top.map((p,i) => {
-    const medal = i===0 ? '🥇' : i===1 ? '🥈' : i===2 ? '🥉' : (i+1);
-    const rankCls = i<3 ? 'top-prod-rank medal' : 'top-prod-rank';
-    const pct = (p.valor / maxVal * 100);
-    return `
-      <div class="top-prod-row">
-        <div class="${rankCls}">${medal}</div>
-        <div class="top-prod-info">
-          <div class="top-prod-name">${p.nome}</div>
-          <div class="top-prod-bar"><div class="top-prod-fill" style="width:${pct}%"></div></div>
-        </div>
-        <div class="top-prod-vals">
-          <div class="top-prod-total">${fmt(p.valor)}</div>
-          <div class="top-prod-qtd">${p.qtd} un.</div>
-        </div>
-      </div>`;
-  }).join('') + '</div>';
+  bodyQtd.innerHTML   = renderList(topProdutos, 'qtd',   v => v + ' un.');
+  bodyValor.innerHTML = renderList(topProdutos, 'valor', v => fmt(v));
 }
 
 // ─── HEATMAP ──────────────────────────────────────────────────────────────────
