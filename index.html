@@ -252,6 +252,120 @@
   .tank-mid  { background:#FEF0D2; color:#8A5400; }
   .tank-low  { background:#FADBD8; color:#922B21; }
 
+  /* FILTER BAR */
+  .filter-bar {
+    background: linear-gradient(135deg, #ffffff 0%, #F7FAFC 100%);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(13,27,42,.04);
+    padding: 18px 24px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .filter-inner { max-width: 1200px; margin: 0 auto; }
+  .filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .filter-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--fuel-blue);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-active {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(27,108,168,.08);
+    border: 1px solid rgba(27,108,168,.15);
+    color: var(--fuel-blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 100px;
+  }
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .filter-btn {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover {
+    border-color: var(--fuel-blue);
+    color: var(--fuel-blue);
+  }
+  .filter-btn.active {
+    background: var(--fuel-blue);
+    border-color: var(--fuel-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(27,108,168,.25);
+  }
+  .filter-custom {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(27,108,168,.05);
+    border: 1px solid rgba(27,108,168,.12);
+    border-radius: 10px;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filter-custom.open { display: flex; }
+  .filter-custom label { font-size: 12px; font-weight: 600; color: var(--text-soft); }
+  .filter-custom input[type="date"] {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+  }
+  .filter-custom input[type="date"]:focus { border-color: var(--fuel-blue); }
+  .filter-custom-apply {
+    background: var(--fuel-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .filter-custom-apply:hover { background: #1d7ec4; }
+  .filter-empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-soft);
+  }
+  .filter-empty-icon { font-size: 48px; margin-bottom: 12px; }
+
   /* TANK FORECAST */
   .tank-forecast-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
   .tank-forecast-card { background:var(--card-bg); border-radius:14px; padding:20px 22px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(13,27,42,.05); position:relative; overflow:hidden; }
@@ -372,6 +486,35 @@
   </div>
 </div>
 
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="filter-header">
+      <div class="filter-title">
+        <span>🗓️</span>
+        <span>Filtrar por período</span>
+      </div>
+      <div class="filter-active" id="filterActive">📊 Todo o período</div>
+    </div>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all" onclick="aplicarFiltro('all', this)">Todo período</button>
+      <button class="filter-btn" data-filter="7d" onclick="aplicarFiltro('7d', this)">Últimos 7 dias</button>
+      <button class="filter-btn" data-filter="15d" onclick="aplicarFiltro('15d', this)">Últimos 15 dias</button>
+      <button class="filter-btn" data-filter="30d" onclick="aplicarFiltro('30d', this)">Últimos 30 dias</button>
+      <button class="filter-btn" data-filter="mes-atual" onclick="aplicarFiltro('mes-atual', this)">Mês atual</button>
+      <button class="filter-btn" data-filter="mes-anterior" onclick="aplicarFiltro('mes-anterior', this)">Mês anterior</button>
+      <button class="filter-btn" data-filter="custom" onclick="toggleCustomFilter(this)">📅 Personalizado</button>
+    </div>
+    <div class="filter-custom" id="filterCustom">
+      <label>De:</label>
+      <input type="date" id="filterDe">
+      <label>Até:</label>
+      <input type="date" id="filterAte">
+      <button class="filter-custom-apply" onclick="aplicarFiltroCustom()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MAIN CONTENT -->
 <div class="container">
 
@@ -454,6 +597,7 @@
   <!-- RANKING DE FRENTISTAS -->
   <div class="section" style="padding-top:0">
     <div class="section-title">ranking de frentistas</div>
+    <div style="font-size:12px;color:var(--fuel-muted);margin-top:-14px;margin-bottom:14px" id="frentistaModo"></div>
     <div class="chart-grid-2">
       <div class="chart-card">
         <div class="chart-title">Faturamento por Frentista</div>
@@ -660,6 +804,8 @@ const dadosPadrao = [
   {data:"03/07",dia:"Sexta",   fc:13356.21,fv:315.98,  ft:13702.09,mg:2057.16, et:106.990, gc:1412.982,ga:407.069,  ds:33.113,  d5:9.933,   lub:29.90,  freq:447},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
+let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
+let filtroAtivo = 'all'; // filtro atualmente ativo
 let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
@@ -673,15 +819,223 @@ const tanquesPadrao = [
 let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
+// ⚠️ FRENTISTAS ACUMULADOS (fallback quando frentistasPorDia estiver vazio)
 const frentistasPadrao = [
-  {nome:'CELIO',   freq:2088, litros:10226.966, faturamento:67799.85, margem:8907.03},
-  {nome:'ELVIO',   freq:1577, litros:7847.408,  faturamento:52059.22, margem:6552.82},
-  {nome:'ERALDO',  freq:1240, litros:5211.895,  faturamento:34779.35, margem:4760.50},
-  {nome:'EURICO',  freq:2391, litros:11751.507, faturamento:78220.87, margem:10155.74},
-  {nome:'ROBERTA', freq:2297, litros:10580.220, faturamento:70911.06, margem:9778.55},
-  {nome:'VICTOR',  freq:2310, litros:9995.369,  faturamento:66737.20, margem:8894.06},
+
 ];
 let frentistas = JSON.parse(localStorage.getItem('postoFrentistas')) || frentistasPadrao;
+
+// ─── FRENTISTAS POR DIA (para permitir filtro por data) ───────────────────────
+const frentistasPorDiaPadrao = [
+  {data:"23/05", nome:'CELIO',  freq:24, litros:215.246, faturamento:1461.48, margem:111.27},
+  {data:"23/05", nome:'ELVIO',  freq:25, litros:140.435, faturamento:938.13, margem:96.28},
+  {data:"23/05", nome:'EURICO', freq:10, litros:72.392, faturamento:501.62, margem:56.92},
+  {data:"23/05", nome:'ROBERTA',freq:34, litros:173.979, faturamento:1175.99, margem:132.15},
+  {data:"23/05", nome:'VICTOR', freq:28, litros:176.558, faturamento:1180.70, margem:141.66},
+  {data:"25/05", nome:'CELIO',  freq:46, litros:260.073, faturamento:1714.87, margem:220.59},
+  {data:"25/05", nome:'ELVIO',  freq:35, litros:158.913, faturamento:1086.73, margem:111.19},
+  {data:"25/05", nome:'ERALDO', freq:39, litros:168.573, faturamento:1155.05, margem:131.62},
+  {data:"25/05", nome:'EURICO', freq:21, litros:80.958, faturamento:565.27, margem:62.28},
+  {data:"25/05", nome:'ROBERTA',freq:43, litros:158.326, faturamento:1081.47, margem:121.23},
+  {data:"25/05", nome:'VICTOR', freq:40, litros:254.023, faturamento:1729.07, margem:195.24},
+  {data:"26/05", nome:'CELIO',  freq:55, litros:218.466, faturamento:1479.00, margem:143.25},
+  {data:"26/05", nome:'ELVIO',  freq:38, litros:147.915, faturamento:994.22, margem:123.16},
+  {data:"26/05", nome:'ERALDO', freq:24, litros:87.573, faturamento:594.96, margem:67.71},
+  {data:"26/05", nome:'EURICO', freq:43, litros:154.170, faturamento:1044.02, margem:124.39},
+  {data:"26/05", nome:'ROBERTA',freq:47, litros:180.212, faturamento:1186.82, margem:150.07},
+  {data:"26/05", nome:'VICTOR', freq:55, litros:222.562, faturamento:1514.34, margem:175.77},
+  {data:"27/05", nome:'CELIO',  freq:45, litros:187.316, faturamento:1272.00, margem:145.40},
+  {data:"27/05", nome:'ELVIO',  freq:51, litros:640.982, faturamento:4207.61, margem:202.70},
+  {data:"27/05", nome:'ERALDO', freq:38, litros:117.865, faturamento:749.20, margem:102.35},
+  {data:"27/05", nome:'EURICO', freq:54, litros:248.564, faturamento:1723.57, margem:201.20},
+  {data:"27/05", nome:'ROBERTA',freq:49, litros:219.715, faturamento:1507.24, margem:168.03},
+  {data:"27/05", nome:'VICTOR', freq:59, litros:288.911, faturamento:1947.53, margem:227.26},
+  {data:"28/05", nome:'CELIO',  freq:66, litros:244.590, faturamento:1600.55, margem:208.35},
+  {data:"28/05", nome:'ELVIO',  freq:54, litros:310.849, faturamento:1930.85, margem:283.34},
+  {data:"28/05", nome:'ERALDO', freq:30, litros:112.993, faturamento:781.74, margem:86.60},
+  {data:"28/05", nome:'EURICO', freq:61, litros:299.353, faturamento:1889.95, margem:214.32},
+  {data:"28/05", nome:'ROBERTA',freq:41, litros:169.815, faturamento:1077.94, margem:148.27},
+  {data:"28/05", nome:'VICTOR', freq:65, litros:186.427, faturamento:1274.15, margem:142.73},
+  {data:"29/05", nome:'CELIO',  freq:60, litros:402.321, faturamento:2771.88, margem:318.48},
+  {data:"29/05", nome:'ELVIO',  freq:52, litros:301.127, faturamento:1993.67, margem:244.53},
+  {data:"29/05", nome:'ERALDO', freq:18, litros:94.707, faturamento:642.93, margem:73.62},
+  {data:"29/05", nome:'EURICO', freq:57, litros:324.502, faturamento:2270.20, margem:261.14},
+  {data:"29/05", nome:'ROBERTA',freq:82, litros:334.784, faturamento:2100.71, margem:297.80},
+  {data:"29/05", nome:'VICTOR', freq:72, litros:370.037, faturamento:2392.61, margem:313.94},
+  {data:"30/05", nome:'CELIO',  freq:51, litros:298.117, faturamento:1827.75, margem:272.34},
+  {data:"30/05", nome:'ELVIO',  freq:37, litros:184.660, faturamento:1282.68, margem:139.54},
+  {data:"30/05", nome:'EURICO', freq:76, litros:323.623, faturamento:2238.20, margem:238.19},
+  {data:"30/05", nome:'ROBERTA',freq:77, litros:342.306, faturamento:2362.44, margem:260.27},
+  {data:"30/05", nome:'VICTOR', freq:72, litros:354.390, faturamento:2422.59, margem:266.02},
+  {data:"01/06", nome:'CELIO',  freq:19, litros:92.485, faturamento:546.16, margem:86.53},
+  {data:"01/06", nome:'ELVIO',  freq:21, litros:135.644, faturamento:819.27, margem:112.13},
+  {data:"01/06", nome:'ERALDO', freq:3, litros:35.530, faturamento:244.75, margem:32.39},
+  {data:"01/06", nome:'EURICO', freq:13, litros:220.134, faturamento:1338.94, margem:236.92},
+  {data:"01/06", nome:'ROBERTA',freq:8, litros:66.575, faturamento:329.55, margem:78.56},
+  {data:"01/06", nome:'VICTOR', freq:11, litros:103.312, faturamento:593.24, margem:111.24},
+  {data:"02/06", nome:'CELIO',  freq:46, litros:205.443, faturamento:1359.00, margem:198.73},
+  {data:"02/06", nome:'ELVIO',  freq:38, litros:191.614, faturamento:1296.81, margem:178.93},
+  {data:"02/06", nome:'ERALDO', freq:83, litros:295.225, faturamento:1937.60, margem:290.07},
+  {data:"02/06", nome:'EURICO', freq:80, litros:410.821, faturamento:2759.17, margem:347.99},
+  {data:"02/06", nome:'ROBERTA',freq:96, litros:437.931, faturamento:2829.98, margem:437.55},
+  {data:"02/06", nome:'VICTOR', freq:55, litros:193.398, faturamento:1303.90, margem:180.81},
+  {data:"03/06", nome:'CELIO',  freq:59, litros:315.825, faturamento:2201.17, margem:253.08},
+  {data:"03/06", nome:'ELVIO',  freq:39, litros:207.219, faturamento:1396.71, margem:195.95},
+  {data:"03/06", nome:'ERALDO', freq:54, litros:226.251, faturamento:1499.64, margem:217.67},
+  {data:"03/06", nome:'EURICO', freq:94, litros:348.534, faturamento:2337.31, margem:328.88},
+  {data:"03/06", nome:'ROBERTA',freq:84, litros:373.584, faturamento:2467.81, margem:361.85},
+  {data:"03/06", nome:'VICTOR', freq:56, litros:230.475, faturamento:1487.72, margem:185.75},
+  {data:"04/06", nome:'CELIO',  freq:64, litros:344.820, faturamento:2166.01, margem:357.04},
+  {data:"04/06", nome:'ELVIO',  freq:36, litros:153.494, faturamento:1040.74, margem:144.19},
+  {data:"04/06", nome:'ERALDO', freq:39, litros:142.002, faturamento:972.41, margem:132.65},
+  {data:"04/06", nome:'EURICO', freq:71, litros:476.069, faturamento:3012.40, margem:454.71},
+  {data:"04/06", nome:'ROBERTA',freq:51, litros:200.596, faturamento:1337.33, margem:191.89},
+  {data:"04/06", nome:'VICTOR', freq:51, litros:172.944, faturamento:1176.64, margem:160.15},
+  {data:"05/06", nome:'CELIO',  freq:64, litros:345.813, faturamento:2364.34, margem:318.66},
+  {data:"05/06", nome:'ELVIO',  freq:57, litros:282.827, faturamento:1942.01, margem:261.41},
+  {data:"05/06", nome:'ERALDO', freq:60, litros:259.585, faturamento:1752.95, margem:240.62},
+  {data:"05/06", nome:'EURICO', freq:103, litros:562.523, faturamento:3554.65, margem:577.55},
+  {data:"05/06", nome:'VICTOR', freq:57, litros:259.098, faturamento:1723.76, margem:247.24},
+  {data:"06/06", nome:'CELIO',  freq:76, litros:693.278, faturamento:4611.81, margem:291.17},
+  {data:"06/06", nome:'ELVIO',  freq:63, litros:226.888, faturamento:1554.35, margem:204.36},
+  {data:"06/06", nome:'EURICO', freq:105, litros:480.345, faturamento:3168.89, margem:459.84},
+  {data:"06/06", nome:'ROBERTA',freq:62, litros:510.647, faturamento:3491.07, margem:467.57},
+  {data:"06/06", nome:'VICTOR', freq:64, litros:214.697, faturamento:1463.15, margem:195.08},
+  {data:"08/06", nome:'CELIO',  freq:48, litros:225.352, faturamento:1413.67, margem:233.50},
+  {data:"08/06", nome:'ERALDO', freq:17, litros:95.017, faturamento:598.74, margem:49.93},
+  {data:"08/06", nome:'EURICO', freq:109, litros:521.608, faturamento:3501.98, margem:508.72},
+  {data:"08/06", nome:'ROBERTA',freq:66, litros:307.921, faturamento:2107.07, margem:291.31},
+  {data:"08/06", nome:'VICTOR', freq:96, litros:293.581, faturamento:1980.15, margem:275.68},
+  {data:"09/06", nome:'CELIO',  freq:38, litros:246.634, faturamento:1562.98, margem:218.39},
+  {data:"09/06", nome:'ERALDO', freq:2, litros:26.825, faturamento:150.00, margem:31.61},
+  {data:"09/06", nome:'EURICO', freq:35, litros:151.457, faturamento:969.55, margem:143.10},
+  {data:"09/06", nome:'ROBERTA',freq:8, litros:113.868, faturamento:685.62, margem:126.37},
+  {data:"09/06", nome:'VICTOR', freq:3, litros:38.384, faturamento:190.00, margem:49.74},
+  {data:"10/06", nome:'ELVIO',  freq:91, litros:417.430, faturamento:2639.90, margem:405.32},
+  {data:"10/06", nome:'ERALDO', freq:53, litros:171.233, faturamento:1148.56, margem:144.60},
+  {data:"10/06", nome:'EURICO', freq:75, litros:278.772, faturamento:1897.07, margem:250.10},
+  {data:"10/06", nome:'ROBERTA',freq:77, litros:286.427, faturamento:1881.83, margem:268.98},
+  {data:"10/06", nome:'VICTOR', freq:80, litros:363.630, faturamento:2455.54, margem:289.73},
+  {data:"11/06", nome:'CELIO',  freq:66, litros:319.021, faturamento:2136.31, margem:260.14},
+  {data:"11/06", nome:'ELVIO',  freq:34, litros:162.273, faturamento:1074.17, margem:150.02},
+  {data:"11/06", nome:'ERALDO', freq:27, litros:132.314, faturamento:840.29, margem:127.55},
+  {data:"11/06", nome:'EURICO', freq:46, litros:273.418, faturamento:1855.08, margem:258.10},
+  {data:"11/06", nome:'ROBERTA',freq:95, litros:338.637, faturamento:2271.81, margem:308.58},
+  {data:"11/06", nome:'VICTOR', freq:103, litros:333.632, faturamento:2228.63, margem:305.45},
+  {data:"12/06", nome:'CELIO',  freq:55, litros:314.942, faturamento:1878.35, margem:324.32},
+  {data:"12/06", nome:'ELVIO',  freq:24, litros:176.276, faturamento:1101.52, margem:174.46},
+  {data:"12/06", nome:'ERALDO', freq:62, litros:289.231, faturamento:1840.00, margem:278.36},
+  {data:"12/06", nome:'EURICO', freq:124, litros:476.947, faturamento:3200.48, margem:425.49},
+  {data:"13/06", nome:'CELIO',  freq:3, litros:18.842, faturamento:100.00, margem:20.55},
+  {data:"13/06", nome:'ELVIO',  freq:4, litros:41.322, faturamento:200.00, margem:49.03},
+  {data:"13/06", nome:'EURICO', freq:2, litros:26.859, faturamento:130.00, margem:31.87},
+  {data:"13/06", nome:'ROBERTA',freq:10, litros:76.200, faturamento:377.29, margem:89.01},
+  {data:"13/06", nome:'VICTOR', freq:13, litros:182.376, faturamento:1169.67, margem:180.01},
+  {data:"14/06", nome:'ELVIO',  freq:2, litros:25.213, faturamento:98.23, margem:6.11},
+  {data:"14/06", nome:'VICTOR', freq:3, litros:64.095, faturamento:310.22, margem:76.05},
+  {data:"15/06", nome:'CELIO',  freq:2, litros:15.245, faturamento:109.68, margem:13.23},
+  {data:"15/06", nome:'ELVIO',  freq:1, litros:26.490, faturamento:200.00, margem:21.72},
+  {data:"15/06", nome:'EURICO', freq:6, litros:43.539, faturamento:245.76, margem:49.02},
+  {data:"15/06", nome:'ROBERTA',freq:2, litros:12.887, faturamento:89.00, margem:13.29},
+  {data:"15/06", nome:'VICTOR', freq:1, litros:20.661, faturamento:100.00, margem:24.52},
+  {data:"16/06", nome:'CELIO',  freq:15, litros:207.440, faturamento:1074.51, margem:239.75},
+  {data:"16/06", nome:'ELVIO',  freq:8, litros:72.644, faturamento:304.00, margem:38.60},
+  {data:"16/06", nome:'ERALDO', freq:2, litros:41.322, faturamento:200.00, margem:49.03},
+  {data:"16/06", nome:'EURICO', freq:1, litros:6.198, faturamento:30.00, margem:7.36},
+  {data:"16/06", nome:'ROBERTA',freq:4, litros:120.040, faturamento:861.26, margem:121.32},
+  {data:"16/06", nome:'VICTOR', freq:5, litros:33.683, faturamento:184.75, margem:38.33},
+  {data:"17/06", nome:'CELIO',  freq:115, litros:655.790, faturamento:4474.58, margem:545.93},
+  {data:"17/06", nome:'ELVIO',  freq:84, litros:284.265, faturamento:1884.42, margem:246.93},
+  {data:"17/06", nome:'ERALDO', freq:90, litros:438.831, faturamento:2980.41, margem:391.34},
+  {data:"17/06", nome:'EURICO', freq:109, litros:817.572, faturamento:5505.58, margem:374.40},
+  {data:"17/06", nome:'ROBERTA',freq:138, litros:625.984, faturamento:4195.94, margem:522.98},
+  {data:"17/06", nome:'VICTOR', freq:182, litros:652.065, faturamento:4333.82, margem:544.10},
+  {data:"18/06", nome:'CELIO',  freq:140, litros:519.252, faturamento:3405.37, margem:458.56},
+  {data:"18/06", nome:'ELVIO',  freq:132, litros:501.797, faturamento:3409.29, margem:407.48},
+  {data:"18/06", nome:'ERALDO', freq:106, litros:346.942, faturamento:2376.98, margem:292.90},
+  {data:"18/06", nome:'EURICO', freq:145, litros:582.806, faturamento:4001.05, margem:473.45},
+  {data:"18/06", nome:'ROBERTA',freq:206, litros:838.788, faturamento:5655.30, margem:720.88},
+  {data:"18/06", nome:'VICTOR', freq:114, litros:384.912, faturamento:2645.97, margem:288.54},
+  {data:"19/06", nome:'CELIO',  freq:76, litros:371.014, faturamento:2494.92, margem:338.55},
+  {data:"19/06", nome:'ELVIO',  freq:34, litros:137.957, faturamento:950.00, margem:121.71},
+  {data:"19/06", nome:'ERALDO', freq:35, litros:99.556, faturamento:676.39, margem:90.55},
+  {data:"19/06", nome:'EURICO', freq:42, litros:286.644, faturamento:1919.29, margem:260.83},
+  {data:"19/06", nome:'ROBERTA',freq:90, litros:348.831, faturamento:2413.50, margem:309.83},
+  {data:"19/06", nome:'VICTOR', freq:94, litros:411.787, faturamento:2853.61, margem:377.79},
+  {data:"20/06", nome:'CELIO',  freq:91, litros:363.049, faturamento:2513.09, margem:325.79},
+  {data:"20/06", nome:'ELVIO',  freq:49, litros:218.060, faturamento:1500.74, margem:192.75},
+  {data:"20/06", nome:'EURICO', freq:97, litros:407.099, faturamento:2679.60, margem:369.25},
+  {data:"20/06", nome:'ROBERTA',freq:97, litros:506.070, faturamento:3424.10, margem:455.88},
+  {data:"20/06", nome:'VICTOR', freq:93, litros:387.215, faturamento:2557.78, margem:356.04},
+  {data:"21/06", nome:'CELIO',  freq:69, litros:248.428, faturamento:1710.20, margem:219.66},
+  {data:"21/06", nome:'EURICO', freq:65, litros:381.902, faturamento:2555.90, margem:290.19},
+  {data:"22/06", nome:'CELIO',  freq:54, litros:247.349, faturamento:1688.66, margem:222.34},
+  {data:"22/06", nome:'ELVIO',  freq:39, litros:270.438, faturamento:1784.74, margem:257.50},
+  {data:"22/06", nome:'ERALDO', freq:56, litros:308.653, faturamento:2058.65, margem:280.20},
+  {data:"22/06", nome:'EURICO', freq:53, litros:254.274, faturamento:1681.90, margem:231.75},
+  {data:"22/06", nome:'ROBERTA',freq:98, litros:406.476, faturamento:2764.20, margem:367.67},
+  {data:"22/06", nome:'VICTOR', freq:84, litros:386.181, faturamento:2658.83, margem:346.33},
+  {data:"23/06", nome:'CELIO',  freq:66, litros:266.779, faturamento:1847.53, margem:239.00},
+  {data:"23/06", nome:'ELVIO',  freq:58, litros:223.722, faturamento:1491.95, margem:203.91},
+  {data:"23/06", nome:'ERALDO', freq:52, litros:215.899, faturamento:1489.37, margem:189.10},
+  {data:"23/06", nome:'EURICO', freq:39, litros:310.968, faturamento:2039.99, margem:248.46},
+  {data:"23/06", nome:'ROBERTA',freq:70, litros:226.503, faturamento:1569.41, margem:202.75},
+  {data:"23/06", nome:'VICTOR', freq:93, litros:349.282, faturamento:2338.00, margem:314.69},
+  {data:"24/06", nome:'ELVIO',  freq:67, litros:254.072, faturamento:1743.84, margem:226.20},
+  {data:"24/06", nome:'ERALDO', freq:28, litros:108.563, faturamento:745.80, margem:96.63},
+  {data:"24/06", nome:'EURICO', freq:95, litros:396.504, faturamento:2658.16, margem:366.85},
+  {data:"24/06", nome:'VICTOR', freq:109, litros:555.910, faturamento:3735.60, margem:503.00},
+  {data:"25/06", nome:'CELIO',  freq:76, litros:263.125, faturamento:1730.51, margem:258.02},
+  {data:"25/06", nome:'ELVIO',  freq:68, litros:412.934, faturamento:2678.25, margem:266.63},
+  {data:"25/06", nome:'ERALDO', freq:57, litros:183.584, faturamento:1243.19, margem:179.31},
+  {data:"25/06", nome:'EURICO', freq:46, litros:380.186, faturamento:2467.04, margem:190.34},
+  {data:"25/06", nome:'ROBERTA',freq:81, litros:501.282, faturamento:3593.61, margem:535.44},
+  {data:"25/06", nome:'VICTOR', freq:72, litros:375.997, faturamento:2489.32, margem:364.65},
+  {data:"26/06", nome:'CELIO',  freq:82, litros:352.723, faturamento:2394.46, margem:347.05},
+  {data:"26/06", nome:'ELVIO',  freq:36, litros:148.255, faturamento:1025.52, margem:140.90},
+  {data:"26/06", nome:'ERALDO', freq:40, litros:196.008, faturamento:1324.35, margem:191.89},
+  {data:"26/06", nome:'EURICO', freq:61, litros:256.855, faturamento:1762.44, margem:256.08},
+  {data:"26/06", nome:'ROBERTA',freq:82, litros:299.782, faturamento:2053.21, margem:287.92},
+  {data:"26/06", nome:'VICTOR', freq:84, litros:333.440, faturamento:2268.69, margem:328.15},
+  {data:"27/06", nome:'CELIO',  freq:89, litros:328.981, faturamento:2253.59, margem:316.21},
+  {data:"27/06", nome:'ELVIO',  freq:59, litros:260.463, faturamento:1765.38, margem:249.80},
+  {data:"27/06", nome:'EURICO', freq:140, litros:608.637, faturamento:4097.34, margem:595.70},
+  {data:"27/06", nome:'ROBERTA',freq:90, litros:399.431, faturamento:2628.64, margem:388.93},
+  {data:"27/06", nome:'VICTOR', freq:62, litros:273.196, faturamento:1852.55, margem:267.97},
+  {data:"28/06", nome:'EURICO', freq:3, litros:21.831, faturamento:147.78, margem:18.07},
+  {data:"29/06", nome:'CELIO',  freq:70, litros:310.077, faturamento:2020.20, margem:302.70},
+  {data:"29/06", nome:'ELVIO',  freq:35, litros:180.506, faturamento:1192.72, margem:176.33},
+  {data:"29/06", nome:'ERALDO', freq:40, litros:183.491, faturamento:1254.50, margem:176.52},
+  {data:"29/06", nome:'EURICO', freq:70, litros:287.172, faturamento:1940.98, margem:269.46},
+  {data:"29/06", nome:'ROBERTA',freq:108, litros:320.223, faturamento:2134.82, margem:301.58},
+  {data:"29/06", nome:'VICTOR', freq:89, litros:382.674, faturamento:2583.68, margem:370.95},
+  {data:"30/06", nome:'CELIO',  freq:89, litros:320.005, faturamento:2222.46, margem:294.20},
+  {data:"30/06", nome:'ELVIO',  freq:62, litros:260.357, faturamento:1758.19, margem:251.99},
+  {data:"30/06", nome:'ERALDO', freq:39, litros:122.236, faturamento:779.06, margem:117.75},
+  {data:"30/06", nome:'EURICO', freq:92, litros:301.156, faturamento:2052.36, margem:292.59},
+  {data:"30/06", nome:'ROBERTA',freq:99, litros:563.523, faturamento:3783.13, margem:538.15},
+  {data:"30/06", nome:'VICTOR', freq:67, litros:254.022, faturamento:1699.45, margem:239.93},
+  {data:"01/07", nome:'CELIO',  freq:59, litros:316.398, faturamento:2059.42, margem:308.87},
+  {data:"01/07", nome:'ELVIO',  freq:59, litros:240.522, faturamento:1657.17, margem:231.44},
+  {data:"01/07", nome:'ERALDO', freq:12, litros:101.374, faturamento:583.82, margem:101.52},
+  {data:"01/07", nome:'EURICO', freq:50, litros:260.856, faturamento:1742.85, margem:252.40},
+  {data:"01/07", nome:'ROBERTA',freq:21, litros:124.854, faturamento:738.00, margem:133.34},
+  {data:"01/07", nome:'VICTOR', freq:23, litros:164.405, faturamento:1014.53, margem:89.60},
+  {data:"02/07", nome:'CELIO',  freq:50, litros:246.409, faturamento:1674.03, margem:247.09},
+  {data:"02/07", nome:'ELVIO',  freq:51, litros:262.242, faturamento:1826.35, margem:252.41},
+  {data:"02/07", nome:'ERALDO', freq:70, litros:319.112, faturamento:2153.65, margem:309.62},
+  {data:"02/07", nome:'EURICO', freq:44, litros:211.576, faturamento:1397.14, margem:221.85},
+  {data:"02/07", nome:'ROBERTA',freq:95, litros:510.734, faturamento:3409.56, margem:508.45},
+  {data:"02/07", nome:'VICTOR', freq:80, litros:322.285, faturamento:2172.36, margem:319.12},
+  {data:"03/07", nome:'CELIO',  freq:60, litros:246.318, faturamento:1659.31, margem:248.31},
+  {data:"03/07", nome:'ELVIO',  freq:34, litros:187.603, faturamento:1289.06, margem:183.87},
+  {data:"03/07", nome:'ERALDO', freq:64, litros:291.400, faturamento:2004.36, margem:286.79},
+  {data:"03/07", nome:'EURICO', freq:54, litros:204.683, faturamento:1337.36, margem:205.98},
+  {data:"03/07", nome:'ROBERTA',freq:86, litros:483.289, faturamento:3325.41, margem:470.63},
+  {data:"03/07", nome:'VICTOR', freq:75, litros:405.124, faturamento:2704.65, margem:400.79},
+];
+let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
+
 
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
@@ -763,6 +1117,8 @@ function importCSV(){
   if(!parsed.length){ msg.className='import-msg err'; msg.textContent='⚠ Nenhuma linha de dados válida encontrada.'; return; }
 
   dados = parsed;
+  dadosCompletos = parsed.slice();
+  filtroAtivo = 'all';
   localStorage.setItem('postoDados', JSON.stringify(parsed));
   renderAll();
   msg.className='import-msg ok';
@@ -775,12 +1131,38 @@ function importCSV(){
 function limparDados(){
   localStorage.removeItem('postoDados');
   dados = [];
+  dadosCompletos = [];
+  filtroAtivo = 'all';
   renderAll();
 }
 
 // ─── RENDER ALL ───────────────────────────────────────────────────────────────
 function renderAll(){
   destroyCharts();
+  if(!dados.length){
+    // Renderiza aviso de filtro sem resultados
+    const container = document.querySelector('.container:last-of-type');
+    document.getElementById('heroDate').textContent = today();
+    document.getElementById('heroPills').innerHTML = '<span class="pill">Nenhum dia no período filtrado</span>';
+    const sections = document.querySelectorAll('.container > .section');
+    sections.forEach(s=>s.style.display='none');
+    // Cria um aviso se não existe
+    let aviso = document.getElementById('filterEmpty');
+    if(!aviso){
+      aviso = document.createElement('div');
+      aviso.id = 'filterEmpty';
+      aviso.className = 'section';
+      aviso.innerHTML = '<div class="filter-empty"><div class="filter-empty-icon">🔍</div><h2 style="font-family:\'Space Grotesk\',sans-serif;color:var(--text);margin-bottom:8px">Nenhum dia encontrado</h2><p>Não há dados no período selecionado. Tente outro filtro.</p></div>';
+      document.querySelector('.container:last-of-type').prepend(aviso);
+    }
+    aviso.style.display='block';
+    return;
+  }
+  // Ocultar aviso e mostrar seções
+  const aviso = document.getElementById('filterEmpty');
+  if(aviso) aviso.style.display='none';
+  document.querySelectorAll('.container > .section').forEach(s=>s.style.display='');
+
   renderHero();
   renderKPIs();
   renderCharts();
@@ -802,6 +1184,128 @@ function destroyCharts(){
   Object.values(charts).forEach(c=>c&&c.destroy());
   charts={};
 }
+
+// ─── FILTRO POR PERÍODO ───────────────────────────────────────────────────────
+function parseDataBR(str){
+  // "23/05" ou "23/05/2026" → Date
+  const parts = str.split('/');
+  const dia = parseInt(parts[0]);
+  const mes = parseInt(parts[1]) - 1;
+  const ano = parts.length > 2 ? parseInt(parts[2]) : 2026;
+  return new Date(ano, mes, dia);
+}
+
+function aplicarFiltro(tipo, btnEl){
+  filtroAtivo = tipo;
+  // fechar personalizado
+  document.getElementById('filterCustom').classList.remove('open');
+  // marcar botão ativo
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
+
+  if(!dadosCompletos.length){ dados = []; renderAll(); return; }
+
+  // encontrar data referência (mais recente dos dados)
+  const ultimaData = parseDataBR(dadosCompletos[dadosCompletos.length-1].data);
+  let dataInicio, dataFim, label;
+
+  if(tipo === 'all'){
+    dados = dadosCompletos.slice();
+    label = '📊 Todo o período';
+    atualizarFilterLabel(label);
+    renderAll();
+    return;
+  }
+
+  if(tipo === '7d'){
+    dataFim = ultimaData;
+    dataInicio = new Date(ultimaData);
+    dataInicio.setDate(dataInicio.getDate() - 6);
+    label = '📅 Últimos 7 dias';
+  } else if(tipo === '15d'){
+    dataFim = ultimaData;
+    dataInicio = new Date(ultimaData);
+    dataInicio.setDate(dataInicio.getDate() - 14);
+    label = '📅 Últimos 15 dias';
+  } else if(tipo === '30d'){
+    dataFim = ultimaData;
+    dataInicio = new Date(ultimaData);
+    dataInicio.setDate(dataInicio.getDate() - 29);
+    label = '📅 Últimos 30 dias';
+  } else if(tipo === 'mes-atual'){
+    dataFim = ultimaData;
+    dataInicio = new Date(ultimaData.getFullYear(), ultimaData.getMonth(), 1);
+    const nomeMes = ultimaData.toLocaleString('pt-BR',{month:'long'});
+    label = '🗓️ '+nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)+' ('+ultimaData.getFullYear()+')';
+  } else if(tipo === 'mes-anterior'){
+    dataFim = new Date(ultimaData.getFullYear(), ultimaData.getMonth(), 0);
+    dataInicio = new Date(ultimaData.getFullYear(), ultimaData.getMonth()-1, 1);
+    const nomeMes = dataInicio.toLocaleString('pt-BR',{month:'long'});
+    label = '🗓️ '+nomeMes.charAt(0).toUpperCase()+nomeMes.slice(1)+' ('+dataInicio.getFullYear()+')';
+  }
+
+  dados = dadosCompletos.filter(d => {
+    const dt = parseDataBR(d.data);
+    return dt >= dataInicio && dt <= dataFim;
+  });
+
+  atualizarFilterLabel(label + ' · ' + dados.length + ' dia' + (dados.length!==1?'s':''));
+  renderAll();
+}
+
+function toggleCustomFilter(btnEl){
+  const painel = document.getElementById('filterCustom');
+  const isOpen = painel.classList.contains('open');
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(isOpen){
+    painel.classList.remove('open');
+    // volta a marcar o filtro anterior
+    const btnAnterior = document.querySelector('.filter-btn[data-filter="'+filtroAtivo+'"]');
+    if(btnAnterior) btnAnterior.classList.add('active');
+  } else {
+    painel.classList.add('open');
+    btnEl.classList.add('active');
+    // preencher com min/max se vazios
+    if(dadosCompletos.length && !document.getElementById('filterDe').value){
+      const primeira = parseDataBR(dadosCompletos[0].data);
+      const ultima = parseDataBR(dadosCompletos[dadosCompletos.length-1].data);
+      document.getElementById('filterDe').value = toISO(primeira);
+      document.getElementById('filterAte').value = toISO(ultima);
+    }
+  }
+}
+
+function toISO(d){
+  const ano = d.getFullYear();
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const dia = String(d.getDate()).padStart(2,'0');
+  return ano+'-'+mes+'-'+dia;
+}
+
+function aplicarFiltroCustom(){
+  const de = document.getElementById('filterDe').value;
+  const ate = document.getElementById('filterAte').value;
+  if(!de || !ate){ alert('Selecione as duas datas.'); return; }
+  const dataInicio = new Date(de + 'T00:00:00');
+  const dataFim = new Date(ate + 'T00:00:00');
+  if(dataInicio > dataFim){ alert('A data inicial deve ser anterior à data final.'); return; }
+
+  filtroAtivo = 'custom';
+  dados = dadosCompletos.filter(d => {
+    const dt = parseDataBR(d.data);
+    return dt >= dataInicio && dt <= dataFim;
+  });
+
+  const fmtBR = d => d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  atualizarFilterLabel('📅 '+fmtBR(dataInicio)+' até '+fmtBR(dataFim)+' · '+dados.length+' dia'+(dados.length!==1?'s':''));
+  renderAll();
+}
+
+function atualizarFilterLabel(txt){
+  const el = document.getElementById('filterActive');
+  if(el) el.textContent = txt;
+}
+
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 function renderHero(){
@@ -1203,8 +1707,62 @@ const nomeNaBarraPlugin = {
 };
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
+function calcularFrentistasFiltrado(){
+  // Se não há dados por dia preenchidos, usa o acumulado (comportamento antigo)
+  if(!frentistasPorDia || !frentistasPorDia.length){
+    return { lista: frentistas, periodo: 'acumulado' };
+  }
+
+  // Datas ativas no filtro atual (dados = subset filtrado)
+  const datasAtivas = new Set(dados.map(d => d.data));
+
+  // Agregar por frentista dentro do período filtrado
+  const agregado = {};
+  frentistasPorDia.forEach(reg => {
+    if(!datasAtivas.has(reg.data)) return;
+    if(!agregado[reg.nome]){
+      agregado[reg.nome] = { nome: reg.nome, freq:0, litros:0, faturamento:0, margem:0 };
+    }
+    agregado[reg.nome].freq        += (+reg.freq        || 0);
+    agregado[reg.nome].litros      += (+reg.litros      || 0);
+    agregado[reg.nome].faturamento += (+reg.faturamento || 0);
+    agregado[reg.nome].margem      += (+reg.margem      || 0);
+  });
+
+  const lista = Object.values(agregado);
+  return { lista, periodo: 'filtrado' };
+}
+
 function renderFrentistas(){
-  const ordenado = [...frentistas].sort((a,b)=>b.faturamento-a.faturamento);
+  const { lista, periodo } = calcularFrentistasFiltrado();
+
+  // Indicador de modo
+  const modoEl = document.getElementById('frentistaModo');
+  if(modoEl){
+    if(periodo === 'acumulado'){
+      modoEl.innerHTML = '⚡ Mostrando acumulado geral (aguardando dados por dia para aplicar filtro)';
+    } else {
+      const dataIni = dados.length ? dados[0].data : '';
+      const dataFim = dados.length ? dados[dados.length-1].data : '';
+      modoEl.innerHTML = `📅 Filtrado: ${dataIni} → ${dataFim} · ${dados.length} dia${dados.length!==1?'s':''}`;
+    }
+  }
+
+  // Se filtro não retornou nada e temos por-dia, mostrar aviso
+  if(!lista.length){
+    const tbody = document.getElementById('tabelaFrentistas');
+    if(tbody){
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--fuel-muted)">Nenhum dado de frentista no período selecionado</td></tr>';
+    }
+    // limpar gráficos
+    ['chartFrentistaValor','chartFrentistaLitros'].forEach(id=>{
+      const c = document.getElementById(id);
+      if(c){ const ctx = c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); }
+    });
+    return;
+  }
+
+  const ordenado = [...lista].sort((a,b)=>b.faturamento-a.faturamento);
 
   // gráfico de faturamento
   charts.frentistaValor = makeChart('chartFrentistaValor',{
@@ -1238,7 +1796,7 @@ function renderFrentistas(){
   const tbody = document.getElementById('tabelaFrentistas');
   if(tbody){
     tbody.innerHTML = ordenado.map((f,i)=>{
-      const mgPct = (f.margem/f.faturamento*100).toFixed(1);
+      const mgPct = f.faturamento > 0 ? (f.margem/f.faturamento*100).toFixed(1) : '0.0';
       const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
       return `<tr>
         <td class="date">${medal}</td>
