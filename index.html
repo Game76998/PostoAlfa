@@ -802,6 +802,7 @@ const dadosPadrao = [
   {data:"01/07",dia:"Quarta",  fc:7845.59, fv:300.64,  ft:8262.33, mg:1262.94, et:269.256, gc:473.324, ga:303.807,  ds:149.086, d5:20.134,  lub:115.80, freq:267},
   {data:"02/07",dia:"Quinta",  fc:12633.09,fv:233.15,  ft:13026.24,mg:1992.43, et:169.180, gc:1140.500,ga:396.724,  ds:116.358, d5:49.596,  lub:160.00, freq:421},
   {data:"03/07",dia:"Sexta",   fc:13356.21,fv:315.98,  ft:13702.09,mg:2057.16, et:106.990, gc:1412.982,ga:407.069,  ds:33.113,  d5:9.933,   lub:29.90,  freq:447},
+  {data:"04/07",dia:"Sábado", fc:12586.31, fv:489.07, ft:13075.38, mg:2047.28, et:127.905, gc:1310.784, ga:361.321, ds:0.000, d5:63.717, lub:0.00, freq:492},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1033,22 +1034,27 @@ const frentistasPorDiaPadrao = [
   {data:"03/07", nome:'EURICO', freq:54, litros:204.683, faturamento:1337.36, margem:205.98},
   {data:"03/07", nome:'ROBERTA',freq:86, litros:483.289, faturamento:3325.41, margem:470.63},
   {data:"03/07", nome:'VICTOR', freq:75, litros:405.124, faturamento:2704.65, margem:400.79},
+  {data:"04/07", nome:'CELIO',  freq:93, litros:372.888, faturamento:2556.78, margem:373.62},
+  {data:"04/07", nome:'ELVIO',  freq:61, litros:287.932, faturamento:1887.37, margem:285.90},
+  {data:"04/07", nome:'EURICO', freq:111, litros:485.820, faturamento:3263.10, margem:493.19},
+  {data:"04/07", nome:'ROBERTA',freq:91, litros:376.195, faturamento:2548.17, margem:375.73},
+  {data:"04/07", nome:'VICTOR', freq:87, litros:340.892, faturamento:2330.89, margem:339.89},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
 
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
-  {nome:'CERV. CONTI ZERO 269ML',                  qtd:688,  valor:1798.25},
+  {nome:'CERV. CONTI ZERO 269ML',                  qtd:706,  valor:1849.73},
+  {nome:'FIGURINHA DA COPA',                       qtd:136,  valor:952.00},
   {nome:'CHOPP BRAHMA',                            qtd:100,  valor:925.75},
-  {nome:'FIGURINHA DA COPA',                       qtd:118,  valor:826.00},
-  {nome:'SALGADO UNIDADE',                         qtd:114,  valor:742.00},
-  {nome:'CERV. BRAHMA CHOPP 269 ML',               qtd:145,  valor:735.50},
-  {nome:'CERV. HEINEKEN 250ML',                    qtd:99,   valor:681.28},
+  {nome:'SALGADO UNIDADE',                         qtd:121,  valor:780.50},
+  {nome:'CERV. HEINEKEN 250ML',                    qtd:108,  valor:744.28},
+  {nome:'CERV. BRAHMA CHOPP 269 ML',               qtd:146,  valor:740.50},
   {nome:'ENER. REDBULL 250ML',                     qtd:52,   valor:630.25},
   {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA',qtd:19,   valor:568.10},
+  {nome:'CERV. BURGUESA 269 ML',                   qtd:253,  valor:552.00},
   {nome:'TABUA DE FRIOS',                          qtd:12,   valor:527.26},
-  {nome:'CERV. BURGUESA 269 ML',                   qtd:241,  valor:526.80},
   {nome:'ARLA 32 GALAO 20L',                       qtd:5,    valor:500.00},
   {nome:'CERV. CORONITA 210ML',                    qtd:67,   valor:469.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML',              qtd:52,   valor:416.00},
