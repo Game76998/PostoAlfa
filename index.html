@@ -829,6 +829,7 @@ const dadosPadrao = [
   {data:"31/07", dia:"Sexta", fc:16866.62, fv:566.82, ft:17433.44, mg:3067.95, et:274.584, gc:1829.684, ga:258.699, ds:97.047, d5:49.019, lub:29.90, freq:606},
   {data:"01/08", dia:"Sábado", fc:15023.38, fv:1634.89, ft:16658.27, mg:3105.60, et:85.054, gc:1630.603, ga:250.273, ds:219.304, d5:14.006, lub:97.86, freq:583},
   {data:"02/08", dia:"Domingo", fc:2133.32, fv:443.00, ft:2576.32, mg:535.84, et:0.000, gc:268.000, ga:30.813, ds:5.340, d5:0.000, lub:96.00, freq:136},
+  {data:"03/08", dia:"Segunda", fc:21101.71, fv:321.69, ft:21423.40, mg:3700.06, et:15.647, gc:2712.307, ga:203.862, ds:73.720, d5:28.011, lub:29.90, freq:925},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -837,11 +838,11 @@ let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:14170,  cap:30000, cor:'#1B6CA8'},
-  {nome:'Gasolina Aditivada', atual:6173, cap:15000, cor:'#3B9FD6'},
-  {nome:'Etanol',             atual:58, cap:15000, cor:'#F5A623'},
-  {nome:'Diesel S500',        atual:12271, cap:15000, cor:'#8FA3B1'},
-  {nome:'Diesel S10',         atual:9445, cap:15000, cor:'#16A085'},
+  {nome:'Gasolina Original',  atual:13028,  cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Aditivada', atual:5947, cap:15000, cor:'#3B9FD6'},
+  {nome:'Etanol',             atual:42, cap:15000, cor:'#F5A623'},
+  {nome:'Diesel S500',        atual:12238, cap:15000, cor:'#8FA3B1'},
+  {nome:'Diesel S10',         atual:9332, cap:15000, cor:'#16A085'},
 ];
 let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
 
@@ -1192,21 +1193,26 @@ const frentistasPorDiaPadrao = [
   {data:"01/08", nome:'VICTOR',  freq:86,  litros:285.413, faturamento:1957.13, margem:347.19},
   {data:"02/08", nome:'EURICO',  freq:41,  litros:136.330, faturamento:957.29,  margem:168.59},
   {data:"02/08", nome:'VICTOR',  freq:35,  litros:167.823, faturamento:1176.03, margem:207.82},
+  {data:"03/08", nome:'CELIO',   freq:176, litros:646.709, faturamento:4488.97, margem:763.85},
+  {data:"03/08", nome:'ELVIO',   freq:149, litros:415.588, faturamento:2888.82, margem:505.80},
+  {data:"03/08", nome:'EURICO',  freq:211, litros:822.109, faturamento:5687.04, margem:939.00},
+  {data:"03/08", nome:'ROBERTA', freq:227, litros:801.876, faturamento:5619.59, margem:982.27},
+  {data:"03/08", nome:'VICTOR',  freq:115, litros:308.923, faturamento:2150.03, margem:372.93},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
 
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
-  {nome:'CERV. CONTI ZERO 269ML',                    qtd:884, valor:2315.21},
-  {nome:'CHOPP BRAHMA',                                qtd:191, valor:1828.73},
-  {nome:'SALGADO UNIDADE',                            qtd:294, valor:1676.00},
+  {nome:'CERV. CONTI ZERO 269ML',                     qtd:900, valor:2355.21},
+  {nome:'CHOPP BRAHMA',                               qtd:191, valor:1828.73},
+  {nome:'SALGADO UNIDADE',                            qtd:301, valor:1714.50},
   {nome:'FIGURINHA DA COPA',                          qtd:190, valor:1330.00},
-  {nome:'CERV. HEINEKEN 250ML',                       qtd:142, valor:1060.28},
+  {nome:'CERV. HEINEKEN 250ML',                       qtd:143, valor:1070.28},
   {nome:'CERV. BURGUESA 47 269 ML',                   qtd:490, valor:1049.70},
   {nome:'CERV. CORONITA 210ML',                       qtd:133, valor:988.00},
+  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA',   qtd:33,  valor:986.70},
   {nome:'CERV. BRAHMA CHOPP 269 ML',                  qtd:194, valor:980.50},
-  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA',   qtd:32,  valor:956.80},
   {nome:'ENER. REDBULL 250ML',                        qtd:67,  valor:822.97},
   {nome:'CERV. IMPERIO ULTRA 210 ML',                 qtd:79,  valor:686.00},
   {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA',        qtd:12,  valor:660.00},
@@ -1215,9 +1221,9 @@ const topProdutosPadrao = [
   {nome:'CAPPUCINO ESPECIAL',                         qtd:45,  valor:500.75},
   {nome:'ARLA 32 GALAO 20L',                          qtd:5,   valor:500.00},
   {nome:'CERV. SKOL 269ML',                           qtd:88,  valor:440.00},
-  {nome:'FRANGO A PASSARINHO TEMPERADO 700G',         qtd:38,  valor:412.50},
   {nome:'CERV. MICHELOB ULTRA 330 ML',                qtd:47,  valor:392.17},
   {nome:'LUB. 20W 50 MINERAL X1MAXX',                 qtd:14,  valor:392.00},
+  {nome:'FRANGO A PASSARINHO TEMPERADO 700G',         qtd:38,  valor:412.50},
 ];
 let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
 
