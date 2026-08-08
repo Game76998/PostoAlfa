@@ -833,6 +833,7 @@ const dadosPadrao = [
   {data:"04/08", dia:"Terça", fc:9925.95, fv:235.21, ft:10161.16, mg:1595.57, et:14.798, gc:967.916, ga:175.867, ds:53.404, d5:235.122, lub:59.80, freq:347},
   {data:"05/08", dia:"Quarta", fc:9775.40, fv:210.22, ft:9985.62, mg:1862.47, et:178.389, gc:918.315, ga:203.814, ds:67.562, d5:78.432, lub:29.90, freq:335},
   {data:"06/08",dia:"Quinta", fc:8362.52, fv:246.40, ft:8608.92, mg:1648.44, et:241.709, gc:808.710, ga:208.722, ds:0.000, d5:15.419, lub:141.90, freq:350},
+  {data:"07/08",dia:"Sexta", fc:12422.07, fv:247.89, ft:12669.96, mg:2382.48, et:335.408, gc:1028.365, ga:286.962, ds:120.233, d5:104.343, lub:84.90, freq:408},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -841,11 +842,11 @@ let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:17225,  cap:30000, cor:'#1B6CA8'},
-  {nome:'Gasolina Aditivada', atual:8422, cap:15000, cor:'#3B9FD6'},
-  {nome:'Etanol',             atual:9632, cap:15000, cor:'#F5A623'},
-  {nome:'Diesel S500',        atual:11901, cap:15000, cor:'#8FA3B1'},
-  {nome:'Diesel S10',         atual:9219, cap:15000, cor:'#16A085'},
+  {nome:'Gasolina Original',  atual:16158,  cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Aditivada', atual:8002, cap:15000, cor:'#3B9FD6'},
+  {nome:'Etanol',             atual:9295, cap:15000, cor:'#F5A623'},
+  {nome:'Diesel S500',        atual:11764, cap:15000, cor:'#8FA3B1'},
+  {nome:'Diesel S10',         atual:9068, cap:15000, cor:'#16A085'},
 ];
 let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
 
@@ -1216,24 +1217,30 @@ const frentistasPorDiaPadrao = [
   {data:"06/08", nome:'EURICO',  freq:86, litros:361.527, faturamento:2451.67, margem:450.52},
   {data:"06/08", nome:'ROBERTA', freq:46, litros:211.145, faturamento:1294.20, margem:258.08},
   {data:"06/08", nome:'VICTOR',  freq:56, litros:178.343, faturamento:1213.36, margem:222.07},
+  {data:"07/08", nome:'CELIO',     freq:57, litros:354.926, faturamento:2301.46, margem:436.02},
+  {data:"07/08", nome:'ELVIO',     freq:57, litros:229.216, faturamento:1448.77, margem:281.12},
+  {data:"07/08", nome:'EURICO',    freq:74, litros:308.132, faturamento:2019.76, margem:381.44},
+  {data:"07/08", nome:'GUILHERME',freq:40, litros:180.327, faturamento:1136.12, margem:221.07},
+  {data:"07/08", nome:'ROBERTA',  freq:81, litros:411.299, faturamento:2795.81, margem:510.49},
+  {data:"07/08", nome:'VICTOR',   freq:82, litros:391.411, faturamento:2720.15, margem:482.78},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
 
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
-  {nome:'CERV. CONTI ZERO 269ML',                  qtd:900, valor:2355.21},
+  {nome:'CERV. CONTI ZERO 269ML',                   qtd:912, valor:2385.21},
   {nome:'CHOPP BRAHMA',                             qtd:191, valor:1828.73},
   {nome:'SALGADO UNIDADE',                          qtd:305, valor:1728.50},
   {nome:'FIGURINHA DA COPA',                        qtd:190, valor:1330.00},
-  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:37,  valor:1106.30},
-  {nome:'CERV. HEINEKEN 250ML',                     qtd:143, valor:1070.28},
+  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:38,  valor:1136.20},
+  {nome:'CERV. HEINEKEN 250ML',                     qtd:145, valor:1090.28},
   {nome:'CERV. BURGUESA 47 269 ML',                 qtd:490, valor:1049.70},
   {nome:'CERV. CORONITA 210ML',                     qtd:133, valor:988.00},
   {nome:'CERV. BRAHMA CHOPP 269 ML',                qtd:195, valor:985.50},
   {nome:'ENER. REDBULL 250ML',                      qtd:67,  valor:822.97},
   {nome:'CERV. IMPERIO ULTRA 210 ML',               qtd:79,  valor:686.00},
-  {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA',      qtd:12,  valor:660.00},
+  {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA',      qtd:13,  valor:715.00},
   {nome:'LUB. 15W 40 SEMISSINTETICO X1MAXX',        qtd:21,  valor:641.90},
   {nome:'LUB. 20W 50 MINERAL X1MAXX',               qtd:19,  valor:532.00},
   {nome:'TABUA DE FRIOS',                           qtd:12,  valor:527.26},
