@@ -52,6 +52,12 @@
   }
   .hero-sub { font-size:14px; color:rgba(255,255,255,.55); margin-bottom:36px; }
   .hero-pills { display:flex; flex-wrap:wrap; gap:10px; }
+  .btn-export-pdf {
+    margin-top:22px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25); color:#fff;
+    border-radius:8px; padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer;
+    transition:background .2s; font-family:'Inter',sans-serif;
+  }
+  .btn-export-pdf:hover { background:rgba(255,255,255,.2); }
   .pill {
     background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
     border-radius:100px; padding:5px 14px; font-size:12px; color:rgba(255,255,255,.75);
@@ -251,6 +257,17 @@
   .tank-ok   { background:#D4F0E3; color:#1A7A44; }
   .tank-mid  { background:#FEF0D2; color:#8A5400; }
   .tank-low  { background:#FADBD8; color:#922B21; }
+  .tank-valor { font-size:13px; font-weight:700; color:var(--fuel-blue); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); }
+  .tank-valor small { display:block; font-size:10px; font-weight:500; color:var(--fuel-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+
+  /* TOTAL EM ESTOQUE */
+  .stock-total-bar {
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    background:linear-gradient(135deg,var(--fuel-dark) 0%,var(--fuel-navy) 100%);
+    border-radius:14px; padding:18px 22px; margin-bottom:18px;
+  }
+  .stock-total-label { font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+  .stock-total-value { font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:#fff; letter-spacing:-.02em; }
 
   /* FILTER BAR */
   .filter-bar {
@@ -439,6 +456,15 @@
   .proj-info { background:#F0FAF5; border:1px solid #B7E4CE; border-radius:12px; padding:14px 18px; font-size:12px; color:#1A5C35; margin-bottom:24px; display:flex; align-items:flex-start; gap:10px; }
   .proj-info-icon { font-size:18px; flex-shrink:0; }
 
+  /* ─── IMPRESSÃO / EXPORTAR PDF ─────────────────────────────────────────── */
+  @media print {
+    .no-print, .import-bar, .filter-bar { display:none !important; }
+    body { background:#fff; }
+    .hero { background:#0D1B2A !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .section { page-break-inside:avoid; break-inside:avoid; }
+    .chart-wrap { page-break-inside:avoid; break-inside:avoid; }
+    .container { width:100%; max-width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -483,6 +509,7 @@
     <h1 id="heroTitle">Posto Alfa<br>Análise de Desempenho</h1>
     <p class="hero-sub" id="heroSub">CNPJ 30.247.229/0001-96 · Gerado em <span id="heroDate"></span> · Usuário: Posto Alfa</p>
     <div class="hero-pills" id="heroPills"></div>
+    <button class="btn-export-pdf no-print" id="btnExportPDF" type="button" onclick="exportarPDF()">📄 Exportar PDF</button>
   </div>
 </div>
 
@@ -591,6 +618,14 @@
   <!-- ESTOQUE DE TANQUES -->
   <div class="section" style="padding-top:0">
     <div class="section-title">estoque de tanques · nível atual</div>
+
+    <div class="stock-total-bar">
+      <div>
+        <div class="stock-total-label">Valor total em estoque</div>
+        <div class="stock-total-value" id="stockTotalValor">R$ 0,00</div>
+      </div>
+    </div>
+
     <div class="tank-grid" id="tankGrid"></div>
   </div>
 
@@ -839,6 +874,7 @@ const dadosPadrao = [
   {data:"10/08",dia:"Segunda", fc:9876.50, fv:212.39, ft:10088.89, mg:1888.67, et:396.668, gc:813.165, ga:190.556, ds:126.484, d5:19.608, lub:57.90, freq:332},
   {data:"11/08",dia:"Terça", fc:11759.30, fv:327.77, ft:12087.07, mg:2256.79, et:328.899, gc:1133.032, ga:259.825, ds:33.378, d5:35.015, lub:151.00, freq:449},
   {data:"12/08",dia:"Quarta", fc:13412.14, fv:373.25, ft:13785.39, mg:2247.53, et:220.433, gc:1094.520, ga:218.202, ds:66.755, d5:432.740, lub:0.00, freq:443},
+  {data:"13/08",dia:"Quinta", fc:12541.70, fv:464.60, ft:13006.30, mg:2009.61, et:221.653, gc:974.555, ga:214.212, ds:422.531, d5:58.823, lub:69.90, freq:428},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -846,14 +882,26 @@ let filtroAtivo = 'all'; // filtro atualmente ativo
 let charts = {};
 
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
+// 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:11518,  cap:30000, cor:'#1B6CA8'},
-  {nome:'Gasolina Aditivada', atual:7047, cap:15000, cor:'#3B9FD6'},
-  {nome:'Etanol',             atual:7850, cap:15000, cor:'#F5A623'},
-  {nome:'Diesel S500',        atual:11275, cap:15000, cor:'#8FA3B1'},
-  {nome:'Diesel S10',         atual:8841, cap:15000, cor:'#16A085'},
+  {nome:'Gasolina Original',  atual:10548,  cap:30000, cor:'#1B6CA8'},
+  {nome:'Gasolina Aditivada', atual:6856, cap:15000, cor:'#3B9FD6'},
+  {nome:'Etanol',             atual:7620, cap:15000, cor:'#F5A623'},
+  {nome:'Diesel S500',        atual:11205, cap:15000, cor:'#8FA3B1'},
+  {nome:'Diesel S10',         atual:8384, cap:15000, cor:'#16A085'},
 ];
-let tanques = JSON.parse(localStorage.getItem('postoTanques')) || tanquesPadrao;
+let tanques = tanquesPadrao;
+
+// ─── PREÇO DE VENDA POR LITRO (por produto) ───────────────────────────────────
+// 👉 Para atualizar o preço de venda, edite o valor (R$/L) de cada produto abaixo.
+const precosPadrao = {
+  'Gasolina Original':  6.99,
+  'Gasolina Aditivada': 7.14,
+  'Etanol':              4.59,
+  'Diesel S500':          7.14,
+  'Diesel S10':           7.49,
+};
+let precos = precosPadrao;
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
 // ⚠️ FRENTISTAS ACUMULADOS (fallback quando frentistasPorDia estiver vazio)
@@ -1249,7 +1297,11 @@ const frentistasPorDiaPadrao = [
   {data:"12/08", nome:'EURICO',  freq:79, litros:382.660, faturamento:2446.95, margem:471.55},
   {data:"12/08", nome:'ROBERTA', freq:74, litros:376.779, faturamento:2587.43, margem:466.42},
   {data:"12/08", nome:'VICTOR',  freq:95, litros:304.963, faturamento:2132.62, margem:381.61},
-  
+  {data:"13/08", nome:'CELIO',   freq:81, litros:258.150, faturamento:1746.32, margem:321.58},
+  {data:"13/08", nome:'ELVIO',   freq:63, litros:283.593, faturamento:1828.86, margem:349.33},
+  {data:"13/08", nome:'EURICO',  freq:92, litros:392.170, faturamento:2661.71, margem:485.17},
+  {data:"13/08", nome:'ROBERTA', freq:80, litros:658.300, faturamento:4338.59, margem:400.81},
+  {data:"13/08", nome:'VICTOR',  freq:89, litros:281.290, faturamento:1865.19, margem:349.08},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1870,6 +1922,9 @@ function renderTabela(){
 function renderTanques(){
   const grid = document.getElementById('tankGrid');
   if(!grid) return;
+
+  let totalGeral = 0;
+
   grid.innerHTML = tanques.map(t=>{
     const pct = Math.max(0, Math.min(100, (t.atual/t.cap*100)));
     const pctRound = pct.toFixed(0);
@@ -1877,6 +1932,11 @@ function renderTanques(){
     if(pct >= 40){ badgeClass='tank-ok'; badgeText='Nível bom'; }
     else if(pct >= 15){ badgeClass='tank-mid'; badgeText='Atenção'; }
     else { badgeClass='tank-low'; badgeText='Crítico'; }
+
+    const precoLitro = precos[t.nome] || 0;
+    const valorEstoque = t.atual * precoLitro;
+    totalGeral += valorEstoque;
+
     return `
       <div class="tank-card">
         <div class="tank-name">${t.nome}</div>
@@ -1888,8 +1948,15 @@ function renderTanques(){
         <div class="tank-litros">${fmtN(t.atual)} L</div>
         <div class="tank-cap">de ${fmtN(t.cap)} L</div>
         <span class="tank-badge ${badgeClass}">${badgeText}</span>
+        <div class="tank-valor">
+          <small>Valor em estoque${precoLitro?` · ${fmt(precoLitro)}/L`:' · defina o preço/L'}</small>
+          ${fmt(valorEstoque)}
+        </div>
       </div>`;
   }).join('');
+
+  const totalEl = document.getElementById('stockTotalValor');
+  if(totalEl) totalEl.textContent = fmt(totalGeral);
 }
 
 // ─── PLUGIN: nome dentro da barra (frentistas) ───────────────────────────────
@@ -2723,6 +2790,11 @@ function renderHeatmap(metrica='ft', tabEl){
     const bg = heatmapColor(i/(steps-1));
     return `<span style="background:${bg}"></span>`;
   }).join('');
+}
+
+// ─── EXPORTAR PDF ─────────────────────────────────────────────────────────────
+function exportarPDF(){
+  window.print();
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
