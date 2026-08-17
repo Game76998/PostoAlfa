@@ -136,6 +136,8 @@
   .badge-green { background:#D4F0E3; color:#1A7A44; }
   .badge-amber { background:#FEF0D2; color:#8A5400; }
   .badge-blue  { background:#D6EBF9; color:#1557A0; }
+  .badge-red   { background:#FADBD8; color:#922B21; }
+  .badge-purple{ background:#EAE0F5; color:#5B2C87; }
 
   /* CHART CARDS */
   .chart-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
@@ -174,6 +176,11 @@
   td.dia { color:var(--text-soft); font-size:12px; }
   td.fat { font-weight:700; }
   td.good { color:var(--fuel-green); font-weight:600; }
+  td.bad  { color:#C0392B; font-weight:600; }
+  .abc-badge { display:inline-block; font-size:11px; font-weight:700; padding:3px 11px; border-radius:100px; }
+  .abc-a { background:#D4F0E3; color:#1A7A44; }
+  .abc-b { background:#FEF0D2; color:#8A5400; }
+  .abc-c { background:#F0F2F5; color:#5A6B7A; }
   td.warn { color:var(--fuel-red); font-weight:600; }
   .tag { display:inline-block; font-size:10px; font-weight:600; padding:2px 8px; border-radius:100px; }
   .tag-g { background:#D4F0E3; color:#1A7A44; }
@@ -268,6 +275,20 @@
   }
   .stock-total-label { font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
   .stock-total-value { font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:#fff; letter-spacing:-.02em; }
+  .stock-total-grand { font-size:12px; color:rgba(255,255,255,.6); text-align:right; }
+  .stock-total-grand strong { display:block; font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:#fff; margin-top:2px; }
+
+  /* ESTOQUE GERAL (CONVENIÊNCIA / LUBRIFICANTES / ADITIVOS) */
+  .eg-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .eg-card {
+    background:var(--card-bg); border:1px solid var(--border); border-radius:14px;
+    padding:20px 20px 18px; box-shadow:0 1px 4px rgba(13,27,42,.05); position:relative; overflow:hidden;
+  }
+  .eg-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--eg-color,var(--fuel-blue)); }
+  .eg-icon { font-size:22px; margin-bottom:10px; display:block; }
+  .eg-label { font-size:12px; font-weight:600; color:var(--text-soft); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .eg-value { font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:var(--text); letter-spacing:-.02em; line-height:1; margin-bottom:6px; }
+  .eg-sub { font-size:12px; color:var(--fuel-muted); }
 
   /* FILTER BAR */
   .filter-bar {
@@ -418,6 +439,8 @@
 
   /* PROGRESS BARS */
   .progress-list { display:flex; flex-direction:column; gap:14px; }
+  .mix-secondary-inner { display:grid; grid-template-columns:1.3fr 1fr; gap:32px; align-items:center; }
+  @media(max-width:800px){ .mix-secondary-inner { grid-template-columns:1fr; } }
   .progress-header { display:flex; justify-content:space-between; margin-bottom:5px; }
   .progress-label { font-size:12px; font-weight:500; color:var(--text); }
   .progress-val { font-size:12px; font-weight:700; color:var(--text); }
@@ -621,12 +644,27 @@
 
     <div class="stock-total-bar">
       <div>
-        <div class="stock-total-label">Valor total em estoque</div>
+        <div class="stock-total-label">Valor em estoque · combustíveis</div>
         <div class="stock-total-value" id="stockTotalValor">R$ 0,00</div>
       </div>
     </div>
 
     <div class="tank-grid" id="tankGrid"></div>
+  </div>
+
+  <!-- ESTOQUE GERAL (CONVENIÊNCIA, LUBRIFICANTES E ADITIVOS) -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">estoque geral · conveniência, lubrificantes e aditivos</div>
+
+    <div class="stock-total-bar">
+      <div>
+        <div class="stock-total-label">Valor em estoque · não-combustível</div>
+        <div class="stock-total-value" id="estoqueGeralTotalValor">R$ 0,00</div>
+      </div>
+      <div class="stock-total-grand" id="estoqueGrandTotal"></div>
+    </div>
+
+    <div class="eg-grid" id="estoqueGeralGrid"></div>
   </div>
 
   <!-- RANKING DE FRENTISTAS -->
@@ -660,22 +698,26 @@
 
   <!-- MIX TABLE -->
   <div class="section" style="padding-top:0">
-    <div class="section-title">detalhamento por combustível</div>
-    <div class="chart-grid-2">
-      <div class="table-card" style="margin-bottom:0">
-        <div class="table-header"><span class="chart-title">Resumo por Combustível</span></div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead>
-              <tr><th>Produto</th><th>Litros</th><th>Part.%</th><th>Fat. Total</th><th>Mg %</th></tr>
-            </thead>
-            <tbody id="tabelaMix"></tbody>
-          </table>
-        </div>
+    <div class="section-title">detalhamento por combustível · custo x margem real</div>
+    <div class="table-card" style="margin-bottom:20px">
+      <div class="table-header"><span class="chart-title">Resumo por Combustível</span></div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Produto</th><th>Estoque Atual</th><th>Part. Estoque%</th><th>Fat. Total</th><th>Custo/L</th><th>Venda/L</th><th>Mg %</th><th>Margem Total</th></tr>
+          </thead>
+          <tbody id="tabelaMix"></tbody>
+        </table>
       </div>
-      <div class="chart-card" style="display:flex;flex-direction:column;justify-content:center">
-        <div class="chart-title" style="margin-bottom:16px">Participação no Mix (litros)</div>
-        <div id="progressBars" class="progress-list"></div>
+    </div>
+    <div class="chart-card mix-secondary">
+      <div class="mix-secondary-inner">
+        <div>
+          <div class="chart-title" style="margin-bottom:4px">Participação no Mix (litros)</div>
+          <div class="chart-sub" style="margin-bottom:20px">Fatia de cada combustível no volume total vendido no período</div>
+          <div id="progressBars" class="progress-list"></div>
+        </div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chartMixDonut"></canvas></div>
       </div>
     </div>
   </div>
@@ -763,6 +805,30 @@
         </div>
         <div id="topProdutosBodyValor"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- CURVA ABC -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">curva abc · produtos da conveniência</div>
+    <div class="table-card" style="margin-bottom:20px">
+      <div class="table-header">
+        <span class="chart-title">📊 Classificação ABC por Faturamento</span>
+        <span class="chart-sub" style="display:block;margin-top:4px" id="abcResumo"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Produto</th><th>Valor</th><th>% Individual</th><th>% Acumulado</th><th>Classe</th></tr>
+          </thead>
+          <tbody id="tabelaABC"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title" style="margin-bottom:4px">Curva de Pareto (80/20)</div>
+      <div class="chart-sub" style="margin-bottom:20px">Barras = valor por produto · linha vermelha = % acumulado do faturamento</div>
+      <div class="chart-wrap" style="height:340px"><canvas id="chartABC"></canvas></div>
     </div>
   </div>
 
@@ -887,11 +953,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:7870,  cap:30000, cor:'#1B6CA8'},
-  {nome:'Gasolina Aditivada', atual:6173, cap:15000, cor:'#3B9FD6'},
-  {nome:'Etanol',             atual:7162, cap:15000, cor:'#F5A623'},
-  {nome:'Diesel S500',        atual:11169, cap:15000, cor:'#8FA3B1'},
-  {nome:'Diesel S10',         atual:7926, cap:15000, cor:'#16A085'},
+  {nome:'Gasolina Original',  atual:7870,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:6173, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:7162, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:11169, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:7926, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -905,6 +971,31 @@ const precosPadrao = {
   'Diesel S10':           7.49,
 };
 let precos = precosPadrao;
+
+// ─── CUSTO DE COMPRA POR LITRO (por produto) ──────────────────────────────────
+// 👉 Para atualizar o custo de compra (o que você paga na distribuidora), edite abaixo.
+// Usado para calcular a margem REAL (venda - custo) por combustível.
+const custosPadrao = {
+  'Gasolina Original':  5.70,
+  'Gasolina Aditivada': 5.85,
+  'Etanol':              3.35,
+  'Diesel S500':          5.94,
+  'Diesel S10':           6.30,
+};
+let custos = custosPadrao;
+
+// ─── ESTOQUE GERAL (CONVENIÊNCIA, LUBRIFICANTES, ADITIVOS) ───────────────────
+// 👉 Para atualizar, edite "qtd" (nº de itens em estoque) e "valor" (valor total
+//    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
+//    Como são muitos produtos diferentes por categoria, o valor é lançado agregado
+//    (some o inventário físico ou puxe do seu sistema de gestão/PDV).
+// Última atualização: posição de estoque de 16/08/2026 (relatório REL024, agrupado por Grupo de Produto)
+const estoqueGeralPadrao = [
+  {categoria:'Conveniência',  icone:'🛒', qtd:1702, valor:16625.03, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes', icone:'🛢️', qtd:318,  valor:20358.06, cor:'#8E44AD'},
+  {categoria:'Aditivos',      icone:'⚗️', qtd:39,   valor:4640.00,  cor:'#F5A623'},
+];
+let estoqueGeral = estoqueGeralPadrao;
 
 // ─── RANKING DE FRENTISTAS ────────────────────────────────────────────────────
 // ⚠️ FRENTISTAS ACUMULADOS (fallback quando frentistasPorDia estiver vazio)
@@ -1447,6 +1538,7 @@ function renderAll(){
   renderCharts();
   renderTabela();
   renderTanques();
+  renderEstoqueGeral();
   renderFrentistas();
   renderMixTable();
   renderProgressBars();
@@ -1455,6 +1547,7 @@ function renderAll(){
   renderDiaSemana();
   renderTankForecast();
   renderTopProdutos();
+  renderABC();
   renderHeatmap('ft');
   document.getElementById('footerDate').textContent = today();
 }
@@ -1615,12 +1708,31 @@ function renderKPIs(){
   const avgFreq  = Math.round(sum(dados,'freq')/dados.length);
   const ticket   = (totalFat/sum(dados,'freq')).toFixed(2);
 
+  // ── Variação vs período anterior (divide os dias filtrados ao meio) ──────────
+  const metade = Math.floor(dados.length/2);
+  const p1 = dados.slice(0, metade), p2 = dados.slice(metade);
+  let variacaoBadge = '<span class="kpi-badge badge-blue">sem histórico suficiente</span>';
+  if(p1.length && p2.length){
+    const avgFat1 = sum(p1,'ft')/p1.length;
+    const avgFat2 = sum(p2,'ft')/p2.length;
+    const variacao = avgFat1>0 ? ((avgFat2-avgFat1)/avgFat1*100) : 0;
+    const seta  = variacao>=0 ? '▲' : '▼';
+    const cor   = variacao>=0 ? 'badge-green' : 'badge-red';
+    variacaoBadge = `<span class="kpi-badge ${cor}">${seta} ${Math.abs(variacao).toFixed(1)}% vs período anterior</span>`;
+  }
+
+  // ── Valor total em estoque (combustível + conveniência/lub./aditivos) ───────
+  const valorEstoqueComb = tanques.reduce((a,t)=>a+(t.atual*(precos[t.nome]||0)),0);
+  const valorEstoqueGeral = estoqueGeral.reduce((a,e)=>a+e.valor,0);
+  const valorEstoqueTotal = valorEstoqueComb + valorEstoqueGeral;
+  const semPreco = tanques.some(t=>!precos[t.nome]) || estoqueGeral.some(e=>!e.valor);
+
   document.getElementById('kpiGrid').innerHTML = `
     <div class="kpi-card" style="--accent-color:#1B6CA8">
       <div class="kpi-label">Faturamento Total</div>
       <div class="kpi-value">${fmtK(totalFat)}</div>
       <div class="kpi-sub">${dados.length} dias de operação</div>
-      <span class="kpi-badge badge-blue">${fmt(totalFat)}</span>
+      ${variacaoBadge}
     </div>
     <div class="kpi-card" style="--accent-color:#27AE60">
       <div class="kpi-label">Margem Bruta Total</div>
@@ -1657,6 +1769,12 @@ function renderKPIs(){
       <div class="kpi-value">${avgFreq}</div>
       <div class="kpi-sub">clientes/atend. por dia</div>
       <span class="kpi-badge badge-green">recorrente</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:#FF5C00">
+      <div class="kpi-label">Valor em Estoque Total</div>
+      <div class="kpi-value">${fmtK(valorEstoqueTotal)}</div>
+      <div class="kpi-sub">${fmtK(valorEstoqueComb)} combustível · ${fmtK(valorEstoqueGeral)} geral</div>
+      <span class="kpi-badge ${semPreco?'badge-amber':'badge-purple'}">${semPreco?'⚠ dados incompletos':'estoque parado'}</span>
     </div>
   `;
 }
@@ -1969,6 +2087,31 @@ function renderTanques(){
   if(totalEl) totalEl.textContent = fmt(totalGeral);
 }
 
+// ─── ESTOQUE GERAL (CONVENIÊNCIA, LUBRIFICANTES, ADITIVOS) ───────────────────
+function renderEstoqueGeral(){
+  const grid = document.getElementById('estoqueGeralGrid');
+  if(!grid) return;
+
+  const totalNaoComb = estoqueGeral.reduce((a,e)=>a+e.valor,0);
+
+  grid.innerHTML = estoqueGeral.map(e=>`
+    <div class="eg-card" style="--eg-color:${e.cor}">
+      <span class="eg-icon">${e.icone}</span>
+      <div class="eg-label">${e.categoria}</div>
+      <div class="eg-value">${fmt(e.valor)}</div>
+      <div class="eg-sub">${e.qtd ? fmtN(e.qtd)+' itens em estoque' : 'quantidade não informada'}</div>
+    </div>`).join('');
+
+  const totalEl = document.getElementById('estoqueGeralTotalValor');
+  if(totalEl) totalEl.textContent = fmt(totalNaoComb);
+
+  const totalComb = tanques.reduce((a,t)=>a+(t.atual*(precos[t.nome]||0)),0);
+  const grandEl = document.getElementById('estoqueGrandTotal');
+  if(grandEl){
+    grandEl.innerHTML = `Estoque total (comb. + geral)<strong>${fmt(totalComb+totalNaoComb)}</strong>`;
+  }
+}
+
 // ─── PLUGIN: nome dentro da barra (frentistas) ───────────────────────────────
 const nomeNaBarraPlugin = {
   id: 'nomeNaBarra',
@@ -2105,37 +2248,58 @@ function renderFrentistas(){
   }
 }
 
-// ─── MIX TABLE ────────────────────────────────────────────────────────────────
+// ─── MIX TABLE (CUSTO x MARGEM REAL) ──────────────────────────────────────────
 function renderMixTable(){
   const totEt=sum(dados,'et'),totGc=sum(dados,'gc'),totGa=sum(dados,'ga'),totDs=sum(dados,'ds'),totD5=sum(dados,'d5');
-  const totL=totEt+totGc+totGa+totDs+totD5;
+  const totLVendido=totEt+totGc+totGa+totDs+totD5;
   const totFc=sum(dados,'fc');
+
+  // Mapeia o estoque atual de cada tanque pelo nome (mesma fonte da seção "estoque de tanques")
+  const estoquePorNome = {};
+  tanques.forEach(t=>{ estoquePorNome[t.nome] = t.atual; });
+
   const produtos=[
-    {nome:'Gasolina Original',   lit:totGc, mg:16.1},
-    {nome:'Gasolina Aditivada',lit:totGa,mg:17.5},
-    {nome:'Etanol',           lit:totEt, mg:18.2},
-    {nome:'Diesel S10',       lit:totDs, mg:14.0},
-    {nome:'Diesel S500',      lit:totD5, mg:14.5},
+    {nome:'Gasolina Original',  litVendido:totGc, litEstoque:estoquePorNome['Gasolina Original']||0},
+    {nome:'Gasolina Aditivada', litVendido:totGa, litEstoque:estoquePorNome['Gasolina Aditivada']||0},
+    {nome:'Etanol',             litVendido:totEt, litEstoque:estoquePorNome['Etanol']||0},
+    {nome:'Diesel S10',         litVendido:totDs, litEstoque:estoquePorNome['Diesel S10']||0},
+    {nome:'Diesel S500',        litVendido:totD5, litEstoque:estoquePorNome['Diesel S500']||0},
   ];
+  const totLEstoque = produtos.reduce((a,p)=>a+p.litEstoque,0);
+
   const tbody=document.getElementById('tabelaMix');
   tbody.innerHTML='';
+  let totalMargemR = 0;
   produtos.forEach(p=>{
-    const pct=(p.lit/totL*100).toFixed(1);
-    const fat=(p.lit/totL*totFc);
+    const pct = totLEstoque>0 ? (p.litEstoque/totLEstoque*100).toFixed(1) : '0.0';
+    const fat = totLVendido>0 ? (p.litVendido/totLVendido*totFc) : 0;
+    const custoL = custos[p.nome]||0;
+    const vendaL = precos[p.nome]||0;
+    const temDados = custoL>0 && vendaL>0;
+    const margemL = vendaL - custoL;
+    const margemPct = vendaL>0 ? (margemL/vendaL*100) : 0;
+    const margemTotal = margemL * p.litVendido; // margem realizada nas vendas do período filtrado
+    if(temDados) totalMargemR += margemTotal;
     tbody.innerHTML+=`<tr>
       <td class="date">${p.nome}</td>
-      <td>${fmtN(p.lit)} L</td>
+      <td>${fmtN(p.litEstoque)} L</td>
       <td>${pct}%</td>
       <td class="fat">${fmt(fat)}</td>
-      <td class="good">~${p.mg}%</td>
+      <td>${custoL?fmt(custoL):'—'}</td>
+      <td>${vendaL?fmt(vendaL):'—'}</td>
+      <td class="${!temDados?'':margemPct>=0?'good':'bad'}">${temDados?margemPct.toFixed(1)+'%':'⚠ definir custo/venda'}</td>
+      <td class="${!temDados?'':margemPct>=0?'good':'bad'}">${temDados?fmt(margemTotal):'—'}</td>
     </tr>`;
   });
   tbody.innerHTML+=`<tr style="background:#F7FAFC;font-weight:700">
     <td><strong>TOTAL</strong></td>
-    <td><strong>${fmtN(totL)} L</strong></td>
+    <td><strong>${fmtN(totLEstoque)} L</strong></td>
     <td><strong>100%</strong></td>
     <td class="fat"><strong>${fmt(totFc)}</strong></td>
-    <td class="good"><strong>~16.1%</strong></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td class="good"><strong>${fmt(totalMargemR)}</strong></td>
   </tr>`;
 }
 
@@ -2144,11 +2308,11 @@ function renderProgressBars(){
   const totEt=sum(dados,'et'),totGc=sum(dados,'gc'),totGa=sum(dados,'ga'),totDs=sum(dados,'ds'),totD5=sum(dados,'d5');
   const totL=totEt+totGc+totGa+totDs+totD5;
   const mixData=[
-    {nome:'Gasolina Original',    lit:totGc, cor:'#1B6CA8'},
-    {nome:'Gasolina Aditivada',lit:totGa, cor:'#3B9FD6'},
-    {nome:'Etanol',            lit:totEt, cor:'#F5A623'},
-    {nome:'Diesel S500',       lit:totD5, cor:'#8FA3B1'},
-    {nome:'Diesel S10',        lit:totDs, cor:'#16A085'},
+    {nome:'Gasolina Original',    lit:totGc, cor:'#FF5C00'},
+    {nome:'Gasolina Aditivada',lit:totGa, cor:'#2E6F40'},
+    {nome:'Etanol',            lit:totEt, cor:'#06402B'},
+    {nome:'Diesel S500',       lit:totD5, cor:'#950606'},
+    {nome:'Diesel S10',        lit:totDs, cor:'#FFDE21'},
   ];
   const pb=document.getElementById('progressBars');
   pb.innerHTML='';
@@ -2162,6 +2326,29 @@ function renderProgressBars(){
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${m.cor}"></div></div>
       </div>`;
+  });
+
+  charts.mixDonut = makeChart('chartMixDonut', {
+    type:'doughnut',
+    data:{
+      labels: mixData.map(m=>m.nome),
+      datasets:[{
+        data: mixData.map(m=>m.lit),
+        backgroundColor: mixData.map(m=>m.cor),
+        borderWidth:2, borderColor:'#fff', hoverOffset:6
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>{
+          const v = ctx.parsed;
+          const pct = (v/totL*100).toFixed(1);
+          return `${ctx.label}: ${fmtN(v)} L (${pct}%)`;
+        }}}
+      }
+    }
   });
 }
 
@@ -2702,6 +2889,78 @@ function renderTopProdutos(){
 
   bodyQtd.innerHTML   = renderList(topProdutos, 'qtd',   v => v + ' un.');
   bodyValor.innerHTML = renderList(topProdutos, 'valor', v => fmt(v));
+}
+
+// ─── CURVA ABC (PARETO) ────────────────────────────────────────────────────────
+function renderABC(){
+  const tbody  = document.getElementById('tabelaABC');
+  const resumo = document.getElementById('abcResumo');
+  if(!tbody) return;
+
+  if(!topProdutos.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-soft);padding:24px">Ranking aguardando dados</td></tr>`;
+    if(resumo) resumo.textContent = '';
+    return;
+  }
+
+  const ordenado    = [...topProdutos].sort((a,b)=>b.valor-a.valor);
+  const totalValor  = ordenado.reduce((a,p)=>a+p.valor,0);
+  let acumulado = 0, countA = 0, countB = 0, countC = 0;
+
+  const linhas = ordenado.map(p=>{
+    const pctInd = totalValor>0 ? (p.valor/totalValor*100) : 0;
+    acumulado += pctInd;
+    let classe, badgeClass;
+    if(acumulado<=80){ classe='A'; badgeClass='abc-a'; countA++; }
+    else if(acumulado<=95){ classe='B'; badgeClass='abc-b'; countB++; }
+    else { classe='C'; badgeClass='abc-c'; countC++; }
+    return {nome:p.nome, valor:p.valor, pctInd, acumulado, classe, badgeClass};
+  });
+
+  tbody.innerHTML = linhas.map((l,i)=>`
+    <tr>
+      <td class="date">${i+1}</td>
+      <td style="font-weight:700">${l.nome}</td>
+      <td class="fat">${fmt(l.valor)}</td>
+      <td>${l.pctInd.toFixed(1)}%</td>
+      <td>${l.acumulado.toFixed(1)}%</td>
+      <td><span class="abc-badge ${l.badgeClass}">${l.classe}</span></td>
+    </tr>`).join('');
+
+  if(resumo){
+    resumo.textContent = `${countA} produto(s) classe A concentram 80% do faturamento · ${countB} classe B · ${countC} classe C`;
+  }
+
+  charts.abc = makeChart('chartABC', {
+    data:{
+      labels: linhas.map(l=>l.nome.length>14 ? l.nome.slice(0,14)+'…' : l.nome),
+      datasets:[
+        {
+          type:'bar', label:'Valor (R$)', data:linhas.map(l=>l.valor),
+          backgroundColor:linhas.map(l=>l.classe==='A' ? 'rgba(27,108,168,.85)' : l.classe==='B' ? 'rgba(245,166,35,.75)' : 'rgba(142,164,177,.6)'),
+          borderRadius:5, yAxisID:'y', order:2
+        },
+        {
+          type:'line', label:'% Acumulado', data:linhas.map(l=>l.acumulado),
+          borderColor:'#E74C3C', backgroundColor:'#E74C3C', pointRadius:3, pointBackgroundColor:'#E74C3C',
+          tension:.25, yAxisID:'y1', order:1
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:true, position:'bottom', labels:{boxWidth:10, font:{size:10}}},
+        tooltip:{callbacks:{label:ctx => ctx.dataset.label==='% Acumulado' ? ctx.parsed.y.toFixed(1)+'%' : fmt(ctx.parsed.y)}}
+      },
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:9}, maxRotation:60, minRotation:60}},
+        y:{position:'left', ticks:{callback:v=>fmtK(v)}, grid:{color:'#F0F4F8'}},
+        y1:{position:'right', min:0, max:100, ticks:{callback:v=>v+'%'}, grid:{display:false}}
+      }
+    }
+  });
 }
 
 // ─── HEATMAP ──────────────────────────────────────────────────────────────────
