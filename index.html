@@ -946,6 +946,7 @@ const dadosPadrao = [
   {data:"16/08",dia:"Domingo", fc:2401.81, fv:310.89, ft:2712.70, mg:571.76, et:51.756, gc:225.610, ga:65.348, ds:0, d5:16.905, lub:29.90, freq:167}, 
   {data:"17/08",dia:"Segunda", fc:10646.81, fv:810.70, ft:11457.51, mg:2293.74, et:232.590, gc:1132.736, ga:153.038, ds:46.703, d5:31.093, lub:419.96, freq:482},
   {data:"18/08", dia:"Terça", fc:11191.05, fv:213.79, ft:11404.84, mg:1986.01, et:243.138, gc:1091.251, ga:256.480, ds:50.734, d5:33.078, lub:87.80, freq:466},
+  {data:"19/08", dia:"Quarta", fc:12247.40, fv:335.44, ft:12582.84, mg:2337.86, et:195.652, gc:1283.152, ga:180.088, ds:136.881, d5:9.702, lub:189.78, freq:457},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -955,11 +956,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:5628,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:5758, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:6666, cap:15000, cor:'#06402B'},
+  {nome:'Gasolina Original',  atual:4362,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:5572, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:6438, cap:15000, cor:'#06402B'},
   {nome:'Diesel S500',        atual:11062, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:7811, cap:15000, cor:'#FFDE21'},
+  {nome:'Diesel S10',         atual:7658, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -991,8 +992,8 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:1719, valor:16140.66, cor:'#3B9FD6'},
-  {categoria:'Lubrificantes', icone:'🛢️', qtd:303,  valor:19757.30, cor:'#8E44AD'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:1704, valor:14609.34, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes', icone:'🛢️', qtd:301,  valor:19660.52, cor:'#8E44AD'},
   {categoria:'Aditivos',      icone:'⚗️', qtd:38,   valor:4630.00,  cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
@@ -1413,6 +1414,12 @@ const frentistasPorDiaPadrao = [
   {data:"18/08", nome:'EURICO', freq:103, litros:437.919, faturamento:2886.19, margem:542.83},
   {data:"18/08", nome:'ROBERTA',freq:83,  litros:329.086, faturamento:2183.90, margem:405.49},
   {data:"18/08", nome:'VICTOR', freq:114, litros:331.257, faturamento:2289.95, margem:413.03},
+  {data:"19/08", nome:'CELIO',     freq:61,  litros:254.266, faturamento:1768.50, margem:318.19},
+  {data:"19/08", nome:'ELVIO',     freq:63,  litros:215.443, faturamento:1533.62, margem:268.04},
+  {data:"19/08", nome:'EURICO',    freq:114, litros:498.385, faturamento:3248.12, margem:613.66},
+  {data:"19/08", nome:'GUILHERME', freq:21,  litros:101.393, faturamento:654.36,  margem:125.15},
+  {data:"19/08", nome:'ROBERTA',   freq:94,  litros:470.766, faturamento:3213.23, margem:586.22},
+  {data:"19/08", nome:'VICTOR',    freq:86,  litros:263.791, faturamento:1819.57, margem:327.88},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1420,9 +1427,9 @@ let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia'))
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
   {nome:'CERV. CONTI ZERO 269ML',                qtd:1089, valor:2822.71},
-  {nome:'SALGADO UNIDADE',                       qtd:337,  valor:1890.50},
+  {nome:'SALGADO UNIDADE',                       qtd:344,  valor:1921.00},
   {nome:'CHOPP BRAHMA',                          qtd:191,  valor:1828.73},
-  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIR.', qtd:48,   valor:1435.20},
+  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIR.', qtd:49,   valor:1465.10},
   {nome:'FIGURINHA DA COPA',                     qtd:190,  valor:1330.00},
   {nome:'CERV. HEINEKEN 250ML',                  qtd:153,  valor:1170.28},
   {nome:'CERV. BURGUESA 47 269 ML',              qtd:516,  valor:1104.30},
@@ -1433,7 +1440,7 @@ const topProdutosPadrao = [
   {nome:'LUB. 20W 50 MINERAL X1MAXX',            qtd:25,   valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML',            qtd:79,   valor:686.00},
   {nome:'LUB. 15W 40 SEMISSINTETICO X1MAXX',     qtd:21,   valor:641.90},
-  {nome:'LUB. 5W 40 SINTETICO X1MAXX',           qtd:14,   valor:560.00},
+  {nome:'LUB. 5W 40 SINTETICO X1MAXX',           qtd:15,   valor:600.00},
   {nome:'TABUA DE FRIOS',                        qtd:12,   valor:527.26},
   {nome:'CAPPUCINO ESPECIAL',                    qtd:46,   valor:513.74},
   {nome:'ARLA 32 GALAO 20L',                     qtd:5,    valor:500.00},
