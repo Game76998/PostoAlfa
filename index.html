@@ -957,6 +957,7 @@ const dadosPadrao = [
   {data:"28/08", dia:"Sexta", fc:4874.32, fv:518.41, ft:5392.73, mg:988.40, et:236.231, gc:13.743, ga:303.487, ds:65.054, d5:155.260, lub:84.90, freq:162},
   {data:"29/08", dia:"Sábado", fc:11656.36, fv:407.69, ft:12064.05, mg:2291.37, et:232.343, gc:1110.431, ga:302.205, ds:0.000, d5:80.958, lub:114.80, freq:431},
   {data:"30/08", dia:"Domingo", fc:3603.21, fv:175.08, ft:3778.29, mg:717.06, et:71.005, gc:320.499, ga:126.928, ds:13.351, d5:0.705, lub:67.96, freq:139},
+  {data:"31/08", dia:"Segunda", fc:24692.18, fv:245.00, ft:24937.18, mg:4472.48, et:450.795, gc:2663.042, ga:275.396, ds:177.293, d5:84.626, lub:79.92, freq:956},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -966,11 +967,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:13560,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:2912, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:4290, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:9856, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:6780, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:12270,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:2652, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:3830, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:9782, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:6628, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -1002,8 +1003,8 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:2234, valor:20890.69, cor:'#3B9FD6'},
-  {categoria:'Lubrificantes',  icone:'🛢️', qtd:277, valor:18674.70, cor:'#8E44AD'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:2211, valor:20764.09, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes',  icone:'🛢️', qtd:275, valor:18594.78, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:38, valor:4630.00, cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
@@ -1478,6 +1479,11 @@ const frentistasPorDiaPadrao = [
   {data:"29-08", nome:'VICTOR', freq:8, litros:47.821, faturamento:320.00, margem:58.31},
   {data:"30-08", nome:'CELIO', freq:65, litros:238.784, faturamento:1654.39, margem:293.81},
   {data:"30-08", nome:'ELVIO', freq:57, litros:293.704, faturamento:1948.82, margem:354.83},
+  {data:"31-08", nome:'CELIO', freq:110, litros:518.443, faturamento:3407.08, margem:638.99},
+  {data:"31-08", nome:'ELVIO', freq:99, litros:578.842, faturamento:3681.88, margem:641.42},
+  {data:"31-08", nome:'EURICO', freq:294, litros:1221.312, faturamento:8268.36, margem:1439.53},
+  {data:"31-08", nome:'ROBERTA', freq:103, litros:342.009, faturamento:2424.94, margem:432.02},
+  {data:"31-08", nome:'VICTOR', freq:298, litros:905.686, faturamento:6335.48, margem:1126.74},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1502,8 +1508,8 @@ const topProdutosPadrao = [
   {nome:'CERV. SKOL 269ML', qtd:118, valor:590.00},
   {nome:'CAPPUCINO ESPECIAL', qtd:50, valor:565.70},
   {nome:'TABUA DE FRIOS', qtd:12, valor:527.26},
+  {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:13, valor:519.48},
   {nome:'ARLA 32 GALAO 20L', qtd:5, valor:500.00},
-  {nome:'CERV. IMPERIO GOLD 210ML', qtd:66, valor:480.61},
 ];
 let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
 
