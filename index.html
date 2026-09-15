@@ -971,6 +971,7 @@ const dadosPadrao = [
   {data:"11/09", dia:"Sexta", fc:5224.83, fv:355.94, ft:5580.77, mg:806.83, et:319.912, gc:16.474, ga:203.625, ds:13.351, d5:339.358, lub:40.00, freq:134},
   {data:"12/09", dia:"Sábado", fc:18881.22, fv:496.56, ft:19377.78, mg:3692.32, et:345.798, gc:2088.182, ga:246.185, ds:116.119, d5:14.104, lub:69.86, freq:647},
   {data:"13/09", dia:"Domingo", fc:2627.77, fv:306.18, ft:2933.95, mg:611.26, et:33.550, gc:263.954, ga:81.060, ds:6.676, d5:0.000, lub:114.80, freq:91},
+  {data:"14/09", dia:"Segunda", fc:10552.89, fv:314.09, ft:10866.98, mg:2050.65, et:347.871, gc:1057.758, ga:149.924, ds:68.103, d5:7.052, lub:0.00, freq:371},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -980,11 +981,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:8867,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:1593, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:2242, cap:15000, cor:'#06402B'},
+  {nome:'Gasolina Original',  atual:7660,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:1454, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:1910, cap:15000, cor:'#06402B'},
   {nome:'Diesel S500',        atual:8079, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:6097, cap:15000, cor:'#FFDE21'},
+  {nome:'Diesel S10',         atual:5984, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -992,7 +993,7 @@ let tanques = tanquesPadrao;
 // 👉 Para atualizar o preço de venda, edite o valor (R$/L) de cada produto abaixo.
 const precosPadrao = {
   'Gasolina Original':  6.99,
-  'Gasolina Aditivada': 7.14,
+  'Gasolina Aditivada': 6.99,
   'Etanol':              4.59,
   'Diesel S500':          7.09,
   'Diesel S10':           7.49,
@@ -1016,7 +1017,7 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:1789, valor:18607.65, cor:'#3B9FD6'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:1737, valor:18183.90, cor:'#3B9FD6'},
   {categoria:'Lubrificantes',  icone:'🛢️', qtd:250, valor:17584.68, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:37, valor:4620.00, cor:'#F5A623'},
 ];
@@ -1556,6 +1557,10 @@ const frentistasPorDiaPadrao = [
   {data:"12/09", nome:'VICTOR', freq:143, litros:625.261, faturamento:4213.47, margem:791.40},
   {data:"13/09", nome:'EURICO', freq:42, litros:245.180, faturamento:1678.51, margem:315.47},
   {data:"13/09", nome:'VICTOR', freq:29, litros:140.060, faturamento:949.26, margem:179.72},
+  {data:"14/09", nome:'CELIO', freq:71, litros:299.462, faturamento:1863.54, margem:356.78},
+  {data:"14/09", nome:'ELVIO', freq:66, litros:350.451, faturamento:2328.44, margem:431.60},
+  {data:"14/09", nome:'EURICO', freq:116, litros:540.428, faturamento:3491.63, margem:652.41},
+  {data:"14/09", nome:'VICTOR', freq:80, litros:358.533, faturamento:2324.50, margem:445.67},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1573,7 +1578,7 @@ const topProdutosPadrao = [
   {nome:'CERV. BRAHMA CHOPP 269 ML', qtd:235, valor:1146.79},
   {nome:'CERV. CORONITA 210ML', qtd:133, valor:988.00},
   {nome:'ENER. REDBULL 250ML', qtd:73, valor:900.97},
-  {nome:'CIGARRO DUNHILL', qtd:53, valor:829.50},
+  {nome:'CIGARRO DUNHILL', qtd:54, valor:846.00},
   {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:18, valor:719.28},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML', qtd:80, valor:696.00},
