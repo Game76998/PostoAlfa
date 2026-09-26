@@ -981,6 +981,8 @@ const dadosPadrao = [
   {data:"21/09", dia:"Segunda", fc:11362.61, fv:232.43, ft:11595.04, mg:2216.05, et:327.062, gc:969.732, ga:358.596, ds:72.548, d5:8.052, lub:0.00, freq:476},
   {data:"22/09", dia:"Terça", fc:4986.70, fv:109.11, ft:5095.81, mg:891.64, et:189.864, gc:453.243, ga:76.141, ds:38.720, d5:18.335, lub:0.00, freq:185},
   {data:"23/09", dia:"Quarta", fc:11602.55, fv:219.59, ft:11822.14, mg:2013.03, et:185.350, gc:1213.209, ga:204.651, ds:111.090, d5:6.346, lub:40.00, freq:505},
+  {data:"24/09", dia:"Quinta", fc:13392.43, fv:215.04, ft:13607.47, mg:2353.89, et:447.176, gc:1324.336, ga:173.707, ds:55.080, d5:65.735, lub:0.00, freq:545},
+  {data:"25/09", dia:"Sexta", fc:15752.87, fv:294.38, ft:16047.25, mg:2498.33, et:380.906, gc:1285.436, ga:262.973, ds:40.053, d5:447.448, lub:40.00, freq:544},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1026,8 +1028,8 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:2744, valor:23090.32, cor:'#3B9FD6'},
-  {categoria:'Lubrificantes',  icone:'🛢️', qtd:242, valor:16953.10, cor:'#8E44AD'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:2679, valor:22586.70, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes',  icone:'🛢️', qtd:241, valor:16913.10, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:39, valor:4640.00, cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
@@ -1606,6 +1608,14 @@ const frentistasPorDiaPadrao = [
   {data:"23/09", nome:'EURICO', freq:99, litros:338.704, faturamento:2290.70, margem:389.72},
   {data:"23/09", nome:'ROBERTA', freq:112, litros:432.797, faturamento:2942.79, margem:489.63},
   {data:"23/09", nome:'VICTOR', freq:126, litros:367.761, faturamento:2495.17, margem:424.50},
+  {data:"24/09", nome:'CELIO', freq:94, litros:341.540, faturamento:2167.39, margem:381.06},
+  {data:"24/09", nome:'ELVIO', freq:89, litros:353.402, faturamento:2143.66, margem:364.34},
+  {data:"24/09", nome:'EURICO', freq:195, litros:823.634, faturamento:5378.35, margem:906.89},
+  {data:"24/09", nome:'VICTOR', freq:129, litros:498.384, faturamento:3361.14, margem:567.27},
+  {data:"25/09", nome:'CELIO', freq:127, litros:486.233, faturamento:3192.81, margem:566.13},
+  {data:"25/09", nome:'ELVIO', freq:83, litros:688.934, faturamento:4438.40, margem:425.27},
+  {data:"25/09", nome:'EURICO', freq:178, litros:760.302, faturamento:4919.16, margem:874.83},
+  {data:"25/09", nome:'VICTOR', freq:113, litros:433.431, faturamento:2872.63, margem:494.05},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1621,17 +1631,17 @@ const topProdutosPadrao = [
   {nome:'FIGURINHA DA COPA', qtd:190, valor:1330.00},
   {nome:'CERV. BURGUESA 47 269 ML', qtd:599, valor:1271.90},
   {nome:'CERV. BRAHMA CHOPP 269 ML', qtd:252, valor:1231.79},
-  {nome:'CERV. CORONITA 210ML', qtd:133, valor:988.00},
-  {nome:'CIGARRO DUNHILL', qtd:60, valor:943.63},
+  {nome:'CERV. CORONITA 210ML', qtd:134, valor:998.00},
+  {nome:'CIGARRO DUNHILL', qtd:62, valor:976.63},
   {nome:'ENER. REDBULL 250ML', qtd:74, valor:913.97},
   {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:19, valor:742.78},
   {nome:'LUB. 5W 40 SINTETICO X1MAXX', qtd:18, valor:720.00},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML', qtd:80, valor:696.00},
   {nome:'CERV. SKOL 269ML', qtd:133, valor:665.00},
-  {nome:'CAPPUCINO MAQUINA', qtd:56, valor:643.64},
+  {nome:'CAPPUCINO MAQUINA', qtd:57, valor:658.63},
   {nome:'LUB. 15W 40 SEMISSINTETICO X1MAXX', qtd:21, valor:641.90},
-  {nome:'REF. COCA COLA 2L', qtd:36, valor:589.89},
+  {nome:'REF. COCA COLA 2L', qtd:37, valor:604.88},
 ];
 let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
 
