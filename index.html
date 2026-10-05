@@ -990,6 +990,7 @@ const dadosPadrao = [
   {data:"01/10", dia:"Quinta", fc:7921.34, fv:109.75, ft:8031.09, mg:1207.38, et:0.000, gc:296.540, ga:760.418, ds:46.729, d5:33.144, lub:0.00, freq:331},
   {data:"02/10", dia:"Sexta", fc:9288.65, fv:599.87, ft:9888.52, mg:1545.32, et:93.541, gc:725.928, ga:156.559, ds:33.377, d5:385.676, lub:149.86, freq:268},
   {data:"03/10", dia:"Sábado", fc:19813.43, fv:2259.37, ft:22072.80, mg:4457.62, et:253.513, gc:2281.979, ga:218.572, ds:113.060, d5:35.260, lub:119.60, freq:870},
+  {data:"04/10", dia:"Domingo", fc:3226.41, fv:244.46, ft:3470.87, mg:669.49, et:40.486, gc:302.709, ga:101.643, ds:26.702, d5:0.000, lub:0.00, freq:73},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -999,11 +1000,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:10474,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:1793, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:1999, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:6666, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:4942, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:8651,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:1427, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:1678, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:6628, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:4833, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -1035,7 +1036,7 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:4275, valor:70057.51, cor:'#3B9FD6'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:7265, valor:69574.99, cor:'#3B9FD6'},
   {categoria:'Lubrificantes',  icone:'🛢️', qtd:219, valor:16516.54, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:39, valor:4640.00, cor:'#F5A623'},
 ];
@@ -1657,6 +1658,8 @@ const frentistasPorDiaPadrao = [
   {data:"03/10", nome:'EURICO', freq:256, litros:1175.351, faturamento:8004.93, margem:1461.20},
   {data:"03/10", nome:'GUILHERME', freq:14, litros:91.420, faturamento:639.03, margem:115.47},
   {data:"03/10", nome:'VICTOR', freq:163, litros:599.213, faturamento:4137.98, margem:747.46},
+  {data:"04/10", nome:'EURICO', freq:33, litros:279.188, faturamento:1894.33, margem:335.39},
+  {data:"04/10", nome:'VICTOR', freq:26, litros:192.352, faturamento:1332.08, margem:241.22},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1665,7 +1668,7 @@ let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia'))
 const topProdutosPadrao = [
   {nome:'CERV. CONTI ZERO 269ML', qtd:1346, valor:3404.37},
   {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:82, valor:2451.80},
-  {nome:'CHOPP', qtd:228, valor:2183.73},
+  {nome:'CHOPP', qtd:232, valor:2223.73},
   {nome:'SALGADO UNIDADE', qtd:387, valor:2115.50},
   {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA', qtd:34, valor:1870.00},
   {nome:'CERV. HEINEKEN 250ML', qtd:200, valor:1630.24},
@@ -1679,9 +1682,9 @@ const topProdutosPadrao = [
   {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:22, valor:862.66},
   {nome:'CERV. SKOL 269ML', qtd:168, valor:832.57},
   {nome:'REF. COCA COLA 2L', qtd:46, valor:739.79},
+  {nome:'CAPPUCINO MAQUINA', qtd:66, valor:730.61},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML', qtd:80, valor:696.00},
-  {nome:'CAPPUCINO MAQUINA', qtd:59, valor:688.61},
   {nome:'LUB. 15W 40 SEMISSINTETICO X1MAXX', qtd:21, valor:641.90},
 ];
 let topProdutos = JSON.parse(localStorage.getItem('postoTopProdutos')) || topProdutosPadrao;
