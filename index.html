@@ -994,6 +994,7 @@ const dadosPadrao = [
   {data:"05/10", dia:"Segunda", fc:9084.98, fv:265.27, ft:9350.25, mg:1713.26, et:165.491, gc:850.183, ga:216.723, ds:80.107, d5:30.388, lub:0.00, freq:346},
   {data:"06/10", dia:"Terça", fc:16996.36, fv:348.83, ft:17345.19, mg:3215.62, et:257.442, gc:1836.113, ga:322.329, ds:66.756, d5:21.156, lub:164.90, freq:689},
   {data:"07/10", dia:"Quarta", fc:13178.09, fv:302.95, ft:13481.04, mg:2464.34, et:188.692, gc:1179.301, ga:317.606, ds:158.986, d5:83.498, lub:168.86, freq:493},
+  {data:"08/10", dia:"Quinta", fc:14310.47, fv:431.26, ft:14741.73, mg:2683.36, et:289.861, gc:1176.445, ga:489.438, ds:116.673, d5:55.711, lub:37.99, freq:565},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1003,11 +1004,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:5239,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:642, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:1086, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:6476, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:4505, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:4059,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:185, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:797, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:4397, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:6438, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -1039,9 +1040,9 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:7224, valor:70915.31, cor:'#3B9FD6'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:7172, valor:70451.63, cor:'#3B9FD6'},
   {categoria:'Lubrificantes',  icone:'🛢️', qtd:211, valor:16201.78, cor:'#8E44AD'},
-  {categoria:'Aditivos',  icone:'⚗️', qtd:178, valor:8348.96, cor:'#F5A623'},
+  {categoria:'Aditivos',  icone:'⚗️', qtd:175, valor:8273.98, cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
 
@@ -1678,6 +1679,10 @@ const frentistasPorDiaPadrao = [
   {data:"07/10", nome:'EURICO', freq:149, litros:557.451, faturamento:3897.90, margem:676.38},
   {data:"07/10", nome:'GUILHERME', freq:60, litros:201.784, faturamento:1367.53, margem:248.05},
   {data:"07/10", nome:'VICTOR', freq:106, litros:448.921, faturamento:3185.00, margem:552.37},
+  {data:"08/10", nome:'CELIO', freq:116, litros:468.297, faturamento:3269.68, margem:575.84},
+  {data:"08/10", nome:'EURICO', freq:227, litros:1021.206, faturamento:6722.86, margem:1187.54},
+  {data:"08/10", nome:'GUILHERME', freq:49, litros:170.334, faturamento:1161.31, margem:207.42},
+  {data:"08/10", nome:'VICTOR', freq:116, litros:361.819, faturamento:2508.39, margem:449.40},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1689,7 +1694,7 @@ const topProdutosPadrao = [
   {nome:'CHOPP', qtd:232, valor:2223.73},
   {nome:'SALGADO UNIDADE', qtd:387, valor:2115.50},
   {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA', qtd:35, valor:1925.00},
-  {nome:'CERV. HEINEKEN 250ML', qtd:201, valor:1640.24},
+  {nome:'CERV. HEINEKEN 250ML', qtd:203, valor:1660.24},
   {nome:'FIGURINHA DA COPA', qtd:190, valor:1330.00},
   {nome:'CIGARRO DUNHILL', qtd:80, valor:1273.63},
   {nome:'CERV. BURGUESA 47 269 ML', qtd:599, valor:1271.90},
@@ -1699,7 +1704,7 @@ const topProdutosPadrao = [
   {nome:'LUB. 5W 40 SINTETICO X1MAXX', qtd:23, valor:920.00},
   {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:23, valor:902.62},
   {nome:'CERV. SKOL 269ML', qtd:170, valor:842.57},
-  {nome:'REF. COCA COLA 2L', qtd:50, valor:789.75},
+  {nome:'REF. COCA COLA 2L', qtd:51, valor:804.74},
   {nome:'CAPPUCINO MAQUINA', qtd:70, valor:772.59},
   {nome:'LUB. 5W 30 SINTETICO X1MAXX', qtd:19, valor:760.00},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
