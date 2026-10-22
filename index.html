@@ -1006,6 +1006,7 @@ const dadosPadrao = [
   {data:"18/10", dia:"Domingo", fc:6075.90, fv:265.23, ft:6341.13, mg:1208.77, et:77.242, gc:421.389, ga:86.323, ds:29.373, d5:286.318, lub:137.75, freq:152},
   {data:"19/10", dia:"Segunda", fc:12488.10, fv:294.65, ft:12782.75, mg:2428.35, et:231.065, gc:1182.029, ga:308.042, ds:65.427, d5:104.816, lub:116.78, freq:533},
   {data:"20/10", dia:"Terça", fc:12360.01, fv:286.66, ft:12646.67, mg:2436.23, et:273.340, gc:1156.436, ga:255.673, ds:143.458, d5:51.169, lub:103.89, freq:525},
+  {data:"21/10", dia:"Quarta", fc:12208.04, fv:383.30, ft:12591.34, mg:2371.38, et:193.348, gc:790.584, ga:730.378, ds:73.432, d5:48.543, lub:79.92, freq:567},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1015,11 +1016,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:1074,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:1427, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:1851, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:5572, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:3245, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:313,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:707, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:1650, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:5534, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:3144, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -1051,8 +1052,8 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:7749, valor:71235.54, cor:'#3B9FD6'},
-  {categoria:'Lubrificantes',  icone:'🛢️', qtd:192, valor:15519.96, cor:'#8E44AD'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:4708, valor:71957.62, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes',  icone:'🛢️', qtd:190, valor:15440.04, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:161, valor:7969.10, cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
@@ -1740,6 +1741,11 @@ const frentistasPorDiaPadrao = [
   {data:"20/10", nome:'EURICO', freq:109, litros:405.137, faturamento:2642.69, margem:509.80},
   {data:"20/10", nome:'JENIFER', freq:107, litros:377.451, faturamento:2389.75, margem:472.92},
   {data:"20/10", nome:'VICTOR', freq:113, litros:387.633, faturamento:2513.25, margem:485.49},
+  {data:"21/10", nome:'CELIO', freq:119, litros:421.262, faturamento:2818.78, margem:518.97},
+  {data:"21/10", nome:'ELVIO', freq:97, litros:300.353, faturamento:1973.12, margem:370.43},
+  {data:"21/10", nome:'EURICO', freq:122, litros:428.143, faturamento:2844.65, margem:535.06},
+  {data:"21/10", nome:'JENIFER', freq:83, litros:326.666, faturamento:2218.88, margem:398.46},
+  {data:"21/10", nome:'VICTOR', freq:113, litros:354.855, faturamento:2318.12, margem:445.38},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1758,11 +1764,11 @@ const topProdutosPadrao = [
   {nome:'CERV. BRAHMA CHOPP 269 ML', qtd:252, valor:1231.79},
   {nome:'CERV. CORONITA 210ML', qtd:151, valor:1168.00},
   {nome:'ENER. REDBULL 250ML', qtd:88, valor:1083.95},
-  {nome:'REF. COCA COLA 2L', qtd:68, valor:1037.13},
+  {nome:'REF. COCA COLA 2L', qtd:70, valor:1063.03},
+  {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:27, valor:1062.46},
   {nome:'CAPPUCINO MAQUINA', qtd:86, valor:998.19},
-  {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:25, valor:982.54},
   {nome:'LUB. 5W 40 SINTETICO X1MAXX', qtd:24, valor:960.00},
-  {nome:'CERV. SKOL 269ML', qtd:185, valor:881.12},
+  {nome:'CERV. SKOL 269ML', qtd:189, valor:901.12},
   {nome:'LUB. 5W 30 SINTETICO X1MAXX', qtd:20, valor:800.00},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML', qtd:80, valor:696.00},
