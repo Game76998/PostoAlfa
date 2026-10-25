@@ -1009,6 +1009,7 @@ const dadosPadrao = [
   {data:"21/10", dia:"Quarta", fc:12208.04, fv:383.30, ft:12591.34, mg:2371.38, et:193.348, gc:790.584, ga:730.378, ds:73.432, d5:48.543, lub:79.92, freq:567},
   {data:"22/10", dia:"Quinta", fc:7520.44, fv:244.08, ft:7764.52, mg:1521.37, et:348.439, gc:0.000, ga:740.092, ds:53.405, d5:51.076, lub:69.86, freq:290},
   {data:"23/10", dia:"Sexta", fc:4256.13, fv:392.68, ft:4648.81, mg:1019.85, et:424.226, gc:0.000, ga:0.000, ds:136.100, d5:169.911, lub:115.80, freq:74},
+  {data:"24/10", dia:"Sábado", fc:6421.01, fv:271.77, ft:6692.78, mg:1292.75, et:454.097, gc:180.520, ga:66.422, ds:53.404, d5:317.347, lub:81.86, freq:128},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1018,20 +1019,20 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:286,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:10, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:890, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:5311, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:2945, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:5048,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:2814, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:2429, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:5016, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:2912, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
 // ─── PREÇO DE VENDA POR LITRO (por produto) ───────────────────────────────────
 // 👉 Para atualizar o preço de venda, edite o valor (R$/L) de cada produto abaixo.
 const precosPadrao = {
-  'Gasolina Original':  6.79,
-  'Gasolina Aditivada': 6.89,
-  'Etanol':              4.79,
+  'Gasolina Original':  6.84,
+  'Gasolina Aditivada': 6.94,
+  'Etanol':              4.84,
   'Diesel S500':          7.09,
   'Diesel S10':           7.49,
 };
@@ -1054,9 +1055,9 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:4708, valor:71957.62, cor:'#3B9FD6'},
-  {categoria:'Lubrificantes',  icone:'🛢️', qtd:190, valor:15440.04, cor:'#8E44AD'},
-  {categoria:'Aditivos',  icone:'⚗️', qtd:161, valor:7969.10, cor:'#F5A623'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:7638, valor:71244.26, cor:'#3B9FD6'},
+  {categoria:'Lubrificantes',  icone:'🛢️', qtd:182, valor:15172.52, cor:'#8E44AD'},
+  {categoria:'Aditivos',  icone:'⚗️', qtd:160, valor:7939.11, cor:'#F5A623'},
 ];
 let estoqueGeral = estoqueGeralPadrao;
 
@@ -1756,6 +1757,10 @@ const frentistasPorDiaPadrao = [
   {data:"23/10", nome:'EURICO', freq:16, litros:278.989, faturamento:1779.59, margem:331.06},
   {data:"23/10", nome:'JENIFER', freq:6, litros:43.034, faturamento:224.16, margem:51.29},
   {data:"23/10", nome:'VICTOR', freq:15, litros:148.421, faturamento:813.32, margem:176.47},
+  {data:"24/10", nome:'ELVIO', freq:24, litros:137.852, faturamento:760.33, margem:167.06},
+  {data:"24/10", nome:'EURICO', freq:41, litros:296.881, faturamento:1785.03, margem:364.54},
+  {data:"24/10", nome:'JENIFER', freq:15, litros:477.424, faturamento:2991.09, margem:471.53},
+  {data:"24/10", nome:'VICTOR', freq:10, litros:73.271, faturamento:350.97, margem:87.19},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1763,7 +1768,7 @@ let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia'))
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
   {nome:'CERV. CONTI ZERO 269ML', qtd:1346, valor:3404.37},
-  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:98, valor:2930.20},
+  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:99, valor:2960.10},
   {nome:'CHOPP', qtd:267, valor:2573.73},
   {nome:'SALGADO UNIDADE', qtd:387, valor:2115.50},
   {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA', qtd:38, valor:2090.00},
