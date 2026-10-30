@@ -1014,6 +1014,7 @@ const dadosPadrao = [
   {data:"26/10", dia:"Segunda", fc:11430.76, fv:235.61, ft:11666.37, mg:2223.63, et:179.484, gc:1300.471, ga:136.063, ds:65.421, d5:39.503, lub:88.90, freq:499},
   {data:"27/10", dia:"Terça", fc:12035.61, fv:446.89, ft:12482.50, mg:2525.68, et:310.329, gc:1176.356, ga:250.747, ds:45.394, d5:60.662, lub:249.90, freq:496},
   {data:"28/10", dia:"Quarta", fc:11640.32, fv:177.24, ft:11817.56, mg:2341.79, et:358.936, gc:1082.434, ga:259.264, ds:60.080, d5:35.261, lub:58.95, freq:435},
+  {data:"29/10", dia:"Quinta", fc:10898.04, fv:84.49, ft:10982.53, mg:2101.09, et:238.559, gc:774.659, ga:528.337, ds:93.213, d5:11.283, lub:0.00, freq:420},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1023,11 +1024,11 @@ let charts = {};
 // ─── ESTOQUE DE TANQUES ───────────────────────────────────────────────────────
 // 👉 Para atualizar o estoque, edite o campo "atual" (em litros) de cada produto abaixo.
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:1074,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:1999, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:1509, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:4869, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:2588, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:313,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:1482, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:1292, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:4853, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:2492, cap:15000, cor:'#FFDE21'},
 ];
 let tanques = tanquesPadrao;
 
@@ -1059,7 +1060,7 @@ let custos = custosPadrao;
 //    em R$ do estoque daquela categoria, pelo preço de venda) de cada linha abaixo.
 //    (relatório REL024, agrupado por Grupo de Produto)
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:5680, valor:46242.36, cor:'#3B9FD6'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:5669, valor:46157.87, cor:'#3B9FD6'},
   {categoria:'Lubrificantes',  icone:'🛢️', qtd:173, valor:14760.80, cor:'#8E44AD'},
   {categoria:'Aditivos',  icone:'⚗️', qtd:159, valor:7920.12, cor:'#F5A623'},
 ];
@@ -1779,6 +1780,11 @@ const frentistasPorDiaPadrao = [
   {data:"28/10", nome:'EURICO', freq:76, litros:363.320, faturamento:2272.36, margem:461.40},
   {data:"28/10", nome:'JENIFER', freq:92, litros:386.880, faturamento:2533.00, margem:493.87},
   {data:"28/10", nome:'VICTOR', freq:93, litros:443.129, faturamento:2902.73, margem:560.73},
+  {data:"29/10", nome:'CELIO', freq:37, litros:136.460, faturamento:923.27, margem:175.53},
+  {data:"29/10", nome:'ELVIO', freq:51, litros:202.200, faturamento:1284.18, margem:252.74},
+  {data:"29/10", nome:'EURICO', freq:126, litros:401.115, faturamento:2675.56, margem:509.80},
+  {data:"29/10", nome:'JENIFER', freq:112, litros:606.657, faturamento:4065.44, margem:764.05},
+  {data:"29/10", nome:'VICTOR', freq:82, litros:298.178, faturamento:1939.59, margem:376.19},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
