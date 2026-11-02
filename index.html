@@ -1016,6 +1016,8 @@ const dadosPadrao = [
   {data:"28/10", dia:"Quarta", fc:11640.32, fv:177.24, ft:11817.56, mg:2341.79, et:358.936, gc:1082.434, ga:259.264, ds:60.080, d5:35.261, lub:58.95, freq:435},
   {data:"29/10", dia:"Quinta", fc:10898.04, fv:84.49, ft:10982.53, mg:2101.09, et:238.559, gc:774.659, ga:528.337, ds:93.213, d5:11.283, lub:0.00, freq:420},
   {data:"30/10", dia:"Sexta", fc:13069.96, fv:429.56, ft:13499.52, mg:2578.90, et:245.800, gc:17.528, ga:1535.655, ds:76.235, d5:75.058, lub:97.78, freq:528},
+  {data:"31/10", dia:"Sábado", fc:5680.54, fv:423.46, ft:6104.00, mg:1293.12, et:358.115, gc:264.260, ga:87.839, ds:150.886, d5:56.418, lub:139.72, freq:173},
+  {data:"01/11", dia:"Domingo", fc:1912.58, fv:288.89, ft:2201.47, mg:287.41, et:0.000, gc:0.000, ga:0.000, ds:0.000, d5:282.092, lub:0.00, freq:17},
 ];
 let dados = JSON.parse(localStorage.getItem('postoDados')) || dadosPadrao;
 let dadosCompletos = dados.slice(); // backup completo (nunca filtrado)
@@ -1791,6 +1793,12 @@ const frentistasPorDiaPadrao = [
   {data:"30/10", nome:'EURICO', freq:102, litros:400.694, faturamento:2715.49, margem:496.21},
   {data:"30/10", nome:'JENIFER', freq:103, litros:407.545, faturamento:2704.20, margem:504.51},
   {data:"30/10", nome:'VICTOR', freq:105, litros:410.593, faturamento:2730.42, margem:510.72},
+  {data:"31/10", nome:'CELIO', freq:14, litros:105.245, faturamento:574.68, margem:127.24},
+  {data:"31/10", nome:'ELVIO', freq:40, litros:200.990, faturamento:1260.98, margem:251.11},
+  {data:"31/10", nome:'EURICO', freq:27, litros:96.579, faturamento:664.99, margem:122.79},
+  {data:"31/10", nome:'JENIFER', freq:15, litros:242.198, faturamento:1502.93, margem:292.68},
+  {data:"31/10", nome:'VICTOR', freq:46, litros:272.506, faturamento:1676.96, margem:334.43},
+  {data:"01/11", nome:'JENIFER', freq:1, litros:282.092, faturamento:1912.58, margem:183.53},
 ];
 let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia')) || frentistasPorDiaPadrao;
 
@@ -1798,8 +1806,8 @@ let frentistasPorDia = JSON.parse(localStorage.getItem('postoFrentistasPorDia'))
 // ─── TOP 10 PRODUTOS DA CONVENIÊNCIA ──────────────────────────────────────────
 const topProdutosPadrao = [
   {nome:'CERV. CONTI ZERO 269ML', qtd:1346, valor:3404.37},
-  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:103, valor:3079.70},
-  {nome:'CHOPP', qtd:276, valor:2663.73},
+  {nome:'LUB. 20W 50 SEMISSINTETICO MOTO IPIRANGA', qtd:105, valor:3139.50},
+  {nome:'CHOPP', qtd:278, valor:2673.73},
   {nome:'LUB. 15W 40 SEMISSINTETICO IPIRANGA', qtd:42, valor:2310.00},
   {nome:'SALGADO UNIDADE', qtd:387, valor:2115.50},
   {nome:'CERV. HEINEKEN 250ML', qtd:243, valor:2040.24},
@@ -1807,13 +1815,13 @@ const topProdutosPadrao = [
   {nome:'FIGURINHA DA COPA', qtd:190, valor:1330.00},
   {nome:'CERV. BURGUESA 47 269 ML', qtd:599, valor:1271.90},
   {nome:'CERV. BRAHMA CHOPP 269 ML', qtd:252, valor:1231.79},
+  {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:31, valor:1222.30},
+  {nome:'ENER. REDBULL 250ML', qtd:97, valor:1200.95},
   {nome:'CERV. CORONITA 210ML', qtd:151, valor:1168.00},
-  {nome:'ENER. REDBULL 250ML', qtd:94, valor:1161.95},
-  {nome:'LUB. 15W 40 SEMISSINTETICO PETRONAS COOLTECH', qtd:29, valor:1142.38},
-  {nome:'REF. COCA COLA 2L', qtd:75, valor:1127.78},
-  {nome:'CAPPUCINO MAQUINA', qtd:92, valor:1088.13},
+  {nome:'REF. COCA COLA 2L', qtd:78, valor:1166.63},
+  {nome:'CAPPUCINO MAQUINA', qtd:93, valor:1103.12},
   {nome:'LUB. 5W 40 SINTETICO X1MAXX', qtd:24, valor:960.00},
-  {nome:'CERV. SKOL 269ML', qtd:191, valor:911.12},
+  {nome:'CERV. SKOL 269ML', qtd:194, valor:926.12},
   {nome:'LUB. 5W 30 SINTETICO X1MAXX', qtd:21, valor:840.00},
   {nome:'LUB. 20W 50 MINERAL X1MAXX', qtd:25, valor:700.00},
   {nome:'CERV. IMPERIO ULTRA 210 ML', qtd:80, valor:696.00},
