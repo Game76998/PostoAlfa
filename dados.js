@@ -14,11 +14,11 @@
 // [EDITE AQUI · A · TANQUES] estoque atual de cada tanque, em litros ("atual").
 //  cap = capacidade do tanque · cor = cor do combustível no dashboard
 const tanquesPadrao = [
-  {nome:'Gasolina Original',  atual:215,  cap:30000, cor:'#FF5C00'},
-  {nome:'Gasolina Aditivada', atual:35, cap:15000, cor:'#2E6F40'},
-  {nome:'Etanol',             atual:1482, cap:15000, cor:'#06402B'},
-  {nome:'Diesel S500',        atual:7162, cap:15000, cor:'#950606'},
-  {nome:'Diesel S10',         atual:1292, cap:15000, cor:'#FFDE21'},
+  {nome:'Gasolina Original',  atual:186,  cap:30000, cor:'#FF5C00'},
+  {nome:'Gasolina Aditivada', atual:38, cap:15000, cor:'#2E6F40'},
+  {nome:'Etanol',             atual:774, cap:15000, cor:'#06402B'},
+  {nome:'Diesel S500',        atual:6742, cap:15000, cor:'#950606'},
+  {nome:'Diesel S10',         atual:1086, cap:15000, cor:'#FFDE21'},
 ];
 
 // [EDITE AQUI · B · PREÇO DE VENDA] R$ por litro na bomba
@@ -205,6 +205,7 @@ const dadosPadrao = [
   {data:"06/11", dia:"Sexta", fc:12503.98, fv:395.32, ft:12899.30, mg:2414.82, et:260.789, gc:74.743, ga:1326.437, ds:175.673, d5:17.357, lub:102.85, freq:487},
   {data:"07/11", dia:"Sábado", fc:5039.16, fv:144.99, ft:5184.15, mg:1022.18, et:222.731, gc:431.294, ga:0.000, ds:66.755, d5:66.757, lub:0.00, freq:173},
   {data:"08/11", dia:"Domingo", fc:1837.12, fv:0.00, ft:1837.12, mg:200.43, et:0.000, gc:0.000, ga:0.000, ds:0.000, d5:267.023, lub:0.00, freq:1},
+  {data:"09/11", dia:"Segunda", fc:4262.49, fv:399.88, ft:4662.37, mg:1062.63, et:464.307, gc:9.712, ga:0.000, ds:154.877, d5:103.030, lub:18.99, freq:92},
 ];
 // ▲▲▲ RESUMO DO DIA · FIM ▲▲▲
 
@@ -213,9 +214,9 @@ const dadosPadrao = [
 // [COLE AQUI · 2 · ESTOQUE] conveniência, lubrificantes e aditivos (bloco ESTOQUE do gerador, REL024).
 // ▼▼▼ ESTOQUE GERAL · INÍCIO ▼▼▼
 const estoqueGeralPadrao = [
-  {categoria:'Conveniência',  icone:'🛒', qtd:5585, valor:45443.00, cor:'#3B9FD6'},
+  {categoria:'Conveniência',  icone:'🛒', qtd:5681, valor:47376.13, cor:'#3B9FD6'},
   {categoria:'Lubrificantes',  icone:'🛢️', qtd:152, valor:13951.98, cor:'#8E44AD'},
-  {categoria:'Aditivos',  icone:'⚗️', qtd:147, valor:7625.18, cor:'#F5A623'},
+  {categoria:'Aditivos',  icone:'⚗️', qtd:146, valor:7606.19, cor:'#F5A623'},
 ];
 // ▲▲▲ ESTOQUE GERAL · FIM ▲▲▲
 
@@ -972,6 +973,10 @@ const frentistasPorDiaPadrao = [
   {data:"07/11", nome:'ELVIO', freq:40, litros:210.589, faturamento:1354.28, margem:257.41},
   {data:"07/11", nome:'EURICO', freq:33, litros:134.709, faturamento:841.31, margem:166.64},
   {data:"07/11", nome:'VICTOR', freq:40, litros:174.317, faturamento:1133.20, margem:211.91},
+  {data:"09/11", nome:'CELIO', freq:18, litros:284.095, faturamento:1729.41, margem:355.75},
+  {data:"09/11", nome:'ELVIO', freq:15, litros:188.872, faturamento:1159.53, margem:222.78},
+  {data:"09/11", nome:'EURICO', freq:10, litros:126.006, faturamento:662.56, margem:153.27},
+  {data:"09/11", nome:'VICTOR', freq:14, litros:122.728, faturamento:660.99, margem:150.70},
 ];
 // ▲▲▲ FRENTISTAS · FIM ▲▲▲
 
@@ -992,8 +997,8 @@ const topProdutosPadrao = [
   {nome:'FIGURINHA DA COPA', qtd:190, valor:1330.00},
   {nome:'CERV. BURGUESA 47 269 ML', qtd:599, valor:1271.90},
   {nome:'CERV. BRAHMA CHOPP 269 ML', qtd:256, valor:1251.79},
-  {nome:'REF. COCA COLA 2L', qtd:81, valor:1205.48},
-  {nome:'CAPPUCINO MAQUINA', qtd:100, valor:1190.07},
+  {nome:'CAPPUCINO MAQUINA', qtd:102, valor:1220.05},
+  {nome:'REF. COCA COLA 2L', qtd:82, valor:1218.43},
   {nome:'CERV. CORONITA 210ML', qtd:151, valor:1168.00},
   {nome:'LUB. 5W 40 SINTETICO X1MAXX', qtd:25, valor:1000.00},
   {nome:'CERV. SKOL 269ML', qtd:208, valor:996.12},
@@ -1010,9 +1015,11 @@ const topProdutosPadrao = [
 //  cliente: operadora (CIELO, SICREDI) ou nome do cliente · bandeira: VISA CREDITO etc.
 //  valor: líquido a receber · bruto: antes da taxa (se omitido = valor) · taxa: da operadora
 // ▼▼▼ CONTAS A RECEBER · INÍCIO ▼▼▼
-const contasReceberPosicao = "09/11/2026 10:01";
+const contasReceberPosicao = "10/11/2026 09:54";
 const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.27376-1","emissao":"04/11/2026","vencimento":"10/12/2026","valor":13.0},
+  {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.28437-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":13.0},
+  {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.28459-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":13.0},
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.27509-1","emissao":"04/11/2026","vencimento":"10/12/2026","valor":5.0},
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.27610-1","emissao":"04/11/2026","vencimento":"10/12/2026","valor":22.1},
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.26899-1","emissao":"02/11/2026","vencimento":"10/12/2026","valor":13.0},
@@ -1025,12 +1032,15 @@ const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.28161-1","emissao":"06/11/2026","vencimento":"10/12/2026","valor":12.0},
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.28199-1","emissao":"06/11/2026","vencimento":"10/12/2026","valor":18.82},
   {"tipo":"Nota a Prazo","cliente":"CARLA SILVA DE ALMEIDA","documento":"NC.28356-1","emissao":"07/11/2026","vencimento":"10/12/2026","valor":13.0},
+  {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.28436-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":13.0},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.27585-1","emissao":"04/11/2026","vencimento":"10/12/2026","valor":11.16},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.26929-1","emissao":"02/11/2026","vencimento":"10/12/2026","valor":7.99},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"EP.EMPREST","emissao":"22/07/2026","vencimento":"31/12/2026","valor":1890.0,"obs":"{D=15740}{D=14135}{D=8885}{D="},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"INMCO.27147-1","emissao":"03/11/2026","vencimento":"10/12/2026","valor":9.78,"obs":"7831}"},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.28228-1","emissao":"06/11/2026","vencimento":"10/12/2026","valor":30.0},
   {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.28344-1","emissao":"07/11/2026","vencimento":"10/12/2026","valor":55.7},
+  {"tipo":"Nota a Prazo","cliente":"CELIO SOUZA TELES","documento":"NC.28417-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":9.0},
+  {"tipo":"Nota a Prazo","cliente":"ELVIO FLORENCIANO SANGUINA","documento":"NC.28466-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":25.0},
   {"tipo":"Nota a Prazo","cliente":"ELVIO FLORENCIANO SANGUINA","documento":"NC.27631-1","emissao":"04/11/2026","vencimento":"10/12/2026","valor":9.99},
   {"tipo":"Nota a Prazo","cliente":"ELVIO FLORENCIANO SANGUINA","documento":"NC.27896-1","emissao":"05/11/2026","vencimento":"10/12/2026","valor":100.0},
   {"tipo":"Nota a Prazo","cliente":"ELVIO FLORENCIANO SANGUINA","documento":"NC.27304-1","emissao":"03/11/2026","vencimento":"10/12/2026","valor":10.47},
@@ -1062,6 +1072,8 @@ const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"EVELYNE ANDRADE CORREA","documento":"NC.24289-1","emissao":"16/10/2026","vencimento":"10/11/2026","valor":12.59},
   {"tipo":"Nota a Prazo","cliente":"EVELYNE ANDRADE CORREA","documento":"NC.24345-1","emissao":"16/10/2026","vencimento":"10/11/2026","valor":77.0},
   {"tipo":"Nota a Prazo","cliente":"EVELYNE ANDRADE CORREA","documento":"NC.24346-1","emissao":"16/10/2026","vencimento":"10/11/2026","valor":10.5},
+  {"tipo":"Nota a Prazo","cliente":"EVERTON VINICIUS ALVES VERA","documento":"NC.28429-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":29.0},
+  {"tipo":"Nota a Prazo","cliente":"EVERTON VINICIUS ALVES VERA","documento":"NC.28432-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":13.0},
   {"tipo":"Nota a Prazo","cliente":"FMC CONSTRUCOES E TRANSPORTES LTDA","documento":"NC.26847-1","emissao":"31/10/2026","vencimento":"10/11/2026","valor":50.0,"obs":"SAVERO"},
   {"tipo":"Nota a Prazo","cliente":"FMC CONSTRUCOES E TRANSPORTES LTDA","documento":"NC.27106-1","emissao":"03/11/2026","vencimento":"10/12/2026","valor":100.0,"obs":"SAVERO"},
   {"tipo":"Nota a Prazo","cliente":"FMC CONSTRUCOES E TRANSPORTES LTDA","documento":"NC.23103-1","emissao":"07/10/2026","vencimento":"10/11/2026","valor":236.19},
@@ -1126,7 +1138,7 @@ const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.5238-1/","emissao":"25/06/2026","vencimento":"31/12/2026","valor":2031.65},
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.7417-1/","emissao":"06/07/2026","vencimento":"31/12/2026","valor":55.31},
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.7968-1/","emissao":"08/07/2026","vencimento":"31/12/2026","valor":2442.22},
-  {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.8168-1/","emissao":"09/07/2026","vencimento":"31/12/2026","valor":29.63},
+  {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"NC.8168-1/","emissao":"09/07/2026","vencimento":"31/12/2026","valor":29.63},
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.8842-1/","emissao":"17/07/2026","vencimento":"31/12/2026","valor":511.28},
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.8845-1/","emissao":"17/07/2026","vencimento":"31/12/2026","valor":990.73},
   {"tipo":"Nota a Prazo","cliente":"JONAS OLIVEIRA ILHA LTDA","documento":"1NC.9203-1/","emissao":"29/07/2026","vencimento":"31/12/2026","valor":2159.71},
@@ -1151,6 +1163,7 @@ const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"KAWANE DE ALENCAR","documento":"NC.24154-1","emissao":"15/10/2026","vencimento":"10/11/2026","valor":9.99},
   {"tipo":"Nota a Prazo","cliente":"KAWANE DE ALENCAR","documento":"NC.24144-1","emissao":"15/10/2026","vencimento":"10/11/2026","valor":28.0},
   {"tipo":"Nota a Prazo","cliente":"KAWANE DE ALENCAR","documento":"NC.24159-1","emissao":"15/10/2026","vencimento":"10/11/2026","valor":10.0},
+  {"tipo":"Nota a Prazo","cliente":"LAURA JENIFER VILHAGRA DA SILVA","documento":"NC.28427-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":14.99},
   {"tipo":"Nota a Prazo","cliente":"LAURA JENIFER VILHAGRA DA SILVA","documento":"NC.27916-1","emissao":"05/11/2026","vencimento":"10/12/2026","valor":12.95},
   {"tipo":"Nota a Prazo","cliente":"LAURA JENIFER VILHAGRA DA SILVA","documento":"NC.28050-1","emissao":"05/11/2026","vencimento":"10/12/2026","valor":25.0},
   {"tipo":"Nota a Prazo","cliente":"LAURA JENIFER VILHAGRA DA SILVA","documento":"NC.28051-1","emissao":"05/11/2026","vencimento":"10/12/2026","valor":6.0},
@@ -1238,6 +1251,7 @@ const contasReceberPadrao = [
   {"tipo":"Nota a Prazo","cliente":"OLVIDIO MARQUES NETO","documento":"NC.19221-1","emissao":"17/09/2026","vencimento":"10/10/2026","valor":16.85},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"AMERICAN EXPRESS","documento":"048773-1/1","emissao":"03/11/2026","vencimento":"03/12/2026","bruto":159.17,"taxa":3.47,"valor":155.7},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"AMERICAN EXPRESS","documento":"043975-1/1","emissao":"19/10/2026","vencimento":"18/11/2026","bruto":100.0,"taxa":1.89,"valor":98.11},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"050595-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":100.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"047643-1/1","emissao":"30/10/2026","vencimento":"29/11/2026","valor":50.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"049071-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":528.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"047725-1/1","emissao":"30/10/2026","vencimento":"29/11/2026","valor":72.07},
@@ -1260,8 +1274,13 @@ const contasReceberPadrao = [
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"045843-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":100.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"045875-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":30.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"ELO CREDITO","documento":"045879-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":33.95},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"ELO DEBITO","documento":"050597-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":20.0,"taxa":0.18,"valor":19.82},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"048993-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":150.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"049013-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":100.0},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"050585-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","bruto":50.0,"taxa":0.8,"valor":49.2},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"050611-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":100.0},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"050615-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":55.96},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"050617-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":13.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"047651-1/1","emissao":"30/10/2026","vencimento":"29/11/2026","valor":5.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"049087-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":40.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"049091-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","bruto":6.42,"taxa":0.1,"valor":6.32},
@@ -1565,7 +1584,31 @@ const contasReceberPadrao = [
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"045827-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":100.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"045831-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","bruto":100.0,"taxa":1.59,"valor":98.41},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"MASTER CREDITO","documento":"045867-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":15.12},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050589-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","valor":50.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050555-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","valor":20.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050559-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":100.0,"taxa":0.77,"valor":99.23},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050563-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":50.0,"taxa":0.39,"valor":49.61},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050571-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","valor":25.06},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050573-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":14.67,"taxa":0.11,"valor":14.56},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050613-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","valor":100.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050625-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":50.0,"taxa":0.39,"valor":49.61},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"MASTER DEBITO","documento":"050631-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":12.95,"taxa":0.1,"valor":12.85},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"000198-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":24.45,"taxa":0.09,"valor":24.36},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050587-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":30.81,"taxa":0.11,"valor":30.7},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050591-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":100.0,"taxa":0.35,"valor":99.65},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050593-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":38.04,"taxa":0.13,"valor":37.91},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050601-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":48.9,"taxa":0.17,"valor":48.73},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050561-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":100.0,"taxa":0.35,"valor":99.65},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050567-1/1","emissao":"09/11/2026","vencimento":"09/11/2026","bruto":40.0,"taxa":0.14,"valor":39.86},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050583-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":48.9,"taxa":0.17,"valor":48.73},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050621-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":10.0,"taxa":0.04,"valor":9.96},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050629-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":100.0,"taxa":0.35,"valor":99.65},
+  {"tipo":"PIX","cliente":"CIELO","bandeira":"PIX","documento":"050635-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":10.0,"taxa":0.04,"valor":9.96},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"048967-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":15.0},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"050599-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","bruto":20.0,"taxa":0.32,"valor":19.68},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"050603-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":50.0},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"050579-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","bruto":197.11,"taxa":3.13,"valor":193.98},
+  {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"050619-1/1","emissao":"09/11/2026","vencimento":"09/12/2026","valor":62.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"047647-1/1","emissao":"30/10/2026","vencimento":"29/11/2026","valor":69.4},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"049109-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":50.0},
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"049119-1/1","emissao":"04/11/2026","vencimento":"04/12/2026","valor":15.42},
@@ -1747,18 +1790,31 @@ const contasReceberPadrao = [
   {"tipo":"Cartão Crédito","cliente":"CIELO","bandeira":"VISA CREDITO","documento":"045907-1/1","emissao":"25/10/2026","vencimento":"24/11/2026","valor":50.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"048969-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":20.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047539-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":16.38},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"000196-1/1","emissao":"07/11/2026","vencimento":"08/11/2026","bruto":20.0,"taxa":0.15,"valor":19.85},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"000200-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":30.0,"taxa":0.23,"valor":29.77},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"000202-1/1","emissao":"07/11/2026","vencimento":"08/11/2026","bruto":20.0,"taxa":0.15,"valor":19.85},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"048983-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":50.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047569-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":50.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050557-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":18.99},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047583-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":20.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050565-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":200.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049023-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":30.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049027-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":50.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050569-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":50.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050575-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":33.65},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047609-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":36.22},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047613-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":100.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050605-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":24.57},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050607-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":80.0,"taxa":0.61,"valor":79.39},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049049-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":8.42},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050609-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":9.5,"taxa":0.07,"valor":9.43},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047629-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":35.94},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049055-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":40.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050623-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":220.24},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047649-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":150.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050627-1/1","emissao":"09/11/2026","vencimento":"20/11/2026","valor":300.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047657-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":10.0},
+  {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"050633-1/1","emissao":"09/11/2026","vencimento":"10/11/2026","bruto":7.0,"taxa":0.05,"valor":6.95},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049085-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":80.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047711-1/1","emissao":"30/10/2026","vencimento":"10/11/2026","valor":15.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"049129-1/1","emissao":"04/11/2026","vencimento":"15/11/2026","valor":50.0},
@@ -1876,6 +1932,7 @@ const contasReceberPadrao = [
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047437-1/1","emissao":"29/10/2026","vencimento":"09/11/2026","valor":15.0},
   {"tipo":"Cartão Débito","cliente":"CIELO","bandeira":"VISA DEBITO","documento":"047455-1/1","emissao":"29/10/2026","vencimento":"09/11/2026","valor":20.0},
   {"tipo":"Cartão Crédito","cliente":"SICREDI","bandeira":"MASTER CREDITO","documento":"048897-1/1","emissao":"03/11/2026","vencimento":"03/12/2026","bruto":29.9,"taxa":0.65,"valor":29.25},
+  {"tipo":"Nota a Prazo","cliente":"VICTOR DIONISO","documento":"NC.28445-1","emissao":"09/11/2026","vencimento":"10/12/2026","valor":3.0},
   {"tipo":"Nota a Prazo","cliente":"VICTOR DIONISO","documento":"NC.27137-1","emissao":"03/11/2026","vencimento":"10/12/2026","valor":14.0},
   {"tipo":"Nota a Prazo","cliente":"VICTOR DIONISO","documento":"NC.28109-1","emissao":"06/11/2026","vencimento":"10/12/2026","valor":10.0}
 ];
