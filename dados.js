@@ -24,7 +24,7 @@ const tanquesPadrao = [
 // [EDITE AQUI · B · PREÇO DE VENDA] R$ por litro na bomba
 const precosPadrao = {
   'Gasolina Original':  6.94,
-  'Gasolina Aditivada': 709,
+  'Gasolina Aditivada': 7.09,
   'Etanol':              4.99,
   'Diesel S500':          7.49,
   'Diesel S10':           7.49,
