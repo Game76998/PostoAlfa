@@ -686,6 +686,111 @@
   .hero::after { content:none !important; }
   .hero-logo { position:absolute; right:56px; top:50%; transform:translateY(-50%); height:190px; filter:drop-shadow(0 10px 24px rgba(0,0,0,.45)); pointer-events:none; }
   @media(max-width:760px){ .hero-logo { height:84px; right:16px; top:18px; transform:none; } }
+
+  /* calendário de recebimentos */
+  .cr-cal-card { padding:22px 24px; }
+  .cr-cal-top { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+  .cr-cal-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .cr-cal-chip { display:inline-flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--border); color:var(--text-soft);
+    border-radius:100px; padding:6px 13px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; }
+  .cr-cal-chip i { width:9px; height:9px; border-radius:50%; background:var(--c); }
+  .cr-cal-chip:hover { border-color:var(--c); color:var(--text); }
+  .cr-cal-chip.on { background:var(--c); border-color:var(--c); color:#fff; }
+  .cr-cal-chip.on i { background:#fff; }
+  .cr-cal-body { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:22px; align-items:start; }
+  .cr-cal-nav { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:10px; }
+  .cr-cal-nav strong { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--text); min-width:190px; text-align:center; }
+  .cr-cal-nav button { width:34px; height:34px; border-radius:10px; border:1px solid var(--border); background:#fff; font-size:20px; line-height:1; cursor:pointer; color:var(--fuel-navy); }
+  .cr-cal-nav button:hover:not(:disabled) { border-color:var(--fuel-blue); background:var(--section-bg); }
+  .cr-cal-nav button:disabled { opacity:.3; cursor:default; }
+  .cr-cal-resumo { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+  .cr-cal-resumo div { background:var(--section-bg); border-radius:10px; padding:8px 12px; }
+  .cr-cal-resumo small { display:block; font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--text-soft); }
+  .cr-cal-resumo strong { font-size:14px; color:var(--text); }
+  .cr-cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)) 64px; gap:5px; }
+  .cr-cal-h { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); text-align:center; padding:2px 0 4px; }
+  .cr-cal-h.fds { color:#B0BEC9; }
+  .cr-cal-h.sem { color:var(--fuel-blue); }
+  .cr-cal-d {
+    position:relative; min-height:74px; border-radius:10px; border:1px solid #E6ECF1; text-align:left; cursor:pointer;
+    background:linear-gradient(rgba(234,193,39,var(--heat)), rgba(234,193,39,var(--heat))), #fff;
+    padding:6px 7px 9px; display:flex; flex-direction:column; gap:2px; font-family:'Inter',sans-serif;
+    transition:transform .12s, box-shadow .12s, border-color .12s;
+  }
+  .cr-cal-d.fds { background:linear-gradient(rgba(234,193,39,var(--heat)), rgba(234,193,39,var(--heat))), #F8FAFC; }
+  .cr-cal-d:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,14,77,.12); border-color:#C9D6E2; }
+  .cr-cal-d.vazio { background:transparent; border:none; cursor:default; box-shadow:none; transform:none; }
+  .cr-cal-d.passado:not(.tem) { opacity:.5; }
+  .cr-cal-d.hoje { border:2px solid var(--fuel-blue); }
+  .cr-cal-d.hoje .cr-cal-n::after { content:'hoje'; margin-left:5px; font-size:9px; font-weight:700; text-transform:uppercase; color:var(--fuel-blue); letter-spacing:.05em; }
+  .cr-cal-d.sel { border:2px solid #000E4D; box-shadow:0 0 0 3px rgba(11,44,140,.18); }
+  .cr-cal-n { font-size:12px; font-weight:700; color:var(--text-soft); display:flex; align-items:center; gap:3px; }
+  .cr-cal-d.tem .cr-cal-n { color:var(--text); }
+  .cr-cal-v { font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#000E4D; letter-spacing:-.01em; margin-top:auto; }
+  .cr-cal-bar { position:absolute; left:7px; right:7px; bottom:5px; height:4px; border-radius:4px; overflow:hidden; display:flex; background:#EEF2F6; }
+  .cr-cal-bar span, .cr-cal-stack span { height:100%; }
+  .cr-cal-flag { font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; font-size:9px; font-weight:800; }
+  .cr-cal-flag.red { background:#E74C3C; color:#fff; }
+  .cr-cal-flag.amb { background:#FEF0D2; font-size:8px; }
+  .cr-cal-sem { display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:10px; background:#EEF3FB; color:#0B2C8C;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; }
+  .cr-cal-sem small { font-family:'Inter',sans-serif; font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--text-soft); }
+  .cr-cal-sem.zero { color:#B0BEC9; background:#F6F8FA; }
+  .cr-cal-leg { display:flex; flex-wrap:wrap; gap:16px; margin-top:12px; font-size:11px; color:var(--text-soft); align-items:center; }
+  .cr-cal-leg span { display:inline-flex; align-items:center; gap:5px; }
+  .cr-cal-leg .q { width:14px; height:14px; border-radius:4px; border:1px solid #E6ECF1; background:linear-gradient(rgba(234,193,39,var(--heat)), rgba(234,193,39,var(--heat))), #fff; }
+  .cr-cal-det { background:linear-gradient(180deg,#F7FAFD,#fff); border:1px solid var(--border); border-radius:14px; padding:16px 18px; position:sticky; top:12px; }
+  .cr-cal-det-h small { display:block; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--fuel-blue); }
+  .cr-cal-det-h strong { font-family:'Space Grotesk',sans-serif; font-size:17px; color:var(--text); }
+  .cr-cal-det-total { font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; color:#000E4D; letter-spacing:-.02em; margin:8px 0 10px; }
+  .cr-cal-det-total small { display:block; font-family:'Inter',sans-serif; font-size:12px; font-weight:500; color:var(--fuel-muted); letter-spacing:0; }
+  .cr-cal-det-vazio { margin-top:14px; font-size:13px; color:var(--text-soft); background:#fff; border:1px dashed #C6D3DE; border-radius:10px; padding:18px 14px; text-align:center; }
+  .cr-cal-aviso { font-size:12px; font-weight:600; border-radius:9px; padding:8px 10px; margin-bottom:8px; }
+  .cr-cal-aviso.red { background:#FDECEA; color:#922B21; }
+  .cr-cal-aviso.amb { background:#FEF6E4; color:#8A5400; }
+  .cr-cal-stack { display:flex; height:10px; border-radius:6px; overflow:hidden; margin:6px 0 10px; background:#EEF2F6; }
+  .cr-cal-sub { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft); margin:14px 0 6px; }
+  .cr-cal-li { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid #EDF2F6; font-size:12px; }
+  .cr-cal-li:last-child { border-bottom:none; }
+  .cr-cal-li i { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+  .cr-cal-li span { flex:1; min-width:0; color:var(--text); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cr-cal-li span small { display:block; font-weight:500; color:var(--fuel-muted); font-size:10px; }
+  .cr-cal-li strong { color:var(--text); white-space:nowrap; }
+  .cr-cal-li.grp span { font-weight:700; }
+  .cr-cal-mais { font-size:11px; color:var(--fuel-muted); padding-top:4px; }
+  @media(max-width:900px){
+    .cr-cal-body { grid-template-columns:1fr; }
+    .cr-cal-det { position:static; }
+  }
+  @media(max-width:620px){
+    .cr-cal-card { padding:16px 12px; }
+    .cr-cal-grid { grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; }
+    .cr-cal-h.sem, .cr-cal-sem { display:none; }
+    .cr-cal-d { min-height:54px; padding:4px 4px 8px; border-radius:8px; }
+    .cr-cal-n { font-size:11px; }
+    .cr-cal-d.hoje .cr-cal-n::after { content:none; }
+    .cr-cal-v { font-size:11px; }
+    .cr-cal-bar { left:4px; right:4px; bottom:3px; height:3px; }
+    .cr-cal-flag { width:12px; height:12px; font-size:8px; }
+    .cr-cal-resumo { grid-template-columns:1fr 1fr; }
+    .cr-cal-resumo div:last-child { grid-column:1 / -1; }
+    .cr-cal-nav strong { font-size:17px; min-width:150px; }
+  }
+
+  /* etiquetas do pódio */
+  .p3d-pod { padding:4px 10px 5px; border-width:1.5px; }
+  .p3d-pod b { font-size:12px; }
+  .p3d-pod b i { font-style:normal; }
+  .p3d-pod span { font-size:10.5px; }
+  .p3d-pod1 { border-color:#F2C230; background:rgba(60,44,0,.88); }
+  .p3d-pod1::after { border-color:#F2C230; }
+  .p3d-pod1 span { color:#FFE38A; }
+  .p3d-pod2 { border-color:#C9D1D9; } .p3d-pod2::after { border-color:#C9D1D9; }
+  .p3d-pod3 { border-color:#CD7F32; } .p3d-pod3::after { border-color:#CD7F32; }
+
+  /* celular: cartões em grade não podem ficar mais largos que a tela */
+  .chart-grid-2 > *, .chart-grid-3 > * { min-width:0; }
+  .chart-grid-2 > .chart-card, .chart-grid-3 > .chart-card { overflow-x:auto; }
 </style>
 </head>
 <body>
@@ -2726,8 +2831,17 @@ const CR_TIPOS = {
   outros:  { label:'Outros',         cor:'#8FA3B1' },
 };
 const CR_COMPENSACAO = 5; // dias de tolerância para repasses de cartão/PIX
-const CR_OPERADORAS = { CIELO:'#0AA0DC', SICREDI:'#3FA34D' };
-const crCorOp = op => CR_OPERADORAS[op] || '#8E44AD';
+// cor de cada operadora; uma operadora nova que aparecer no relatório pega a
+// próxima cor livre da lista CR_CORES_EXTRA automaticamente
+const CR_OPERADORAS = { CIELO:'#0AA0DC', SICREDI:'#3FA34D', PAGBANK:'#D6336C', PAGSEGURO:'#D6336C' };
+const CR_CORES_EXTRA = ['#7B3FE4','#E8590C','#0CA678','#1C7ED6','#AE3EC9'];
+const crCoresAuto = {};
+const crCorOp = op => {
+  op = String(op||'').toUpperCase();
+  for(const k in CR_OPERADORAS) if(op.includes(k)) return CR_OPERADORAS[k];
+  if(!crCoresAuto[op]) crCoresAuto[op] = CR_CORES_EXTRA[Object.keys(crCoresAuto).length % CR_CORES_EXTRA.length];
+  return crCoresAuto[op];
+};
 
 function crTipoKey(t){
   const s = String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
@@ -2942,18 +3056,7 @@ function renderContasReceber(){
 
     <div class="cr-op-grid">${r.operadoras.map(cardOp).join('')}</div>
 
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="chart-title">Repasses das Operadoras · próximos 35 dias</div>
-        <div class="chart-sub">Quanto a Cielo e o Sicredi depositam em cada dia · hoje inclui o que está em compensação (até ${CR_COMPENSACAO} dias)</div>
-        <div class="chart-wrap" style="height:270px"><canvas id="chartCRFluxo"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Notas a Prazo por Vencimento</div>
-        <div class="chart-sub">Quanto os clientes devem pagar em cada data</div>
-        <div class="chart-wrap" style="height:270px"><canvas id="chartCRPrazo"></canvas></div>
-      </div>
-    </div>
+    <div class="chart-card cr-cal-card" id="crCal" style="margin-bottom:24px"></div>
 
     <div class="chart-grid-2">
       <div class="chart-card">
@@ -3035,47 +3138,7 @@ function renderContasReceber(){
       </div>
     </div>`:''}`;
 
-  // ── Fluxo diário das operadoras ─────────────────────────────────────────────
-  const HORIZ = 35;
-  const dias = Array.from({length:HORIZ},(_,i)=>crAddDias(r.ref,i));
-  const cart = r.titulos.filter(t=>t.cartao);
-  const tiposCart = ['credito','debito','pix'].filter(k=>r.porTipo[k]>0);
-  charts.crFluxo = makeChart('chartCRFluxo', {
-    type:'bar',
-    data:{ labels:['Vencido', ...dias.map(crFmtDM), '+'+HORIZ+'d'], datasets: tiposCart.map(k=>{
-      const doTipo = cart.filter(t=>t.tipoKey===k);
-      return {
-        label: CR_TIPOS[k].label,
-        data: [ crS(doTipo.filter(t=>t.dias<0)), ...dias.map((_,i)=>crS(doTipo.filter(t=>t.dias===i))), crS(doTipo.filter(t=>t.dias>=HORIZ)) ],
-        backgroundColor: CR_TIPOS[k].cor, stack:'cr', borderRadius:3,
-      };
-    })},
-    options:{ responsive:true, maintainAspectRatio:false,
-      interaction:{ mode:'index', intersect:false },
-      plugins:{ tooltip:{ filter: item => item.parsed.y > 0, callbacks:{ label: ctx => ctx.dataset.label+': '+fmt(ctx.parsed.y), footer: items => 'Total: '+fmt(items.reduce((a,i)=>a+i.parsed.y,0)) } } },
-      scales:{
-        x:{ stacked:true, grid:{ display:false }, ticks:{ maxRotation:0, autoSkip:true, maxTicksLimit:12 } },
-        y:{ stacked:true, ticks:{ callback:v=>fmtK(v) }, grid:{ color:'#F0F4F8' } }
-      }
-    }
-  });
-
-  // ── Notas a prazo por data de vencimento ────────────────────────────────────
-  const porData = {};
-  r.titulos.filter(t=>!t.cartao).forEach(t=>{
-    const k = t.dias<0 ? 'Vencido' : crFmtD(t.venc);
-    porData[k] = (porData[k]||0) + t.saldo;
-  });
-  const chavesData = Object.keys(porData).sort((a,b)=> a==='Vencido' ? -1 : b==='Vencido' ? 1 : crParseData(a)-crParseData(b));
-  charts.crPrazo = makeChart('chartCRPrazo', {
-    type:'bar',
-    data:{ labels: chavesData, datasets:[{ label:'Notas a prazo', data: chavesData.map(k=>porData[k]),
-      backgroundColor: chavesData.map(k=>k==='Vencido'?'#E74C3C':'#F5A623'), borderRadius:6 }] },
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.parsed.y) } } },
-      scales:{ x:{ grid:{ display:false } }, y:{ ticks:{ callback:v=>fmtK(v) }, grid:{ color:'#F0F4F8' } } }
-    }
-  });
+  renderCalendarioCR();
 
   // ── Composição por tipo ─────────────────────────────────────────────────────
   const tiposAtivos = Object.keys(CR_TIPOS).filter(k=>r.porTipo[k]>0);
@@ -3094,10 +3157,180 @@ function renderContasReceber(){
 
 function crAtualizarTudo(){
   crCache = null;
-  ['crFluxo','crPrazo','crTipo'].forEach(k=>{ if(charts[k]){ charts[k].destroy(); delete charts[k]; } });
+  ['crTipo'].forEach(k=>{ if(charts[k]){ charts[k].destroy(); delete charts[k]; } });
   renderContasReceber();
   if(dados.length) renderKPIs();
   if(typeof refresh3D==='function') refresh3D();
+}
+
+// ─── CALENDÁRIO DE RECEBIMENTOS ───────────────────────────────────────────────
+// Cada título fica no dia do vencimento. Dias que já passaram e ainda têm título
+// em aberto aparecem marcados (⚠ vencido · ⏳ repasse em compensação).
+const CR_MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const CR_SEM = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const CR_SEM_LONGO = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const crCal = { mes:null, filtro:'todos', sel:null };
+const crChaveD = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const crGrupo = t => t.cartao ? t.operadora : 'NOTAS A PRAZO';
+const crCorGrupo = g => g==='NOTAS A PRAZO' ? CR_TIPOS.prazo.cor : crCorOp(g);
+const crNomeGrupo = g => g==='NOTAS A PRAZO' ? 'Notas a prazo' : g.charAt(0)+g.slice(1).toLowerCase();
+const crK = v => v>=1e6 ? (v/1e6).toFixed(1).replace('.',',')+'mi' : v>=1000 ? (v/1000).toFixed(1).replace('.',',')+'k' : v.toFixed(0);
+
+function crCalFiltrar(lista){
+  const f = crCal.filtro;
+  if(f==='todos') return lista;
+  if(f==='prazo') return lista.filter(t=>!t.cartao);
+  return lista.filter(t=>t.cartao && t.operadora===f);
+}
+
+function renderCalendarioCR(){
+  const box = document.getElementById('crCal'); if(!box) return;
+  const r = crCalcular();
+  const hoje = r.ref;
+  if(!crCal.mes) crCal.mes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+
+  const lista = crCalFiltrar(r.titulos.filter(t=>t.venc));
+  const porDia = {};
+  lista.forEach(t=>{ const k = crChaveD(t.venc); (porDia[k] || (porDia[k]=[])).push(t); });
+  if(!crCal.sel){ // começa no primeiro dia, a partir de hoje, que tem dinheiro para entrar
+    const futuros = Object.keys(porDia).filter(k=>k>=crChaveD(hoje)).sort();
+    crCal.sel = futuros[0] || crChaveD(hoje);
+    const [sa,sm] = crCal.sel.split('-').map(Number); crCal.mes = new Date(sa, sm-1, 1);
+  }
+
+  // meses navegáveis: do mais antigo em aberto até o último vencimento
+  const datas = r.titulos.filter(t=>t.venc).map(t=>t.venc);
+  const primeiro = datas.length ? new Date(Math.min(...datas)) : hoje;
+  const ultimo   = datas.length ? new Date(Math.max(...datas, hoje)) : hoje;
+  const mesMin = new Date(primeiro.getFullYear(), primeiro.getMonth(), 1);
+  const mesMax = new Date(ultimo.getFullYear(), ultimo.getMonth(), 1);
+  if(crCal.mes < mesMin) crCal.mes = mesMin;
+  if(crCal.mes > mesMax) crCal.mes = mesMax;
+  const ano = crCal.mes.getFullYear(), mes = crCal.mes.getMonth();
+
+  // valores do mês
+  const diasNoMes = new Date(ano, mes+1, 0).getDate();
+  const valDia = d => crS(porDia[crChaveD(new Date(ano, mes, d))] || []);
+  let totMes = 0, maxDia = 0, diaMax = null, aindaEntra = 0;
+  for(let d=1; d<=diasNoMes; d++){
+    const v = valDia(d); totMes += v;
+    if(v>maxDia){ maxDia = v; diaMax = d; }
+    if(new Date(ano,mes,d) >= hoje) aindaEntra += v;
+  }
+
+  const grupos = ['todos', ...r.operadoras.map(o=>o.nome), ...(r.prazoV>0?['prazo']:[])];
+  const chip = g => {
+    const lbl = g==='todos' ? 'Tudo' : g==='prazo' ? 'Notas a prazo' : crNomeGrupo(g);
+    const cor = g==='todos' ? 'var(--fuel-navy)' : g==='prazo' ? CR_TIPOS.prazo.cor : crCorOp(g);
+    return `<button class="cr-cal-chip ${crCal.filtro===g?'on':''}" style="--c:${cor}" onclick="crCalFiltro('${g}')">${g!=='todos'?'<i></i>':''}${lbl}</button>`;
+  };
+
+  // células
+  const offset = new Date(ano, mes, 1).getDay();
+  const celulas = [];
+  for(let i=0;i<offset;i++) celulas.push(null);
+  for(let d=1; d<=diasNoMes; d++) celulas.push(d);
+  while(celulas.length % 7) celulas.push(null);
+
+  let html = '';
+  for(let w=0; w<celulas.length/7; w++){
+    let somaSemana = 0;
+    for(let i=0;i<7;i++){
+      const d = celulas[w*7+i];
+      if(d===null){ html += '<div class="cr-cal-d vazio"></div>'; continue; }
+      const dt = new Date(ano, mes, d), k = crChaveD(dt), its = porDia[k] || [];
+      const v = crS(its); somaSemana += v;
+      const passado = dt < hoje, ehHoje = +dt === +hoje;
+      const venc = its.some(t=>t.dias<0), comp = its.some(t=>t.compensacao);
+      const intens = v>0 && maxDia>0 ? 0.10 + 0.55*Math.sqrt(v/maxDia) : 0;
+      const gs = {};
+      its.forEach(t=>{ const g = crGrupo(t); gs[g] = (gs[g]||0) + t.saldo; });
+      const barra = v>0 ? `<div class="cr-cal-bar">${Object.entries(gs).sort((a,b)=>b[1]-a[1]).map(([g,x])=>`<span style="width:${x/v*100}%;background:${crCorGrupo(g)}"></span>`).join('')}</div>` : '';
+      const cls = ['cr-cal-d', v>0?'tem':'', passado?'passado':'', ehHoje?'hoje':'', crCal.sel===k?'sel':'', (i===0||i===6)?'fds':''].join(' ');
+      html += `<button class="${cls}" style="--heat:${intens.toFixed(3)}" onclick="crCalSel('${k}')" title="${crFmtD(dt)}${v>0?' · '+fmt(v):''}">
+        <span class="cr-cal-n">${d}${venc?'<em class="cr-cal-flag red" title="vencido">!</em>':comp?'<em class="cr-cal-flag amb" title="em compensação">⏳</em>':''}</span>
+        ${v>0?`<span class="cr-cal-v">${crK(v)}</span>`:''}${barra}
+      </button>`;
+    }
+    html += `<div class="cr-cal-sem ${somaSemana>0?'':'zero'}"><small>semana</small>${somaSemana>0?crK(somaSemana):'—'}</div>`;
+  }
+
+  box.innerHTML = `
+    <div class="cr-cal-top">
+      <div>
+        <div class="chart-title">📅 Calendário de Recebimentos</div>
+        <div class="chart-sub" style="margin-bottom:0">O que cai na conta em cada dia · clique num dia para ver o detalhe</div>
+      </div>
+      <div class="cr-cal-chips">${grupos.map(chip).join('')}</div>
+    </div>
+    <div class="cr-cal-body">
+      <div class="cr-cal-main">
+        <div class="cr-cal-nav">
+          <button onclick="crCalMes(-1)" ${+crCal.mes<=+mesMin?'disabled':''} aria-label="Mês anterior">‹</button>
+          <strong>${CR_MESES[mes]} ${ano}</strong>
+          <button onclick="crCalMes(1)" ${+crCal.mes>=+mesMax?'disabled':''} aria-label="Próximo mês">›</button>
+        </div>
+        <div class="cr-cal-resumo">
+          <div><small>Total no mês</small><strong>${fmt(totMes)}</strong></div>
+          <div><small>Ainda vai entrar</small><strong>${fmt(aindaEntra)}</strong></div>
+          <div><small>Maior dia</small><strong>${diaMax?String(diaMax).padStart(2,'0')+'/'+String(mes+1).padStart(2,'0')+' · '+fmtK(maxDia):'—'}</strong></div>
+        </div>
+        <div class="cr-cal-grid">
+          ${CR_SEM.map((n,i)=>`<div class="cr-cal-h ${(i===0||i===6)?'fds':''}">${n}</div>`).join('')}<div class="cr-cal-h sem">Semana</div>
+          ${html}
+        </div>
+        <div class="cr-cal-leg">
+          <span><i class="q" style="--heat:.12"></i><i class="q" style="--heat:.35"></i><i class="q" style="--heat:.65"></i> menos → mais dinheiro</span>
+          <span><em class="cr-cal-flag red">!</em> título vencido em aberto</span>
+          <span><em class="cr-cal-flag amb">⏳</em> repasse em compensação</span>
+        </div>
+      </div>
+      <div class="cr-cal-det" id="crCalDet"></div>
+    </div>`;
+  crCalDetalhe(porDia);
+}
+
+function crCalDetalhe(porDia){
+  const el = document.getElementById('crCalDet'); if(!el) return;
+  const [a,m,d] = crCal.sel.split('-').map(Number);
+  const dt = new Date(a, m-1, d);
+  const its = porDia[crCal.sel] || [];
+  const v = crS(its);
+  const hoje = crHoje();
+  const titulo = `${CR_SEM_LONGO[dt.getDay()]}, ${crFmtD(dt)}`;
+  if(!its.length){
+    el.innerHTML = `<div class="cr-cal-det-h"><small>${+dt===+hoje?'Hoje':dt<hoje?'Dia que já passou':'Dia futuro'}</small><strong>${titulo}</strong></div>
+      <div class="cr-cal-det-vazio">Nada previsto para entrar neste dia${crCal.filtro!=='todos'?' (com este filtro)':''}.</div>`;
+    return;
+  }
+  const gs = {};
+  its.forEach(t=>{ const g = crGrupo(t); gs[g] = (gs[g]||0) + t.saldo; });
+  const ordG = Object.entries(gs).sort((x,y)=>y[1]-x[1]);
+  const venc = its.filter(t=>t.dias<0), comp = its.filter(t=>t.compensacao);
+  // cartões por bandeira · notas por cliente
+  const band = {}, cli = {};
+  its.forEach(t=>{
+    if(t.cartao){ const k = t.operadora+' · '+(t.bandeira||CR_TIPOS[t.tipoKey].label); band[k] = band[k] || {v:0,n:0,cor:crCorOp(t.operadora)}; band[k].v += t.saldo; band[k].n++; }
+    else { const k = t.cliente||'—'; cli[k] = cli[k] || {v:0,n:0}; cli[k].v += t.saldo; cli[k].n++; }
+  });
+  const linhas = (obj, corFn) => Object.entries(obj).sort((x,y)=>y[1].v-x[1].v).slice(0,8).map(([k,o])=>
+    `<div class="cr-cal-li"><i style="background:${corFn(o)}"></i><span>${k}<small>${o.n} título${o.n!==1?'s':''}</small></span><strong>${fmt(o.v)}</strong></div>`).join('');
+  el.innerHTML = `
+    <div class="cr-cal-det-h"><small>${+dt===+hoje?'Hoje':dt<hoje?'Dia que já passou':'Previsto para'}</small><strong>${titulo}</strong></div>
+    <div class="cr-cal-det-total">${fmt(v)}<small>${its.length} título${its.length!==1?'s':''}</small></div>
+    ${venc.length?`<div class="cr-cal-aviso red">⚠ ${fmt(crS(venc))} vencido e ainda em aberto</div>`:''}
+    ${comp.length?`<div class="cr-cal-aviso amb">⏳ ${fmt(crS(comp))} de repasse em compensação (fim de semana/feriado ou baixa pendente)</div>`:''}
+    <div class="cr-cal-stack">${ordG.map(([g,x])=>`<span title="${crNomeGrupo(g)}: ${fmt(x)}" style="width:${x/v*100}%;background:${crCorGrupo(g)}"></span>`).join('')}</div>
+    ${ordG.map(([g,x])=>`<div class="cr-cal-li grp"><i style="background:${crCorGrupo(g)}"></i><span>${crNomeGrupo(g)}</span><strong>${fmt(x)}</strong></div>`).join('')}
+    ${Object.keys(band).length?`<div class="cr-cal-sub">Cartões e PIX por bandeira</div>${linhas(band, o=>o.cor)}`:''}
+    ${Object.keys(cli).length?`<div class="cr-cal-sub">Clientes (notas a prazo)</div>${linhas(cli, ()=>CR_TIPOS.prazo.cor)}${Object.keys(cli).length>8?`<div class="cr-cal-mais">+ ${Object.keys(cli).length-8} clientes</div>`:''}`:''}`;
+}
+
+function crCalMes(n){ crCal.mes = new Date(crCal.mes.getFullYear(), crCal.mes.getMonth()+n, 1); renderCalendarioCR(); }
+function crCalFiltro(g){ crCal.filtro = g; renderCalendarioCR(); }
+function crCalSel(k){
+  crCal.sel = k; renderCalendarioCR();
+  if(window.innerWidth<=900){ const d = document.getElementById('crCalDet'); if(d) d.scrollIntoView({behavior:'smooth', block:'nearest'}); }
 }
 
 
@@ -3111,7 +3344,7 @@ const POSTO_LOGO = 'data:image/webp;base64,UklGRhgtAABXRUJQVlA4WAoAAAAQAAAA0AAA6
   const f = document.querySelector('link[rel="icon"]'); if(f){ f.href = POSTO_LOGO; f.type = 'image/webp'; }
 })();
 
-const P3D = { ok:false, zonas:{}, labels:{}, hover:null, sel:null, aneis:{}, tanques:[], frentistas:[], apres:null, alertaFin:false };
+const P3D = { ok:false, zonas:{}, labels:{}, podLabels:[], podio:[], hover:null, sel:null, aneis:{}, tanques:[], frentistas:[], apres:null, alertaFin:false };
 const P3D_COR = { royal:0x0B2C8C, navy:0x000E4D, gold:0xEAC127, royalHex:'#0B2C8C', navyHex:'#000E4D', goldHex:'#EAC127' };
 
 const P3D_COR_COMB = {
@@ -3125,7 +3358,7 @@ const P3D_ZONAS = {
   conveniencia: { nome:'Conveniência',     icone:'🛒', eyebrow:'Loja e lubrificantes',   ancora:[-9,7.4,-18],   sec:'topProdutosBodyValor' },
   financeiro:   { nome:'Contas a Receber', icone:'💳', eyebrow:'Escritório · financeiro', ancora:[9.5,7.2,-18], sec:'secContasReceber' },
   tanques:      { nome:'Tanques',          icone:'🛢️', eyebrow:'Estoque de combustível', ancora:[24,6,0],       sec:'tankGrid' },
-  frentistas:   { nome:'Frentistas',       icone:'👷', eyebrow:'Equipe da pista',        ancora:[-4.6,4,5.8],   sec:'tabelaFrentistas' },
+  frentistas:   { nome:'Frentistas',       icone:'🏆', eyebrow:'Pódio do período',       ancora:[-23,10.6,-1.0], sec:'tabelaFrentistas' },
   precos:       { nome:'Preços',           icone:'🪧', eyebrow:'Totem · venda e custo',  ancora:[-24,16,18],    sec:'tabelaMix' },
 };
 Object.keys(P3D_CAMPO).forEach(n=>{ P3D_ZONAS['comb:'+n] = { nome:n, icone:'⛽', eyebrow:'Bomba · combustível', ancora:null, sec:'tabelaMix', cor:P3D_COR_COMB[n] }; });
@@ -3136,7 +3369,7 @@ const P3D_FOCOS = {
   conveniencia: { t:[-9,2.5,-18], r:27, th:-0.7, ph:1.1 },
   financeiro:   { t:[9.5,2.5,-18],r:22, th:0.75, ph:1.12 },
   tanques:      { t:[24,2,0],     r:28, th:1.2,  ph:1.02 },
-  frentistas:   { t:[0,1.5,3],    r:21, th:0.85, ph:1.18 },
+  frentistas:   { t:[-23,4.6,0.2], r:21, th:0.4, ph:1.28 },
   precos:       { t:[-24,9,18],   r:24, th:0.3,  ph:1.3 },
 };
 
@@ -3325,8 +3558,7 @@ function init3D(){
   gPista.traverse(o=>{ if(o.isMesh && !o.userData.zona){ o.userData.zona = 'pista'; zP.meshes.push(o); } });
 
   // ── FRENTISTAS ─────────────────────────────────────────────────────────────
-  const gFrent = new THREE.Group();
-  [[-7.8,-0.4],[-10.3,4.4],[1.3,4.8],[-1.2,-0.4],[7.6,4.8],[10.4,-0.6],[-4.6,5.4]].forEach(([x,z],i)=>{
+  const boneco = (parent, { medalha=null, comemorando=false, escala=1 }={}) => {
     const g = new THREE.Group();
     cyl(0.17,0.17,0.85, mat(0x1d2b3a), -0.13,0.43,0, g, 10);
     cyl(0.17,0.17,0.85, mat(0x1d2b3a), 0.13,0.43,0, g, 10);
@@ -3335,10 +3567,77 @@ function init3D(){
     add(new THREE.SphereGeometry(0.26,16,12), mat(0xd9a982), 0,2.03,0, g);
     cyl(0.28,0.28,0.12, mat(P3D_COR.navy), 0,2.24,0, g, 14);
     box(0.32,0.04,0.2, mat(P3D_COR.gold), 0,2.2,0.24, g, false);
+    // braços: para baixo, ou para cima comemorando
+    [-1,1].forEach(sd=>{
+      const b = cyl(0.08,0.08,0.75, mat(P3D_COR.royal,{r:0.6}), sd*0.42, comemorando?2.05:1.3, 0, g, 8);
+      b.rotation.z = comemorando ? -sd*0.45 : sd*0.12;
+      add(new THREE.SphereGeometry(0.09,10,8), mat(0xd9a982), sd*(comemorando?0.6:0.47), comemorando?2.42:0.92, 0, g);
+    });
+    if(medalha){
+      cyl(0.03,0.03,0.42, mat(0xc0392b), -0.1,1.68,0.3, g, 6).rotation.z = 0.5;
+      cyl(0.03,0.03,0.42, mat(0x2471a3), 0.1,1.68,0.3, g, 6).rotation.z = -0.5;
+      const m = cyl(0.15,0.15,0.05, mat(medalha,{m:0.8,r:0.25,e:medalha,ei:0.25}), 0,1.46,0.37, g, 20);
+      m.rotation.x = Math.PI/2;
+    }
+    g.scale.setScalar(escala);
+    parent.add(g); return g;
+  };
+  const gFrent = new THREE.Group();
+  [[-7.8,-0.4],[-10.3,4.4],[1.3,4.8],[-1.2,-0.4],[7.6,4.8],[10.4,-0.6],[-4.6,5.4]].forEach(([x,z],i)=>{
+    const g = boneco(gFrent);
     g.position.set(x,0,z); g.rotation.y = (i*1.3)%6.28;
     g.userData.fase = i*0.9;
-    gFrent.add(g); P3D.frentistas.push(g);
+    P3D.frentistas.push(g);
   });
+
+  // pódio dos 3 primeiros do período (faturamento), ao lado da pista
+  const gPod = new THREE.Group();
+  gPod.position.set(-23, 0, 0.6);
+  gFrent.add(gPod);
+  box(8.6,0.3,3.6, mat(P3D_COR.navy,{r:0.5}), 0,0.15,0, gPod);
+  box(8.8,0.06,3.8, mat(P3D_COR.gold,{e:P3D_COR.gold,ei:0.2}), 0,0.02,0, gPod, false);
+  const MEDALHAS = [0xF2C230, 0xC9D1D9, 0xCD7F32];
+  const MEDALHAS_HEX = ['#F2C230','#C9D1D9','#CD7F32'];
+  [[0,2.3],[-2.75,1.6],[2.75,1.05]].forEach(([x,h],i)=>{
+    box(2.6,h,2.8, mat(0xf4f6f9,{r:0.55}), x,0.3+h/2,0, gPod);
+    box(2.66,0.14,2.86, mat(MEDALHAS[i],{m:0.6,r:0.3,e:MEDALHAS[i],ei:0.18}), x,0.3+h+0.03,0, gPod);
+    const num = texCanvas(256, 256, g=>{
+      g.fillStyle = P3D_COR.royalHex; g.fillRect(0,0,256,256);
+      g.fillStyle = MEDALHAS_HEX[i]; g.beginPath(); g.arc(128,128,98,0,Math.PI*2); g.fill();
+      g.fillStyle = P3D_COR.navyHex; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '800 140px "Space Grotesk", Arial, sans-serif'; g.fillText(String(i+1), 128, 140);
+    });
+    placa(num, Math.min(1.5, h*0.8), Math.min(1.5, h*0.8), x, 0.3+h/2, 1.41, gPod);
+    const b = boneco(gPod, { medalha:MEDALHAS[i], comemorando:i===0, escala:1.25 });
+    b.position.set(x, 0.3+h+0.1, 0);
+    b.userData.base = 0.3+h+0.1; b.userData.fase = i*1.7;
+    P3D.podio.push(b);
+  });
+  // painel de fundo (palco)
+  box(8.6,9.6,0.25, mat(0x0A1A5C,{r:0.6}), 0,5.1,-1.75, gPod);
+  box(8.8,0.16,0.35, mat(P3D_COR.gold,{e:P3D_COR.gold,ei:0.25}), 0,9.95,-1.75, gPod, false);
+  [-4.35,4.35].forEach(x=>box(0.16,9.6,0.35, mat(P3D_COR.gold,{e:P3D_COR.gold,ei:0.25}), x,5.1,-1.75, gPod, false));
+  const painel = texCanvas(1024, 200, g=>{
+    const gr = g.createLinearGradient(0,0,1024,0); gr.addColorStop(0,P3D_COR.navyHex); gr.addColorStop(.5,'#1240B0'); gr.addColorStop(1,P3D_COR.navyHex);
+    g.fillStyle = gr; g.fillRect(0,0,1024,200);
+    g.fillStyle = P3D_COR.goldHex; g.fillRect(0,0,1024,10); g.fillRect(0,190,1024,10);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#fff'; g.font = '800 84px "Space Grotesk", Arial, sans-serif'; g.fillText('🏆 DESTAQUES', 512, 104);
+  });
+  placa(painel, 7.8, 1.52, 0, 9.0, -1.6, gPod);
+  // troféu girando sobre o 1º lugar + facho de luz
+  const trofeu = new THREE.Group();
+  const mOuro = mat(0xF2C230,{m:0.85,r:0.2,e:0xF2C230,ei:0.35});
+  add(new THREE.CylinderGeometry(0.42,0.12,0.6,20), mOuro, 0,0.5,0, trofeu);
+  add(new THREE.TorusGeometry(0.22,0.05,8,16), mOuro, -0.45,0.55,0, trofeu).rotation.y = Math.PI/2;
+  add(new THREE.TorusGeometry(0.22,0.05,8,16), mOuro, 0.45,0.55,0, trofeu).rotation.y = Math.PI/2;
+  add(new THREE.CylinderGeometry(0.06,0.06,0.25,10), mOuro, 0,0.08,0, trofeu);
+  add(new THREE.CylinderGeometry(0.28,0.3,0.12,16), mOuro, 0,-0.08,0, trofeu);
+  trofeu.position.set(0, 0.3+2.3+3.35, 0);
+  trofeu.traverse(o=>{ if(o.isMesh) o.userData.semGlow = true; });
+  gPod.add(trofeu); P3D.trofeu = trofeu;
+  const facho = add(new THREE.CylinderGeometry(0.6,1.7,9,28,1,true), new THREE.MeshBasicMaterial({color:0xFFE9A0, transparent:true, opacity:0.09, side:THREE.DoubleSide, depthWrite:false}), 0,7.2,0, gPod, false);
+  facho.userData.semGlow = true;
   registrar('frentistas', gFrent);
 
   // ── CONVENIÊNCIA ───────────────────────────────────────────────────────────
@@ -3362,8 +3661,9 @@ function init3D(){
   [7.4,11.6].forEach(x=>box(2.6,1.6,0.1, mat(0x9fd3f5,{t:0.6,e:0x1a3550,ei:0.5}), x,2.6,-13.46, gFin, false));
   box(1.6,2.6,0.12, mat(0x2a3a4a), 9.5,1.3,-13.44, gFin, false);
   placa(texto('ESCRITÓRIO', {bg:P3D_COR.navyHex}), 7, 0.82, 9.5, 4.8, -13.28, gFin);
-  // maquininhas das operadoras ao lado (Cielo e Sicredi)
-  [[14.6,-15.2,0x0AA0DC],[14.6,-17.2,0x3FA34D]].forEach(([x,z,c])=>{
+  // maquininhas: uma para cada operadora que aparece no contas a receber
+  (contasReceber.length ? crCalcular().operadoras.slice(0,4) : []).forEach((o,i)=>{
+    const x = 14.6, z = -14.8 - i*1.75, c = new THREE.Color(crCorOp(o.nome));
     box(0.9,1.1,0.9, mat(0x2c3e50,{r:0.5}), x,0.55,z, gFin);
     box(0.55,0.8,0.18, mat(c,{r:0.4,e:c,ei:0.2}), x,1.5,z, gFin);
     box(0.42,0.26,0.02, mat(0x0b2236,{e:0x9fe8ff,ei:0.6}), x,1.68,z+0.1, gFin, false);
@@ -3423,6 +3723,15 @@ function init3D(){
     el.addEventListener('mouseleave', () => { if(P3D.hover===key){ P3D.hover = null; p3dGlow(); } });
     labelsEl.appendChild(el);
     P3D.labels[key] = { el, pos:new THREE.Vector3(...z.ancora) };
+  });
+  ['🥇','🥈','🥉'].forEach((ic,i)=>{
+    const el = document.createElement('div');
+    el.className = 'p3d-label p3d-pod p3d-pod'+(i+1);
+    el.innerHTML = `<b>${ic} <i></i></b><span></span>`;
+    el.addEventListener('click', ev => { ev.stopPropagation(); p3dSelecionar('frentistas'); });
+    labelsEl.appendChild(el);
+    const b = P3D.podio[i];
+    P3D.podLabels.push({ pod:true, el, pos:new THREE.Vector3(-23 + b.position.x, i===0 ? 7.45 : b.userData.base + 3.05, 0.6) });
   });
   const tip = document.getElementById('p3dTip');
 
@@ -3532,6 +3841,8 @@ function init3D(){
     );
     camera.lookAt(ctl.target);
     P3D.frentistas.forEach(f=>{ if(f.visible) f.position.y = Math.max(0, Math.sin(t*3+f.userData.fase))*0.06; });
+    P3D.podio.forEach((b,i)=>{ if(b.visible) b.position.y = b.userData.base + (i===0 ? Math.max(0, Math.sin(t*4))*0.22 : Math.max(0, Math.sin(t*2.2+b.userData.fase))*0.05); });
+    if(P3D.trofeu){ P3D.trofeu.rotation.y = t*1.2; P3D.trofeu.position.y = 6.35 + Math.sin(t*2)*0.12; }
 
     // alertas: tanques críticos piscam em vermelho, giroflex no escritório
     const pulso = 0.5 + 0.5*Math.sin(t*5);
@@ -3557,7 +3868,10 @@ function init3D(){
 
     renderer.render(scene, camera);
     const w = view.clientWidth, h = view.clientHeight;
-    Object.values(P3D.labels).forEach(L=>{
+    [...Object.values(P3D.labels), ...P3D.podLabels].forEach(L=>{
+      const podVis = P3D.sel==='frentistas';
+      const esconder = L.oculto || (L.pod && !podVis) || (L===P3D.labels.frentistas && podVis);
+      if(esconder){ L.el.style.opacity = 0; L.el.style.pointerEvents = 'none'; return; }
       vTmp.copy(L.pos).project(camera);
       const fora = vTmp.z>1 || Math.abs(vTmp.x)>1.1 || Math.abs(vTmp.y)>1.1;
       L.el.style.opacity = fora ? 0 : 1;
@@ -3704,7 +4018,10 @@ function p3dResumoLabel(key){
       if(crit.length) return { txt:'⚠ '+crit.map(t=>t.nome.replace('Gasolina ','Gas. ')+' '+p3dDias(t.dias)).join(' · '), alerta:true };
       return { txt: fmtN(tanques.reduce((a,t)=>a+t.atual,0))+' L em estoque' };
     }
-    case 'frentistas': return { txt: calcularFrentistasFiltrado().lista.length+' no período' };
+    case 'frentistas': {
+      const l = [...calcularFrentistasFiltrado().lista].sort((a,b)=>b.faturamento-a.faturamento);
+      return { txt: l.length ? '🥇 '+l[0].nome+' · '+l.length+' no período' : 'sem dados no período' };
+    }
     case 'precos': return { txt:'Gasolina '+fmt(precos['Gasolina Original']||0) };
   }
   return { txt:'' };
@@ -3845,7 +4162,13 @@ function refresh3D(){
     T.nivel = t.nivel;
   });
   P3D.giroflex.visible = contasReceber.length>0 && crCalcular().vencidoV>0;
-  const n = dados.length ? Math.max(1, Math.min(P3D.frentistas.length, calcularFrentistasFiltrado().lista.length)) : 0;
+  const rank = dados.length ? [...calcularFrentistasFiltrado().lista].sort((a,b)=>b.faturamento-a.faturamento) : [];
+  P3D.podLabels.forEach((L,i)=>{
+    const f = rank[i];
+    L.oculto = !f; P3D.podio[i].visible = !!f;
+    if(f){ L.el.querySelector('i').textContent = f.nome; L.el.querySelector('span').textContent = p3dK(f.faturamento)+' · '+fmtN(f.litros)+' L'; }
+  });
+  const n = dados.length ? Math.max(1, Math.min(P3D.frentistas.length, rank.length)) : 0;
   P3D.frentistas.forEach((f,i)=>{ f.visible = i<n; });
   if(P3D.sel) p3dPainel();
 }
